@@ -1,0 +1,13 @@
+parameters:
+    lunetics_locale.changeLanguage.class: Lunetics\LocaleBundle\Twig\Extension\ChangeLanguageExtension
+services:
+    twig.extension.lunetics_change_language:
+        class: %lunetics_locale.changeLanguage.class%
+        calls:
+            - [ setServiceContainer, [@service_container] ]
+            - [ setAvailableLocales, [%lunetics_locale.allowed_languages%] ]
+            - [ setShowLanguagetitle, [%lunetics_locale.change_language.show_languagetitle%]]
+            - [ setShowForeignLanguageNames, [%lunetics_locale.change_language.show_foreign_languagenames%] ]
+            - [ setShowFirstUppercase, [%lunetics_locale.change_language.show_first_uppercase%] ]
+        tags:
+            - { name: twig.extension }

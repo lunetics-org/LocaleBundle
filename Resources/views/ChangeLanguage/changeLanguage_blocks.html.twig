@@ -1,0 +1,11 @@
+{% block lunetics_language_link_target %}
+    {{-  path('LuneticsLocaleBundle_localeswitch', { '_locale': locale}) -}}
+{% endblock %}
+
+{% block lunetics_language_link_text %}
+	{{- lunetics_languageName(locale) -}}
+{% endblock %}
+
+{% block lunetics_language_title%}
+    <li>{{ 'change_language.title'|trans({},'lunetics_locale')}}</li>
+{% endblock %}

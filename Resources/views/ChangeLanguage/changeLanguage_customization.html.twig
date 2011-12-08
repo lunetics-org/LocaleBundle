@@ -1,0 +1,8 @@
+{% extends 'LuneticsLocaleBundle:ChangeLanguage:changeLanguage_content.html.twig' %}
+
+{% block lunetics_language_link_text %}
+{% spaceless %}
+	{# You could use the variable "locale" here to add an image or anything else. #}
+	{{ parent() }}
+{% endspaceless %}
+{% endblock %}

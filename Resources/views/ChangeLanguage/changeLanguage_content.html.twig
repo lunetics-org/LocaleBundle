@@ -1,0 +1,19 @@
+{% use 'LuneticsLocaleBundle:ChangeLanguage:changeLanguage_blocks.html.twig' %}
+
+{% spaceless %}
+<ul>
+    {%- if lunetics_showLanguagetitle -%}{{- block('lunetics_language_title')-}}{%- endif -%}
+	{% for locale in lunetics_availableLocales %}
+		<li>
+			{%- set lunetics_language_iscurrent = locale == lunetics_getLocaleLanguage() -%}
+			{%- if lunetics_language_iscurrent -%}
+				{{- block('lunetics_language_link_text') -}}
+			{%- else -%}
+				<a href="{{ block('lunetics_language_link_target') }}">
+					{{- block('lunetics_language_link_text') -}}
+				</a>
+			{%- endif -%}
+		</li>
+	{% endfor %}
+</ul>
+{% endspaceless %}

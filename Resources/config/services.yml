@@ -1,0 +1,8 @@
+# TODO: Move tld mapping to main configuration
+# TODO: Add a list of allowed locales
+parameters:
+   tld_map:
+        - { domain: "stageshare.de", locale: de_DE }
+        - { domain: "stageshare.dev", locale: en_US, default: true}
+        - { domain: "stageshare.co.uk", locale: en_UK }
+        - { domain: "stageshare.fr", locale: fr_FR }
