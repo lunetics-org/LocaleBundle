@@ -24,8 +24,10 @@ class LocaleController extends Controller
     {
         $request = $this->getRequest();
         /* @var $request \Symfony\Component\HttpFoundation\Request */
+
         $session = $this->get('session');
         /* @var $session \Symfony\Component\HttpFoundation\Session */
+
         $router = $this->get('router');
         /* @var $router \Symfony\Component\Routing\Router */
 
@@ -40,15 +42,10 @@ class LocaleController extends Controller
         if (!in_array(\Locale::getPrimaryLanguage($_locale), $allowedLanguages)) {
             throw new NotFoundHttpException('This language is not available');
         }
-        $session->setLocale($_locale);
 
         // Set the Locale Manually selected, will also be set into cookie at the response listener
-        $session->set('localeManually', true);
-
-        $logger = $this->get('logger');
-        if (null !== $logger) {
-            $logger->info(sprintf('Language Locale manually set to cookie, value: [ %s ]', $session->getLocale()));
-        }
+        $session->set('localeIdentified', $_locale);
+        $session->set('setLocaleCookie', true);
 
         // Redirect the User
         if ($request->headers->has('referer') && true === $useReferrer) {

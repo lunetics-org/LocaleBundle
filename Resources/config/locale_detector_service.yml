@@ -5,6 +5,7 @@ services:
             - %locale%
             - %lunetics_locale.allowed_languages%
             - @logger
+        calls:
+            - [ setEventDispatcher, [@event_dispatcher] ]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onRequest }
-            - { name: kernel.event_listener, event: kernel.response, method: onResponse }

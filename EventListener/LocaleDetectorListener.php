@@ -4,6 +4,7 @@ namespace Lunetics\LocaleBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -29,6 +30,16 @@ class LocaleDetectorListener
     private $defaultLocale;
 
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var boolean
+     */
+    private $cookieListenerisAdded = false;
+
+    /**
      * Setup the Locale Listener
      *
      * @param                                                        $defaultLocale      The default Locale
@@ -40,6 +51,22 @@ class LocaleDetectorListener
         $this->defaultLocale = $defaultLocale;
         $this->logger = $logger;
         $this->availableLanguages = $availableLanguages;
+    }
+
+    public function setEventDispatcher(EventDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function addCookieResponseListener()
+    {
+        if($this->cookieListenerisAdded !== true) {
+            $this->dispatcher->addListener(
+                KernelEvents::RESPONSE,
+                array($this, 'onResponse')
+            );
+        }
+        $this->cookieListenerisAdded = true;
     }
 
     /**
@@ -58,26 +85,16 @@ class LocaleDetectorListener
         $session = $request->getSession();
         /* @var $session \Symfony\Component\HttpFoundation\Session */
 
-        // Which handler should be used for setlocale. session for pre 2.1.0-DEV and request for post 2.1.0-DEV
-        if (version_compare(Kernel::VERSION, '2.1.0-DEV') >= 0) {
-            $handler = $request;
-        } else {
-            $handler = $session;
-        }
-
-        // Checks Cookie if a locale has been selected manually, then just set the Locale from the Cookie and return
-        if ($request->cookies->has('localeManually')) {
-            $handler->setLocale($request->cookies->get('localeManually'));
-            if (null !== $this->logger) {
-                $this->logger->info(sprintf('Language Locale manually get from cookie, value: [ %s ]', $session->getLocale()));
-            }
-            return;
-        }
+       if($session->get('setLocaleCookie') === true || !$request->cookies->has('locale')) {
+          $session->remove('setLocaleCookie');
+          $this->addCookieResponseListener();
+       }
 
         // Check if the locale has been identified, no repeating locale checks on subsequent requests needed
         if ($session->has('localeIdentified')) {
+            $request->setLocale($session->get('localeIdentified'));
             if (null !== $this->logger) {
-                $this->logger->info(sprintf('Language Locale already Identified : [ %s ]', $session->get('localeIdentified')));
+                $this->logger->info(sprintf('Locale already Identified : [ %s ]', $session->get('localeIdentified')));
             }
             return;
         }
@@ -105,41 +122,26 @@ class LocaleDetectorListener
             }
         }
 
-
-        // Checks the Session var 'localeManually' if  no locale has been selected manually
-        if ($session->get('localeManually') !== true) {
-            $handler->setLocale($preferredLanguage);
-            $session->set('localeIdentified', $preferredLanguage);
-            if (null !== $this->logger) {
-                $this->logger->info(sprintf('Language Locale Autoset to: [ %s ]', $session->getLocale()));
-            }
-            return;
+        $request->setLocale($preferredLanguage);
+        $session->set('localeIdentified', $preferredLanguage);
+        if (null !== $this->logger) {
+            $this->logger->info(sprintf('Locale detected: [ %s ]', $request->getLocale()));
         }
+        $this->addCookieResponseListener();
+        return;
     }
 
     public function onResponse(Event  $event)
     {
-        $request = $event->getRequest();
-        /* @var $request \Symfony\Component\HttpFoundation\Request */
-
         $response = $event->getResponse();
-        /* @var $request \Symfony\Component\HttpFoundation\Response */
+        /* @var $response \Symfony\Component\HttpFoundation\Response */
 
-        $session = $request->getSession();
+        $session = $event->getRequest()->getSession();
         /* @var $session \Symfony\Component\HttpFoundation\Session */
 
-        if (!$request->cookies->has('locale')) {
-            $response->headers->setCookie(new Cookie('locale', $session->getLocale(), '2037-01-01'));
-            if (null !== $this->logger) {
-                $this->logger->info(sprintf('Language Locale Cookie set to: [ %s ]', $session->getLocale()));
-            }
-        }
-
-        if ($session->has('localeManually')) {
-            $response->headers->setCookie(new Cookie('localeManually', $session->getLocale(), '2037-01-01'));
-            if (null !== $this->logger) {
-                $this->logger->info(sprintf('Language Locale Cookie manually set to: [ %s ]', $session->getLocale()));
-            }
+        $response->headers->setCookie(new Cookie('locale', $session->get('localeIdentified')));
+        if (null !== $this->logger) {
+            $this->logger->info(sprintf('Locale Cookie set to: [ %s ]', $session->get('localeIdentified')));
         }
     }
 }
