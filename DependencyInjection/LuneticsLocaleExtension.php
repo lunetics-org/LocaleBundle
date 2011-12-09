@@ -22,8 +22,8 @@ class LuneticsLocaleExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('twig.yml');
-        $loader->load('LocaleDetectorService.yml');
-        $loader->load('LocaleDomainService.yml');
+        $loader->load('locale_detector_service.yml');
+
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);

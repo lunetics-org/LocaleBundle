@@ -42,11 +42,8 @@ class LocaleController extends Controller
         }
         $session->setLocale($_locale);
 
-        // Set the Locale Manually selected and save into Cookie
+        // Set the Locale Manually selected, will also be set into cookie at the response listener
         $session->set('localeManually', true);
-        $response = new Response();
-        $response->headers->setCookie(new Cookie('localeManually', $session->getLocale(), '2037-01-01'));
-        $response->sendHeaders();
 
         $logger = $this->get('logger');
         if (null !== $logger) {
@@ -56,10 +53,13 @@ class LocaleController extends Controller
         // Redirect the User
         if ($request->headers->has('referer') && true === $useReferrer) {
             return $this->redirect($request->headers->get('referer'));
-        } elseif (null !== $redirectToRoute) {
-            return $this->redirect($this->generateUrl($redirectToRoute));
-        } else {
-            return $this->redirect($request->getScheme() . '://' . $request->getHttpHost() . $redirectToUrl);
         }
+
+        if (null !== $redirectToRoute) {
+            return $this->redirect($this->generateUrl($redirectToRoute));
+        }
+
+        return $this->redirect($request->getScheme() . '://' . $request->getHttpHost() . $redirectToUrl);
+
     }
 }

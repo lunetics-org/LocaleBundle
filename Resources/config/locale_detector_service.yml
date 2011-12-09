@@ -1,0 +1,10 @@
+services:
+    kernel.listener.locale_detector_listener:
+        class: Lunetics\LocaleBundle\EventListener\LocaleDetectorListener
+        arguments:
+            - %locale%
+            - %lunetics_locale.allowed_languages%
+            - @logger
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onRequest }
+            - { name: kernel.event_listener, event: kernel.response, method: onResponse }
