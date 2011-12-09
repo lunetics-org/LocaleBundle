@@ -75,7 +75,7 @@ Installation
 ## 1. deps
 
 	[LuneticsLocaleBundle]
-	    git=http://github.com/lunetics/LuneticsLocaleBundle.git
+	    git=http://github.com/lunetics/localeBundle.git
 	    target=bundles/Lunetics/LocaleBundle
 
 (add to deps file and run `./bin/vendors install`)
