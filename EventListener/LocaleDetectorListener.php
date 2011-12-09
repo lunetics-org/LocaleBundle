@@ -52,12 +52,25 @@ class LocaleDetectorListener
         $this->logger = $logger;
         $this->availableLanguages = $availableLanguages;
     }
-
+    /**
+     * DI Setter for the EventDispatcher
+     *
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
+     *
+     * @return void
+     */
     public function setEventDispatcher(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * Method to add the ResponseListener which sets the cookie. Should only be called once
+     *
+     * @see also http://slides.seld.be/?file=2011-10-20+High+Performance+Websites+with+Symfony2.html#45
+     *
+     * @return void
+     */
     public function addCookieResponseListener()
     {
         if($this->cookieListenerisAdded !== true) {
@@ -70,7 +83,7 @@ class LocaleDetectorListener
     }
 
     /**
-     *  OnRequest Listener
+     *  The Request Listener which sets the locale
      *
      * @param \Symfony\Component\EventDispatcher\Event $event
      *
