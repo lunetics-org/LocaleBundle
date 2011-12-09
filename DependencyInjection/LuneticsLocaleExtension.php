@@ -36,9 +36,4 @@ class LuneticsLocaleExtension extends Extension
         $container->setParameter('lunetics_locale.change_language.show_languagetitle', $config['change_language']['show_languagetitle']);
 
     }
-
-    public function getAlias()
-    {
-        return 'lunetics_locale';
-    }
 }
