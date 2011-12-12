@@ -15,17 +15,13 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 abstract class AbstractLocaleAwareExtension extends \Twig_Extension
 {
-
-    /**
-     * @var string
-     */
-    protected $localeStorage = null;
     /**
      * @var ContainerInterface
      */
     protected $serviceContainer = null;
 
     /**
+     * Injects the Service Container
      * @param mixed $serviceContainer Can be a locale string or the service container.
      */
     public function setServiceContainer($serviceContainer)
@@ -35,19 +31,7 @@ abstract class AbstractLocaleAwareExtension extends \Twig_Extension
             return;
         }
 
-        if ($serviceContainer instanceof ContainerInterface) {
-            if (version_compare(Kernel::VERSION, '2.1.0-DEV') >= 0) {
-                if ($serviceContainer->isScopeActive('request') && $serviceContainer->has('request')) {
-                    $this->localeStorage = 'request';
-                    return;
-                }
-            } else {
-                if ($serviceContainer->has('session')) {
-                    $this->localeStorage = 'session';
-                    return;
-                }
-            }
-        } else {
+        if (!$serviceContainer instanceof ContainerInterface) {
             throw new \InvalidArgumentException(sprintf('Expected argument of either type "string" or "%s", but "%s" given.',
                 'Symfony\Component\DependencyInjection\ContainerInterface',
                 is_object($serviceContainer) ? get_class($serviceContainer) : gettype($serviceContainer)
@@ -55,6 +39,10 @@ abstract class AbstractLocaleAwareExtension extends \Twig_Extension
         }
     }
 
+    /**
+     * Returns the Service Container
+     * @return ContainerInterface
+     */
     public function getServiceContainer()
     {
         return $this->serviceContainer;
@@ -65,8 +53,7 @@ abstract class AbstractLocaleAwareExtension extends \Twig_Extension
      */
     public function getLocale()
     {
-        //return $this->locale;
-        return $this->getServiceContainer()->get($this->localeStorage)->getLocale();
+        return $this->getServiceContainer()->get('request')->getLocale();
     }
 
     /**
@@ -74,7 +61,7 @@ abstract class AbstractLocaleAwareExtension extends \Twig_Extension
      */
     public function getLocaleLanguage()
     {
-        return \Locale::getPrimaryLanguage($this->getServiceContainer()->get($this->localeStorage)->getLocale());
+        return \Locale::getPrimaryLanguage($this->getServiceContainer()->get('request')->getLocale());
     }
 
 }
