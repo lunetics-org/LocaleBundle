@@ -98,7 +98,7 @@ class LocaleDetectorListener
         $session = $request->getSession();
         /* @var $session \Symfony\Component\HttpFoundation\Session */
 
-       if($session->get('setLocaleCookie') === true || !$request->cookies->has('locale')) {
+       if($session->has('setLocaleCookie') || !$request->cookies->has('locale')) {
           $session->remove('setLocaleCookie');
           $this->addCookieResponseListener();
        }

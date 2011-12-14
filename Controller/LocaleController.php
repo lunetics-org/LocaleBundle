@@ -2,61 +2,95 @@
 
 namespace Lunetics\LocaleBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Controller for the Switch Locale
  */
-class LocaleController extends Controller
+class LocaleController
 {
+    protected $request;
+    protected $router;
+    protected $session;
+    protected $redirectToRoute;
+    protected $redirectToUrl;
+    protected $useReferrer;
+    protected $allowedLanguages;
+
+    /**
+     * Constructor for the Locale Switch Servicecontroller
+     *
+     * @param \Symfony\Component\Routing\RouterInterface $router
+     * @param \Symfony\Component\HttpFoundation\Session  $session
+     * @param                                            $redirectToRoute
+     * @param                                            $redirectToUrl
+     * @param                                            $useReferrer
+     * @param                                            $allowedLanguages
+     */
+    public function __construct(RouterInterface $router,
+                                Session $session,
+                                $redirectToRoute,
+                                $redirectToUrl,
+                                $useReferrer,
+                                $allowedLanguages)
+    {
+        $this->router           = $router;
+        $this->session          = $session;
+        $this->redirectToRoute  = $redirectToRoute;
+        $this->redirectToUrl    = $redirectToUrl;
+        $this->useReferrer      = $useReferrer;
+        $this->allowedLanguages = $allowedLanguages;
+    }
+
     /**
      * Action for locale switch
-
-     * @param $_locale The locale to set
-
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param                                           $_locale The locale to set
+     *
      * @return \Symfony\Bundle\FrameworkBundle\Controller\RedirectResponse
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function switchAction($_locale)
+    public function switchAction(Request $request, $_locale)
     {
-        $request = $this->getRequest();
-        /* @var $request \Symfony\Component\HttpFoundation\Request */
-
-        $session = $this->get('session');
-        /* @var $session \Symfony\Component\HttpFoundation\Session */
-
-        $router = $this->get('router');
-        /* @var $router \Symfony\Component\Routing\Router */
-
-        $container = $this->container;
-
-        $redirectToRoute = $container->getParameter('lunetics_locale.switch.redirect_route');
-        $redirectToUrl = $container->getParameter('lunetics_locale.switch.redirect_url');
-        $useReferrer = $container->getParameter('lunetics_locale.switch.use_referrer');
-        $allowedLanguages = $container->getParameter('lunetics_locale.allowed_languages');
-
         // Check if the Language is allowed
-        if (!in_array(\Locale::getPrimaryLanguage($_locale), $allowedLanguages)) {
+        if (!in_array(\Locale::getPrimaryLanguage($_locale), $this->allowedLanguages)) {
             throw new NotFoundHttpException('This language is not available');
         }
 
-        // Set the Locale Manually selected, will also be set into cookie at the response listener
-        $session->set('localeIdentified', $_locale);
-        $session->set('setLocaleCookie', true);
+        // tries to detect a Region from the user-provided locales
+        $providedLanguages = $request->getLanguages();
+        $locales           = array();
+        foreach ($providedLanguages as $locale) {
+            if (strpos($locale . '_', $_locale) !== false && strlen($locale) > 2) {
+                $locales[] = $locale;
+            }
+        }
+
+        if (count($locales) > 0) {
+            $this->session->set('localeIdentified', $locales[0]);
+        } else {
+            $this->session->set('localeIdentified', $_locale);
+        }
+
+        // Add the listener
+        $this->session->set('setLocaleCookie', true);
 
         // Redirect the User
-        if ($request->headers->has('referer') && true === $useReferrer) {
-            return $this->redirect($request->headers->get('referer'));
+        if ($request->headers->has('referer') && true === $this->useReferrer) {
+            return new RedirectResponse($request->headers->get('referer'));
         }
 
         if (null !== $redirectToRoute) {
-            return $this->redirect($this->generateUrl($redirectToRoute));
+            return new RedirectResponse($this->router->generate($this->redirectToRoute));
         }
-
-        return $this->redirect($request->getScheme() . '://' . $request->getHttpHost() . $redirectToUrl);
+        return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
 
     }
 }

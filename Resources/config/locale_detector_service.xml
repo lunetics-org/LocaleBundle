@@ -2,11 +2,10 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
+<parameters>
         <parameter key="locale_detector_listener.class">Lunetics\LocaleBundle\EventListener\LocaleDetectorListener</parameter>
+        <parameter key="lunetics_locale_router.class">Lunetics\LocaleBundle\Controller\LocaleController</parameter>
     </parameters>
-
     <services>
         <service id="kernel.listener.locale_detector_listener" class="%locale_detector_listener.class%">
             <argument>%locale%</argument>
@@ -17,6 +16,14 @@
             </call>
             <tag name="kernel.event_listener" event="kernel.request" method="onRequest"/>
         </service>
-    </services>
 
+        <service id="lunetics_locale.switch.router" class="%lunetics_locale_router.class%" scope="request">
+            <argument type="service" id="router"/>
+            <argument type="service" id="session"/>
+            <argument>%lunetics_locale.switch.redirect_route%</argument>
+            <argument>%lunetics_locale.switch.redirect_url%</argument>
+            <argument>%lunetics_locale.switch.use_referrer%</argument>
+            <argument>%lunetics_locale.allowed_languages%</argument>
+        </service>
+    </services>
 </container>
