@@ -87,7 +87,7 @@ class LocaleController
             return new RedirectResponse($request->headers->get('referer'));
         }
 
-        if (null !== $redirectToRoute) {
+        if (null !== $this->redirectToRoute) {
             return new RedirectResponse($this->router->generate($this->redirectToRoute));
         }
         return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
