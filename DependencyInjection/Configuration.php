@@ -37,7 +37,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('allowed_languages')
-                    ->addDefaultsIfNotSet()
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')
                         ->validate()
