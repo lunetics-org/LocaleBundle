@@ -128,7 +128,7 @@ class LocaleDetectorListener
                 }
             };
             $result = array_values(array_filter($providedLanguages, $map));
-            if (is_array($result)) {
+            if (!empty($result)) {
                 $preferredLanguage = $result[0];
             } else {
                 $preferredLanguage = $this->defaultLocale;
