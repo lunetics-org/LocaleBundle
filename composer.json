@@ -1,0 +1,20 @@
+{
+    "name": "lunetics/locale-bundle",
+    "description": "A Bundle for switching Languages",
+    "keywords": ["locale"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lunetics",
+            "homepage": "http://www.lunetics.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "2.*"
+    },
+    "autoload": {
+        "psr-0": { "Lunetics\\LocaleBundle": "" }
+    },
+    "target-dir": "Lunetics/LocaleBundle"
+}
