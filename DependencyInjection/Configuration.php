@@ -17,11 +17,29 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+        /**
+        * @TODO: Refactor to implement addXXXSection methods
+        */
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('lunetics_locale');
 
         $rootNode
             ->children()
+                ->arrayNode('detection')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('priority')
+                            ->prototype('scalar')->end()
+                            ->setExample(array('browser', 'url', 'custom'))
+                            ->defaultValue(array())
+                        ->end()
+                        ->scalarNode('browser_detector_class')->DefaultValue(null)->end()
+                        ->scalarNode('router_detector_class')
+                            ->DefaultValue('Lunetics\LocaleBundle\LocaleDetection\RouterLocaleDetector')->end()
+                        ->scalarNode('cookie_detector_class')->DefaultValue(null)->end()
+                        ->scalarNode('custom_detector_class')->DefaultValue(null)->end()
+                    ->end()
+                ->end()
                 ->arrayNode('change_language')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -57,7 +75,7 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('use_referrer')
                             ->defaultValue(true)
                         ->end()
-                    ->end()
+                    ->end()                  
             ->end();
 
         return $treeBuilder;

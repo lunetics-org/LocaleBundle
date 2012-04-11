@@ -25,5 +25,24 @@
             <argument>%lunetics_locale.switch.use_referrer%</argument>
             <argument>%lunetics_locale.allowed_languages%</argument>
         </service>
+
+        <service id="lunetics_locale.detection_priority" class="Lunetics\LocaleBundle\LocaleDetection\DetectionPriority">
+            <argument>%lunetics_locale.detection.priority%</argument>
+            <argument>%lunetics_locale.detection.browser_detector_class%</argument>
+            <argument>%lunetics_locale.detection.router_detector_class%</argument>
+            <argument>%lunetics_locale.detection.cookie_detector_class%</argument>
+            <argument>%lunetics_locale.detection.custom_detector_class%</argument>
+        </service>
+
+        <service id="lunetics_locale.detector" class="Lunetics\LocaleBundle\EventListener\RequestListener" scope="request">
+            <argument type="service" id="lunetics_locale.detection_priority" />
+            <argument>%locale%</argument>
+            <argument>%lunetics_locale.allowed_languages%</argument>
+            <argument type="service" id="logger" />
+            <argument type="service" id="router" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
+        </service>
+
+        
     </services>
 </container>

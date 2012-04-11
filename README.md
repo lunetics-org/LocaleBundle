@@ -1,6 +1,8 @@
 Information
 ============
 
+# Bundle in refactoring state
+
 This Symfony2 Bundle consists currently of 3 Parts
 
 1. A Request Eventlistener which sets the Language

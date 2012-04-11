@@ -26,6 +26,10 @@ class LuneticsLocaleExtension extends Extension
         $loader_xml->load('locale_detector_service.xml');
 
 
+        /**
+        * @TODO: Remap config parameters
+        */
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -36,6 +40,11 @@ class LuneticsLocaleExtension extends Extension
         $container->setParameter('lunetics_locale.change_language.show_foreign_languagenames', $config['change_language']['show_foreign_languagenames']);
         $container->setParameter('lunetics_locale.change_language.show_first_uppercase', $config['change_language']['show_first_uppercase']);
         $container->setParameter('lunetics_locale.change_language.show_languagetitle', $config['change_language']['show_languagetitle']);
+        $container->setParameter('lunetics_locale.detection.priority', $config['detection']['priority']);
+        $container->setParameter('lunetics_locale.detection.browser_detector_class', $config['detection']['browser_detector_class']);
+        $container->setParameter('lunetics_locale.detection.router_detector_class', $config['detection']['router_detector_class']);
+        $container->setParameter('lunetics_locale.detection.cookie_detector_class', $config['detection']['cookie_detector_class']);
+        $container->setParameter('lunetics_locale.detection.custom_detector_class', $config['detection']['custom_detector_class']);
 
     }
 }
