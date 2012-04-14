@@ -20,9 +20,9 @@
         <service id="lunetics_locale.switch.router" class="%lunetics_locale_router.class%" scope="request">
             <argument type="service" id="router"/>
             <argument type="service" id="session"/>
-            <argument>%lunetics_locale.switch.redirect_route%</argument>
-            <argument>%lunetics_locale.switch.redirect_url%</argument>
-            <argument>%lunetics_locale.switch.use_referrer%</argument>
+            <argument>%lunetics_locale.switch_router.redirect_to_route%</argument>
+            <argument>%lunetics_locale.switch_router.redirect_to_url%</argument>
+            <argument>%lunetics_locale.switch_router.use_referrer%</argument>
             <argument>%lunetics_locale.allowed_languages%</argument>
         </service>
 
