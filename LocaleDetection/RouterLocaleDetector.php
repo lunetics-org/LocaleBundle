@@ -38,15 +38,19 @@ class RouterLocaleDetector implements LocaleDetectorInterface
 	}
 
 	/**
+	* This method contains the logic for the locale detection through the route parameters.
+	* A logic is already done in the Symfony\Component\HttpKernel\EventListener\LocaleListener class
+	*
 	* {@inheritDoc}
 	*/
 	public function processLocaleDetection()
 	{
 		if($locale = $this->request->attributes->get('_locale'))
 		{
+			// I would like to have here another method to verify that the locale is valid
 			if(!preg_match('/^[a-z]{2}$/',$locale))
 			{
-				throw new \InvalidArgumentException('The _locale parameter "'.$locale.'" is not valid');
+				throw new \InvalidArgumentException('The _locale parameter "'.$locale.'" in the route is not valid');
 			}
 			$this->detectedLocale = $locale;
 		}

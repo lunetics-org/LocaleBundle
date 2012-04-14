@@ -40,6 +40,9 @@ class RequestListener
 	*/
 	public function onKernelRequest(GetResponseEvent $event)
 	{
+		//If this is not a MASTER_REQUEST we do not need to go further
+		if(1 === $event->getRequestType())
+		{
 		$request = $event->getRequest();
 		$session = $request->getSession();
 		$response = $event->getResponse();
@@ -58,6 +61,7 @@ class RequestListener
 										);
 
 				$engine->processLocaleDetection();
+
 				if($locale = $engine->getDetectedLocale())
 				{
 					$request->setDefaultLocale($locale);
@@ -66,5 +70,13 @@ class RequestListener
 				}
 			}
 		}
+		}
+	}
+
+	public function setDefaultLocale($locale)
+	{
+		//It would be nice to have a common code here to set the default locale in the app
+		//So all detectors(browser, cookie, ...) do not need to have some logic, only the detection logic and return 
+		//the detected locale ??
 	}
 }
