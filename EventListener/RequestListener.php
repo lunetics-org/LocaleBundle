@@ -71,12 +71,16 @@ class RequestListener
 
 				if($locale = $engine->getDetectedLocale())
 				{
-					$this->logger->info(sprintf('The locale has been identified through the [ %s ] detector', $detector));
+					$this->logger->info(sprintf('The locale has been identified by the [ %s ] detector', $detector));
 					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $engine->getDetectedLocale()));
 					$request->setDefaultLocale($locale);
 					$request->setLocale($locale);
 					$this->addCookieResponseListener();
 					return;
+				}
+				else
+				{
+					$this->logger->info(sprintf('The [ %s ] detector failed to find a locale', $detector));
 				}
 			}
 		}
@@ -87,9 +91,9 @@ class RequestListener
 
 	public function setDefaultLocale($locale)
 	{
-		//It would be nice to have a common code here to set the default locale in the app
-		//So all detectors(browser, cookie, ...) do not need to have some logic, only the detection logic and return 
-		//the detected locale ??
+		// It would be nice to have a common code here to set the default locale in the app
+		// So all detectors(browser, cookie, ...) do not need to have some logic to register the locale, 
+		// They will only the detection logic and return the detected locale ??
 	}
 
 	/**
