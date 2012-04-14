@@ -6,6 +6,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Lunetics\LocaleBundle\LocaleDetection\DetectionPriority;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestListener
 {
@@ -18,6 +20,8 @@ class RequestListener
 	public $defaultLocale;
 	public $router;
 	public $logger;
+
+	private $dispatcher;
 
 	
 	public function __construct(DetectionPriority $detectionPriority, 
@@ -64,6 +68,8 @@ class RequestListener
 
 				if($locale = $engine->getDetectedLocale())
 				{
+					$this->logger->info(sprintf('The locale has been identified through the [ %s ] detector', $detector));
+					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $engine->getDetectedLocale()));
 					$request->setDefaultLocale($locale);
 					$request->setLocale($locale);
 					return;
@@ -73,10 +79,42 @@ class RequestListener
 		}
 	}
 
+
+
 	public function setDefaultLocale($locale)
 	{
 		//It would be nice to have a common code here to set the default locale in the app
 		//So all detectors(browser, cookie, ...) do not need to have some logic, only the detection logic and return 
 		//the detected locale ??
 	}
+
+	/**
+     * DI Setter for the EventDispatcher
+     *
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
+     *
+     * @return void
+     */
+    public function setEventDispatcher(EventDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+	/**
+     * Method to add the ResponseListener which sets the cookie. Should only be called once
+     *
+     * @see also http://slides.seld.be/?file=2011-10-20+High+Performance+Websites+with+Symfony2.html#45
+     *
+     * @return void
+     */
+    public function addCookieResponseListener()
+    {
+        if($this->cookieListenerisAdded !== true) {
+            $this->dispatcher->addListener(
+                KernelEvents::RESPONSE,
+                array($this, 'onResponse')
+            );
+        }
+        $this->cookieListenerisAdded = true;
+    }
 }
