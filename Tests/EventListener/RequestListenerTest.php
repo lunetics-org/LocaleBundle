@@ -32,11 +32,13 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     * The router has to take over
     * The router has to find a locale based on the _locale param
     */
-    public function testLocaleWithRouteParams()
+    public function testLocaleWithRouteParamsAndDefaultPrio()
     {
         $request = Request::create('/');
         $request->attributes->set('_locale', 'es');
+        $request->headers->set('Accept-language', '');
         $request->setSession(new Session(new MockArraySessionStorage()));
+        $this->assertEquals('', $request->getPreferredLanguage());
         $listener = $this->getListener();
         $listener->onKernelRequest($this->getEvent($request));
         $this->assertEquals('es', $request->getLocale());
@@ -55,7 +57,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $listener = $this->getListener();
         $listener->onKernelRequest($this->getEvent($request));
 
-        $this->assertEquals('fr', $request->getLocale());
+        $this->assertEquals('fr_FR', $request->getLocale());
     }
 
     public function testLocaleWithBrowserLanguageAndRouterPrio()
@@ -81,10 +83,29 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $request->attributes->set('_locale', 'ru');
         $request->headers->set('Accept-language', 'fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4');
         $request->setSession(new Session(new MockArraySessionStorage()));
+
         $listener = $this->getListener(array('browser'));
         $listener->onKernelRequest($this->getEvent($request));
 
-        $this->assertEquals('fr_FR', $request->getPreferredLanguage());
+        // Asserts that the locale is the browser preferred Language
+        $this->assertEquals('fr_FR', $request->getLocale());
+    }
+
+    /**
+    * Use case:
+    * We have a cookie set to "de" locale
+    * We are visiting a resource with a "fr" router param
+    * Does the cookie needs to be update at each new detection ?
+    */
+    public function testWithCookieAndRouterParam()
+    {
+        $request = new Request();
+        $request->attributes->set('_locale', 'fr');
+        $request->headers->set('Accept-language', 'fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4');
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->cookies->set('_locale', 'de');
+        $listener = $this->getListener(array('router'));
+        $listener->onKernelRequest($this->getEvent($request));
 
 
         // Asserts that the locale is the browser preferred Language

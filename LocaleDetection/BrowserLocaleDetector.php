@@ -83,7 +83,6 @@ class BrowserLocaleDetector implements LocaleDetectorInterface
 
        if($session->has('setLocaleCookie') || !$request->cookies->has('locale')) {
           $session->remove('setLocaleCookie');
-          //$this->addCookieResponseListener();
        }
 
         // Check if the locale has been identified, no repeating locale checks on subsequent requests needed
@@ -101,9 +100,8 @@ class BrowserLocaleDetector implements LocaleDetectorInterface
         $providedLanguages = $request->getLanguages();
 
         if (!$preferredLanguage OR count($providedLanguages) === 0) {
-            $preferredLanguage = $this->defaultLocale;
-        } else if (!in_array(\Locale::getPrimaryLanguage($preferredLanguage), $this->allowedLanguages)) {
-
+            //$preferredLanguage = $this->defaultLocale; // This one is skipped as the next detector has to take over
+        } else if (!in_array(\Locale::getPrimaryLanguage($preferredLanguage), $this->allowedLanguages) && !empty($this->allowedLanguages)) {
             $allowedLanguages = $this->allowedLanguages;
             $map = function($v) use ($allowedLanguages)
             {
@@ -115,11 +113,11 @@ class BrowserLocaleDetector implements LocaleDetectorInterface
             if (!empty($result)) {
                 $preferredLanguage = $result[0];
             } else {
-                $preferredLanguage = $this->defaultLocale;
+                // We skip this one as the next detector has to take over
+                // $preferredLanguage = $this->defaultLocale;
             }
         }
-
-        echo $preferredLanguage;
+        
         $request->setLocale($preferredLanguage);
         $session->set('localeIdentified', $preferredLanguage);
         if (null !== $this->logger) {

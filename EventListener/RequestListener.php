@@ -26,6 +26,11 @@ class RequestListener
 	private $dispatcher;
 	private $cookieListenerisAdded;
 
+	/**
+	* @var string $finalLocale The locale defined after the whole detection process
+	*/
+	private $finalLocale;
+
 	
 	public function __construct(DetectionPriority $detectionPriority, 
 								$defaultLocale = 'en',
@@ -70,12 +75,12 @@ class RequestListener
 
 				$engine->processLocaleDetection();
 
-				if($locale = $engine->getDetectedLocale())
+				if($this->finalLocale = $engine->getDetectedLocale())
 				{
 					$this->logger->info(sprintf('The locale has been identified by the [ %s ] detector', $detector));
-					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $engine->getDetectedLocale()));
-					$request->setDefaultLocale($locale);
-					$request->setLocale($locale);
+					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $this->finalLocale));
+					$request->setDefaultLocale($this->finalLocale);
+					$request->setLocale($this->finalLocale);
 					$this->addCookieResponseListener();
 					return;
 				}
@@ -86,11 +91,14 @@ class RequestListener
 			}
 		}
 		}
+
+		// If there is no locale found by all the detection mechanisms, then we fall back on the default locale
+		$this->finalLocale = $this->defaultLocale;
 	}
 
 
 
-	public function setDefaultLocale($locale)
+	public function setDefaultLocale()
 	{
 		// It would be nice to have a common code here to set the default locale in the app
 		// So all detectors(browser, cookie, ...) do not need to have some logic to register the locale, 
@@ -135,9 +143,9 @@ class RequestListener
         $session = $event->getRequest()->getSession();
         /* @var $session \Symfony\Component\HttpFoundation\Session */
 
-        $response->headers->setCookie(new Cookie('locale', $session->get('localeIdentified')));
+        $response->headers->setCookie(new Cookie('locale', $this->finalLocale));
         if (null !== $this->logger) {
-            $this->logger->info(sprintf('Locale Cookie set to: [ %s ]', $session->get('localeIdentified')));
+            $this->logger->info(sprintf('Locale Cookie set to: [ %s ]', $this->finalLocale));
         }
     }
 }
