@@ -3,11 +3,13 @@
 namespace Lunetics\LocaleBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Lunetics\LocaleBundle\LocaleDetection\DetectionPriority;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class RequestListener
 {
@@ -22,6 +24,7 @@ class RequestListener
 	public $logger;
 
 	private $dispatcher;
+	private $cookieListenerisAdded;
 
 	
 	public function __construct(DetectionPriority $detectionPriority, 
@@ -72,6 +75,7 @@ class RequestListener
 					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $engine->getDetectedLocale()));
 					$request->setDefaultLocale($locale);
 					$request->setLocale($locale);
+					$this->addCookieResponseListener();
 					return;
 				}
 			}
@@ -112,9 +116,23 @@ class RequestListener
         if($this->cookieListenerisAdded !== true) {
             $this->dispatcher->addListener(
                 KernelEvents::RESPONSE,
-                array($this, 'onResponse')
+                array($this, 'onKernelResponse')
             );
         }
         $this->cookieListenerisAdded = true;
+    }
+
+    public function onKernelResponse(FilterResponseEvent  $event)
+    {
+        $response = $event->getResponse();
+        /* @var $response \Symfony\Component\HttpFoundation\Response */
+
+        $session = $event->getRequest()->getSession();
+        /* @var $session \Symfony\Component\HttpFoundation\Session */
+
+        $response->headers->setCookie(new Cookie('locale', $session->get('localeIdentified')));
+        if (null !== $this->logger) {
+            $this->logger->info(sprintf('Locale Cookie set to: [ %s ]', $session->get('localeIdentified')));
+        }
     }
 }

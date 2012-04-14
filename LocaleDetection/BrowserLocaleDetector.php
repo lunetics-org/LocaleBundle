@@ -128,20 +128,6 @@ class BrowserLocaleDetector implements LocaleDetectorInterface
         return;
     }
 
-    public function onResponse(Event  $event)
-    {
-        $response = $event->getResponse();
-        /* @var $response \Symfony\Component\HttpFoundation\Response */
-
-        $session = $event->getRequest()->getSession();
-        /* @var $session \Symfony\Component\HttpFoundation\Session */
-
-        $response->headers->setCookie(new Cookie('locale', $session->get('localeIdentified')));
-        if (null !== $this->logger) {
-            $this->logger->info(sprintf('Locale Cookie set to: [ %s ]', $session->get('localeIdentified')));
-        }
-    }
-
     /**
     * {@inheritDoc}
     */
