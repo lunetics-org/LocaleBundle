@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                             ->setExample(array('browser', 'url', 'custom'))
                             ->defaultValue(array('cookie', 'browser', 'router'))
-                        ->end()
+                            ->end()
                         ->scalarNode('browser_detector_class')
                             ->DefaultValue('Lunetics\LocaleBundle\LocaleDetection\BrowserLocaleDetector')->end()
                         ->scalarNode('router_detector_class')

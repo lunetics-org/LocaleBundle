@@ -55,6 +55,7 @@ class RequestListener
 		$response = $event->getResponse();
 
 		$detectors = $this->detectionPriority->getDetectorsByPriority();
+
 		foreach($detectors as $key=>$detector)
 		{
 			if(!empty($detector) && class_exists($detector))

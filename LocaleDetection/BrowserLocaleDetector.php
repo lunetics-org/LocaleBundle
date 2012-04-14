@@ -119,10 +119,12 @@ class BrowserLocaleDetector implements LocaleDetectorInterface
             }
         }
 
+        echo $preferredLanguage;
         $request->setLocale($preferredLanguage);
         $session->set('localeIdentified', $preferredLanguage);
         if (null !== $this->logger) {
             $this->logger->info(sprintf('Locale detected: [ %s ]', $request->getLocale()));
+            $this->detectedLocale = $preferredLanguage;
         }
         //$this->addCookieResponseListener();
         return;
