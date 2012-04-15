@@ -38,10 +38,26 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $request->attributes->set('_locale', 'es');
         $request->headers->set('Accept-language', '');
         $request->setSession(new Session(new MockArraySessionStorage()));
-        $this->assertEquals('', $request->getPreferredLanguage());
+        $this->assertEquals('', $request->getPreferredLanguage()); // Checks that the accept-language is well overwritten with blank value
         $listener = $this->getListener();
         $listener->onKernelRequest($this->getEvent($request));
         $this->assertEquals('es', $request->getLocale());
+    }
+
+    /**
+    * None locale from browser
+    * None from route
+    * Expected default "en" locale
+    */
+    public function testLocaleWithNihilParams()
+    {
+        $request = Request::create('/');
+        $request->headers->set('Accept-language', '');
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $this->assertEquals('', $request->getPreferredLanguage()); // Checks that the accept-language is well overwritten with blank value
+        $listener = $this->getListener();
+        $listener->onKernelRequest($this->getEvent($request));
+        $this->assertEquals('en', $request->getLocale());
     }
 
     /**

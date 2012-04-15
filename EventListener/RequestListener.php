@@ -75,8 +75,12 @@ class RequestListener
 
 				$engine->processLocaleDetection();
 
-				if($this->finalLocale = $engine->getDetectedLocale())
+				if($locale = $engine->getDetectedLocale())
 				{
+					$locale = (string) $locale;
+					$locales = \Symfony\Component\Locale\Locale::getLocales();
+					print_r($locales);
+					$this->finalLocale = $locale;
 					$this->logger->info(sprintf('The locale has been identified by the [ %s ] detector', $detector));
 					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $this->finalLocale));
 					$request->setDefaultLocale($this->finalLocale);
