@@ -77,9 +77,11 @@ class RequestListener
 
 				if($locale = $engine->getDetectedLocale())
 				{
-					$locale = (string) $locale;
-					$locales = \Symfony\Component\Locale\Locale::getLocales();
-					print_r($locales);
+					// We need here a way to validate the Locale name
+					// Hold an array with all locales ? :-)
+					
+					// $this->verifyLocaleName($locale)
+
 					$this->finalLocale = $locale;
 					$this->logger->info(sprintf('The locale has been identified by the [ %s ] detector', $detector));
 					$this->logger->info(sprintf('The locale identified is the [ %s ] locale', $this->finalLocale));
@@ -98,6 +100,11 @@ class RequestListener
 
 		// If there is no locale found by all the detection mechanisms, then we fall back on the default locale
 		$this->finalLocale = $this->defaultLocale;
+	}
+
+	public function verifyLocaleName($locale)
+	{
+
 	}
 
 
