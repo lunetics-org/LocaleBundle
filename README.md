@@ -1,5 +1,10 @@
-Information
-============
+## Refactoring
+
+This bundle is in refactoring state. You can see the vision the bundle will take by looking inside the comments of the PR #5 or looking into the Wiki.
+
+You can follow the refactoring by looking into the `refactoring` branch. The `master` branch remains the last stable version for the Symfony 2.0.* framework.
+
+# Information
 
 This Symfony2 Bundle consists currently of 3 Parts
 
