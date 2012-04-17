@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Lunetics\LocaleBundle\LocaleEvents;
+use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 
 /**
  * Controller for the Switch Locale
@@ -64,6 +67,8 @@ class LocaleController
             throw new NotFoundHttpException('This language is not available');
         }
 
+        /* This logic has been moved to the LocaleSwitchListener
+
         // tries to detect a Region from the user-provided locales
         $providedLanguages = $request->getLanguages();
         $locales           = array();
@@ -82,6 +87,8 @@ class LocaleController
         // Add the listener
         $this->session->set('setLocaleCookie', true);
 
+        
+
         // Redirect the User
         if ($request->headers->has('referer') && true === $this->useReferrer) {
             return new RedirectResponse($request->headers->get('referer'));
@@ -92,5 +99,16 @@ class LocaleController
         }
         return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
 
+        */
+
+        $this->dispatchEvent($_locale);
+
+    }
+
+    public function dispatchEvent($locale)
+    {
+        $event = new FilterLocaleSwitchEvent($locale);
+        $dispatcher = new EventDispatcher();
+        $dispatcher->dispatch(LocaleEvents::onLocaleSwitch, $event);
     }
 }
