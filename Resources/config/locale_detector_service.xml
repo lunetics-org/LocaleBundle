@@ -3,27 +3,38 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 <parameters>
-        <parameter key="locale_detector_listener.class">Lunetics\LocaleBundle\EventListener\LocaleDetectorListener</parameter>
         <parameter key="lunetics_locale_router.class">Lunetics\LocaleBundle\Controller\LocaleController</parameter>
     </parameters>
     <services>
-        <service id="kernel.listener.locale_detector_listener" class="%locale_detector_listener.class%">
-            <argument>%locale%</argument>
-            <argument>%lunetics_locale.allowed_languages%</argument>
-            <argument type="service" id="logger"/>
-            <call method="setEventDispatcher">
-                <argument type="service" id="event_dispatcher"/>
-            </call>
-            <tag name="kernel.event_listener" event="kernel.request" method="onRequest"/>
-        </service>
-
         <service id="lunetics_locale.switch.router" class="%lunetics_locale_router.class%" scope="request">
             <argument type="service" id="router"/>
             <argument type="service" id="session"/>
-            <argument>%lunetics_locale.switch.redirect_route%</argument>
-            <argument>%lunetics_locale.switch.redirect_url%</argument>
-            <argument>%lunetics_locale.switch.use_referrer%</argument>
+            <argument>%lunetics_locale.switch_router.redirect_to_route%</argument>
+            <argument>%lunetics_locale.switch_router.redirect_to_url%</argument>
+            <argument>%lunetics_locale.switch_router.use_referrer%</argument>
             <argument>%lunetics_locale.allowed_languages%</argument>
         </service>
+
+        <service id="lunetics_locale.detection_priority" class="Lunetics\LocaleBundle\LocaleDetection\DetectionPriority">
+            <argument>%lunetics_locale.detection.priority%</argument>
+            <argument>%lunetics_locale.detection.browser_detector_class%</argument>
+            <argument>%lunetics_locale.detection.router_detector_class%</argument>
+            <argument>%lunetics_locale.detection.cookie_detector_class%</argument>
+            <argument>%lunetics_locale.detection.custom_detector_class%</argument>
+        </service>
+
+        <service id="lunetics_locale.detector" class="Lunetics\LocaleBundle\EventListener\RequestListener" scope="request">
+            <argument type="service" id="lunetics_locale.detection_priority" />
+            <argument>%locale%</argument>
+            <argument>%lunetics_locale.allowed_languages%</argument>
+            <argument type="service" id="logger" />
+            <argument type="service" id="router" />
+            <call method="setEventDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
+        </service>
+
+        
     </services>
 </container>
