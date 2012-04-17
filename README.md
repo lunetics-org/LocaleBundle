@@ -1,13 +1,50 @@
 Information
 ============
 
+# Bundle in refactoring state
+
 This Symfony2 Bundle consists currently of 3 Parts
 
-1. A Request Eventlistener which sets the Language
-2. A Controller / Route for the actual "Switch Language" action
-3. A Twig Plugin to show the available Languages (forked from Craue/TwigExtensionsBundle)
+1. A Locale Guessing Priority class that tells the priority of the different locale detection mechanisms
+2. A Request Eventlistener that will run in priority order the locale detection mechanisms
+3. A Cookie Locale Detector - This class contains the detection mechanism based on Cookie system *
+4. A Browser Locale Detector - This class contains the detection mechanism based on the browser (content negotiation)
+5. A Router Locale Detector - This class contains the detection mechanism based on the Route parameters
+6. A Controller / Route for the actual "Switch Language" action
+7. A Twig Plugin to show the available Languages (forked from Craue/TwigExtensionsBundle)
 
-## 1. The Request Eventlistener (Listener/LocaleDetectorListener.php)
+* Still needs to be implemented
+
+## 1. The Locale Guessing Priority (LocaleDetection\DetectionPriority.php)
+
+You can detect the user locale through different ways: content negotiation, route (url), cookie for returning visitors.
+
+This bundle allows you to configure the priority for your application, the available configuration priorities are `cookie`, `browser`, `router`, `custom` .
+
+The default priority is
+1. cookie
+2. browser
+3. router
+
+## 2. The Request Event Listener (EventListener\RequestListener)
+
+The Event listener listen for the `kernel.request` event. Once called, he will first check if the request is a `MASTER_REQUEST`.
+
+Then he will call the DetectionPriority and run in order of priority the different detection mechanisms.
+
+If one of the mechanisms find a locale, he will set the locale to the Request, in the Session and in the Router Context.
+
+Additionnaly, he will subscribe to the `kernel.response` event to sets a cookie in the Response for returning visitors.
+
+If none locale is found from the first mechanism, he will call the second one in the priority list, and so on....
+
+If none locale is found by all the available mechanisms, then the default Locale provided in the `app/config.yml` file will be set.
+
+## 3. Cookie Locale Detector
+
+Not already available
+
+## 4. The Browser Locale Detector (LocaleDetection\BrowserLocaleDetector.php)
 
 The Listener uses the ``$request->getPreferredLanguage()`` and ``$request->getLanguages()`` methods which gather infomation about the browser language (see http://en.wikipedia.org/wiki/Content_negotiation).
 
@@ -15,9 +52,14 @@ The Listener also checks against the ``allowed_language`` list to ensure that th
 
 After the locale is identified, the  is saved in the Session, because we only want to do the locale lookup only once per user and not on every page request.
 
+## 5. The Router Locale Detector (LocaleDetection\RouterLocaleDetector.php)
+
+The detector will check if the route contains a `_locale` parameter. If found, the locale will be set to the locale provided in the route parameters.
+
+## 6. Switch Language
+
 If the user changes the language manually (with the "Switch Language" action from this bundle), the app will locked to that language.
 
-Additionally a cookie with the user-selected language is set. (For returning visitors).
 
 **If you have a project with registered users, you should always set the language and region provided by the user, e.g. set the application locale after login.**
 
