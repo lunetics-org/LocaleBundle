@@ -4,7 +4,7 @@ namespace Lunetics\LocaleBundle\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,12 +25,12 @@ class LocaleController
     /**
      * Constructor for the Locale Switch Servicecontroller
      *
-     * @param \Symfony\Component\Routing\RouterInterface $router
-     * @param \Symfony\Component\HttpFoundation\Session  $session
-     * @param                                            $redirectToRoute
-     * @param                                            $redirectToUrl
-     * @param                                            $useReferrer
-     * @param                                            $allowedLanguages
+     * @param \Symfony\Component\Routing\RouterInterface         $router
+     * @param \Symfony\Component\HttpFoundation\Session\Session  $session
+     * @param                                                    $redirectToRoute
+     * @param                                                    $redirectToUrl
+     * @param                                                    $useReferrer
+     * @param                                                    $allowedLanguages
      */
     public function __construct(RouterInterface $router,
                                 Session $session,
