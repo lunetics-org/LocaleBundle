@@ -17,7 +17,7 @@ class LocaleListener
     
     private $logger;
     
-    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LoggerInterface $logger)
+    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LoggerInterface $logger = null)
     {
         $this->defaultLocale = $defaultLocale;
         $this->guesserManager = $guesserManager;
@@ -34,6 +34,7 @@ class LocaleListener
         $request = $event->getRequest();
         $manager = $this->guesserManager;
         if($locale = $manager->runLocaleGuessing($request)){
+            $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setDefaultLocale($locale);
             return;
         }

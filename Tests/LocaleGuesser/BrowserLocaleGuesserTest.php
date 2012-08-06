@@ -5,6 +5,8 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,6 +39,14 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $guesser->getIdentifiedLocale());
     }
     
+    public function testLocaleIsRetrievedFromSessionIfSet()
+    {
+        $request = $this->getRequestWithSessionLocale();
+        $guesser = $this->getGuesser();
+        $guesser->guessLocale($request);
+        $this->assertEquals('ru', $guesser->getIdentifiedLocale());
+    }
+    
     private function getGuesser($defaultLocale = 'en', $allowedLocales = array('en','fr','de'))
     {
         $guesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
@@ -54,6 +64,16 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('/');
         $request->headers->set('Accept-language', '');
+        return $request;
+    }
+    
+    private function getRequestWithSessionLocale()
+    {
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('lunetics_locale', 'ru');
+        $request = Request::create('/');
+        $request->setSession($session);
+        $request->headers->set('Accept-language', 'fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4');
         return $request;
     }
 }
