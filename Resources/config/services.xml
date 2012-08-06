@@ -12,7 +12,8 @@
         </service>
         
         <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
-            
+            <argument>%locale%</argument>
+            <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
         
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
@@ -20,9 +21,13 @@
             <argument type="service" id="lunetics_locale.router_guesser" />
         </service>
         
-        <service id="lunetics_locale.request_listener" class="%lunetics_locale.request_listener.class%">
+        <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
             <argument>%locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
+            <argument type="service" id="logger" />
+            <call method="setEventDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
             <tag name="kernel.event_listener" event="kernel.request" method="onRequest"/>
         </service>
     </services>
