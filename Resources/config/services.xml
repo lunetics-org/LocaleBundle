@@ -16,9 +16,15 @@
             <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
         
+        <service id="lunetics_locale.cookie_guesser" class="%lunetics_locale.cookie_guesser.class%">
+            <argument>%lunetics_locale.cookie_guesser.locale_cookie_name%</argument>
+        </service>
+        
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="lunetics_locale.router_guesser" />
+            <argument type="service" id="lunetics_locale.browser_guesser" />
+            <argument type="service" id="lunetics_locale.cookie_guesser" />
         </service>
         
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">

@@ -57,6 +57,17 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('cookie_guesser')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('class')
+                            ->defaultValue('Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser')
+                        ->end()
+                        ->scalarNode('locale_cookie_name')
+                            ->defaultValue('lunetics_locale')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
