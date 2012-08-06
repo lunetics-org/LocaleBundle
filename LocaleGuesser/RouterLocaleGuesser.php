@@ -37,6 +37,10 @@ class RouterLocaleGuesser implements LocaleGuesserInterface
                 return true;
             }
         }
+        if ($locale = $request->attributes->get('_locale')) {
+            $this->identifiedLocale = $locale;
+            return true;
+        }
         return false;
     }
     
