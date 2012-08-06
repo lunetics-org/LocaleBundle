@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 {
