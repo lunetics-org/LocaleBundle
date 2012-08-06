@@ -6,6 +6,7 @@ use Lunetics\LocaleBundle\EventListener\LocaleListener;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
+use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -114,7 +115,8 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $allowedLocales = array('de', 'fr', 'nl');
         $routerGuesser = new RouterLocaleGuesser();
         $browserGuesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
-        $manager = new LocaleGuesserManager($order, $routerGuesser, $browserGuesser);
+        $cookieGuesser = new CookieLocaleGuesser('lunetics_locale');
+        $manager = new LocaleGuesserManager($order, $routerGuesser, $browserGuesser, $cookieGuesser);
         return $manager;
     }
     
