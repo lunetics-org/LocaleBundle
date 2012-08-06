@@ -20,5 +20,5 @@ This bundle is released under the MIT License
 
 ## Authors
 
-Matthias Breddin : [@lunetics](https://github.com/lunetics)
+Matthias Breddin : [@lunetics](https://github.com/lunetics)  
 Christophe Willemsen : [@kwattro](https://github.com/kwattro)
