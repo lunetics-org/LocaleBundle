@@ -74,6 +74,19 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
     }
+    
+    /**
+     * Request with empty route params and empty browser preferences
+     */
+    public function testDefaultLocaleIfEmptyRequest()
+    {
+        $request = $this->getEmptyRequest();
+        $manager = $this->getGuesserManager();
+        $listener = new LocaleListener('en', $manager);
+        $event = $this->getEvent($request);
+        $listener->onKernelRequest($event);
+        $this->assertEquals('en', $request->getLocale());
+    }
 
     private function getEvent(Request $request)
     {
@@ -97,6 +110,13 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
             $request->attributes->set('_locale', $routerLocale);
         }
         $request->headers->set('Accept-language', 'fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4');
+        return $request;
+    }
+    
+    private function getEmptyRequest()
+    {
+        $request = Request::create('/');
+        $request->headers->set('Accept-language', '');
         return $request;
     }
 }
