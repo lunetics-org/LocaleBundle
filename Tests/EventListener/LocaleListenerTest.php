@@ -30,6 +30,11 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $request->getLocale());
     }
     
+    /**
+     * Router is prio 1
+     * Request contains _locale parameter in router
+     * Request contains browser locale preferences
+     */
     public function testRouteLocaleIsReturnedIfRouterIsPrio1()
     {
         $request = $this->getFullRequest();
@@ -40,10 +45,30 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('es', $request->getLocale());
     }
     
+    /**
+     * Browser is prio 1
+     * Request contains _locale parameter in router
+     * Request contains browser locale preferences
+     */
     public function testBrowserLocaleIsReturnedIfBrowserIsPrio1()
     {
         $request = $this->getFullRequest();
         $manager = $this->getGuesserManager(array(1 => 'browser', 2 => 'router'));
+        $listener = new LocaleListener('en', $manager);
+        $event = $this->getEvent($request);
+        $listener->onKernelRequest($event);
+        $this->assertEquals('fr_FR', $request->getLocale());
+    }
+    
+    /**
+     * Router is prio 1
+     * Request DOES NOT contains _locale parameter in router
+     * Request contains browser locale preferences
+     */
+    public function testBrowserTakeOverIfRouterParamsFail()
+    {
+        $request = $this->getFullRequest(null);
+        $manager = $this->getGuesserManager();
         $listener = new LocaleListener('en', $manager);
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
@@ -65,10 +90,12 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         return $manager;
     }
     
-    private function getFullRequest()
+    private function getFullRequest($routerLocale = 'es')
     {
         $request = Request::create('/');
-        $request->attributes->set('_locale', 'es');
+        if(!empty($routerLocale)){
+            $request->attributes->set('_locale', $routerLocale);
+        }
         $request->headers->set('Accept-language', 'fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4');
         return $request;
     }
