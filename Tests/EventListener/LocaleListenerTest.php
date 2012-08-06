@@ -76,6 +76,21 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * Router is prio 1
+     * Request DOES NOT contains _locale parameter in router
+     * Request contains browser locale preferences
+     */
+    public function testThatGuesserIsNotCalledIfNotInGuessingOrder()
+    {
+        $request = $this->getRequestWithRouterParam();
+        $manager = $this->getGuesserManager(array(1 => 'browser'));
+        $listener = new LocaleListener('en', $manager);
+        $event = $this->getEvent($request);
+        $listener->onKernelRequest($event);
+        $this->assertEquals('en', $request->getLocale());
+    }
+    
+    /**
      * Request with empty route params and empty browser preferences
      */
     public function testDefaultLocaleIfEmptyRequest()
@@ -101,6 +116,16 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $browserGuesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
         $manager = new LocaleGuesserManager($order, $routerGuesser, $browserGuesser);
         return $manager;
+    }
+    
+    private function getRequestWithRouterParam($routerLocale = 'es')
+    {
+        $request = Request::create('/');
+        if(!empty($routerLocale)){
+            $request->attributes->set('_locale', $routerLocale);
+        }
+        $request->headers->set('Accept-language', '');
+        return $request;
     }
     
     private function getFullRequest($routerLocale = 'es')
