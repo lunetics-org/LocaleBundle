@@ -27,6 +27,15 @@
             <argument type="service" id="lunetics_locale.cookie_guesser" />
         </service>
         
+        <service id="lunetics_locale.locale_cookie" class="%lunetics_locale.cookie.class%">
+            <argument>%lunetics_locale.cookie.name%</argument>
+            <argument>%lunetics_locale.cookie.ttl%</argument>
+            <argument>%lunetics_locale.cookie.path%</argument>
+            <argument>%lunetics_locale.cookie.domain%</argument>
+            <argument>%lunetics_locale.cookie.secure%</argument>
+            <argument>%lunetics_locale.cookie.httpOnly%</argument>
+        </service>
+        
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
             <argument>%locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
