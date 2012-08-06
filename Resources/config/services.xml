@@ -6,7 +6,12 @@
         <parameter key="lunetics_locale.request_listener.class">Lunetics\LocaleBundle\EventListener\RequestListener</parameter>
     </parameters>
     <services>
-        <service id="kernel.listener.request_listener" class="%lunetics_locale.request_listener.class%">
+        
+        <service id="lunetics_locale.router_guesser" class="%lunetics_locale.router_guesser.class%">
+            <argument>%lunetics_locale.router_guesser.check_query%</argument>
+        </service>
+        
+        <service id="lunetics_locale.request_listener" class="%lunetics_locale.request_listener.class%">
             <argument type="service" id="logger"/>
             <tag name="kernel.event_listener" event="kernel.request" method="onRequest"/>
         </service>
