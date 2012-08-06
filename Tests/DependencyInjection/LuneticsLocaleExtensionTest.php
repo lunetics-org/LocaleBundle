@@ -25,7 +25,18 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $loader = new LuneticsLocaleExtension();
         $config = $this->getEmptyConfig();
-        unset($config['detectors_order']);
+        unset($config['guessing_order']);
+        $loader->load(array($config), new ContainerBuilder());
+    }
+    
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     */
+    public function testBundleLoadThrowsExceptionIfNonBooleanValueIsSet()
+    {
+        $loader = new LuneticsLocaleExtension();
+        $config = $this->getEmptyConfig();
+        $config['router_guesser']['check_query'] = 'hello';
         $loader->load(array($config), new ContainerBuilder());
     }
 
@@ -65,9 +76,11 @@ allowed_locales:
     - de
     - fr
     - en
-detectors_order:
+guessing_order:
     - router
     - browser
+router_guesser:
+    check_query: true
 EOF;
         $parser = new Parser();
 
@@ -81,9 +94,11 @@ allowed_locales:
     - de
     - fr
     - en
-detectors_order:
+guessing_order:
     - router
     - browser
+router_guesser:
+    check_query: true
 EOF;
         $parser = new Parser();
 
