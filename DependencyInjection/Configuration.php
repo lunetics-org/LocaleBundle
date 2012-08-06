@@ -41,8 +41,16 @@ class Configuration implements ConfigurationInterface
                             ->defaultTrue()
                         ->end()
                     ->end()
+                ->end()
+                ->arrayNode('browser_guesser')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('class')
+                            ->defaultValue('Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser')
+                        ->end()
                     ->end()
-                ->end();
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

@@ -11,6 +11,10 @@
             <argument>%lunetics_locale.router_guesser.check_query%</argument>
         </service>
         
+        <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
+            
+        </service>
+        
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="lunetics_locale.router_guesser" />
