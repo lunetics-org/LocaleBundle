@@ -17,7 +17,7 @@
         </service>
         
         <service id="lunetics_locale.cookie_guesser" class="%lunetics_locale.cookie_guesser.class%">
-            <argument>%lunetics_locale.cookie_guesser.locale_cookie_name%</argument>
+            <argument>%lunetics_locale.cookie.name%</argument>
         </service>
         
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
