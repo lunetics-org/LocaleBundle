@@ -12,9 +12,11 @@ namespace Lunetics\LocaleBundle\EventListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
+use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 
 /**
  * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
@@ -27,13 +29,30 @@ class LocaleListener
     
     private $logger;
     
-    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LoggerInterface $logger = null)
+    private $dispatcher;
+    
+    private $localeCookie;
+    
+    private $identifiedLocale;
+    
+    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LocaleCookie $localeCookie, LoggerInterface $logger = null)
     {
         $this->defaultLocale = $defaultLocale;
         $this->guesserManager = $guesserManager;
         $this->logger = $logger;
+        $this->localeCookie = $localeCookie;
     }
     
+    /**
+     * Called at the "kernel.request" event
+     * 
+     * Call the LocaleGuesserManager to guess the locale
+     * by the activated guessers
+     * 
+     * Sets the identified locale as default locale to the request
+     * 
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {        
         if($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
@@ -46,6 +65,10 @@ class LocaleListener
         if($locale = $manager->runLocaleGuessing($request)){
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setDefaultLocale($locale);
+            $this->identifiedLocale = $locale;
+            if($this->localeCookie->setCookieOnDetection()){
+                $this->addCookieResponseListener();
+            }
             return;
         }
         $request->setDefaultLocale($this->defaultLocale);
@@ -55,8 +78,6 @@ class LocaleListener
      * DI Setter for the EventDispatcher
      *
      * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
-     *
-     * @return void
      */
     public function setEventDispatcher(EventDispatcher $dispatcher)
     {
@@ -65,34 +86,26 @@ class LocaleListener
     
     /**
      * Method to add the ResponseListener which sets the cookie. Should only be called once
-     *
-     * @see also http://slides.seld.be/?file=2011-10-20+High+Performance+Websites+with+Symfony2.html#45
-     *
-     * @return void
      */
     public function addCookieResponseListener()
     {
-        if($this->cookieListenerisAdded !== true) {
             $this->dispatcher->addListener(
                 KernelEvents::RESPONSE,
                 array($this, 'onResponse')
             );
-        }
-        $this->cookieListenerisAdded = true;
     }
     
-    public function onResponse(Event  $event)
+    /**
+     * Called at the kernel.response event to attach the cookie to the request
+     * 
+     * @param Event $event
+     */
+    public function onResponse(Event $event)
     {
         $response = $event->getResponse();
-        /* @var $response \Symfony\Component\HttpFoundation\Response */
-
-        $session = $event->getRequest()->getSession();
-        /* @var $session \Symfony\Component\HttpFoundation\Session */
-
-        $response->headers->setCookie(new Cookie('locale', $session->get('localeIdentified')));
-        if (null !== $this->logger) {
-            $this->logger->info(sprintf('Locale Cookie set to: [ %s ]', $session->get('localeIdentified')));
-        }
+        $cookie = $this->localeCookie->getLocaleCookie($this->identifiedLocale);
+        $response->headers->setCookie($cookie);
+        $this->logEvent('Locale Cookie set to [ %s ]', $this->identifiedLocale);
     }
     
     /**

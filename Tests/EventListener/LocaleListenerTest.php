@@ -7,15 +7,19 @@ use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
+use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultLocaleWithoutParams()
     {
-        $listener = new LocaleListener('fr', $this->getGuesserManager());
+        $listener = new LocaleListener('fr', $this->getGuesserManager(), $this->getLocaleCookie());
         $event = $this->getEvent($request = Request::create('/'));
 
         $listener->onKernelRequest($event);
@@ -24,7 +28,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     
     public function testCustomLocaleIsSetWhenParamsExist()
     {
-        $listener = new LocaleListener('fr', $this->getGuesserManager());
+        $listener = new LocaleListener('fr', $this->getGuesserManager(), $this->getLocaleCookie());
         $event = $this->getEvent($request = Request::create('/', 'GET', array('_locale' => 'de')));
 
         $listener->onKernelRequest($event);
@@ -40,7 +44,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getFullRequest();
         $manager = $this->getGuesserManager();
-        $listener = new LocaleListener('en', $manager);
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('es', $request->getLocale());
@@ -55,7 +59,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getFullRequest();
         $manager = $this->getGuesserManager(array(1 => 'browser', 2 => 'router'));
-        $listener = new LocaleListener('en', $manager);
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
@@ -70,7 +74,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getFullRequest(null);
         $manager = $this->getGuesserManager();
-        $listener = new LocaleListener('en', $manager);
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
@@ -84,8 +88,8 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     public function testThatGuesserIsNotCalledIfNotInGuessingOrder()
     {
         $request = $this->getRequestWithRouterParam();
-        $manager = $this->getGuesserManager(array(1 => 'browser'));
-        $listener = new LocaleListener('en', $manager);
+        $manager = $this->getGuesserManager(array(0 => 'browser'));
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('en', $request->getLocale());
@@ -98,7 +102,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getEmptyRequest();
         $manager = $this->getGuesserManager();
-        $listener = new LocaleListener('en', $manager);
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('en', $request->getLocale());
@@ -123,6 +127,8 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     private function getRequestWithRouterParam($routerLocale = 'es')
     {
         $request = Request::create('/');
+        $session = new Session(new MockArraySessionStorage());
+        $request->setSession($session);
         if(!empty($routerLocale)){
             $request->attributes->set('_locale', $routerLocale);
         }
@@ -145,5 +151,11 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('/');
         $request->headers->set('Accept-language', '');
         return $request;
+    }
+    
+    private function getLocaleCookie($onDetection = false, $onSwitch = true)
+    {
+        $cookie = new LocaleCookie('lunetics_locale', 86400, '/', null, false, true, $onDetection, $onSwitch);
+        return $cookie;
     }
 }
