@@ -1,3 +1,0 @@
-LuneticsLocaleBundle_localeswitch:
-    pattern:  /changelocale/{_locale}
-    defaults: { _controller: lunetics_locale.switch.router:switchAction, _locale: %locale% }
