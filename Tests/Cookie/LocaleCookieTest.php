@@ -17,7 +17,7 @@ class LocaleCookieTest extends \PHPUnit_Framework_TestCase
 {
     public function testCookieParamsAreSet()
     {
-        $localeCookie = new LocaleCookie('lunetics_locale', 86400, '/', null, false, true);
+        $localeCookie = new LocaleCookie('lunetics_locale', 86400, '/', null, false, true, false, true);
         $cookie = $localeCookie->getLocaleCookie('en');
         $this->assertTrue($cookie instanceof Cookie);
     }

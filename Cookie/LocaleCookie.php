@@ -22,8 +22,10 @@ class LocaleCookie
     private $domain;
     private $secure;
     private $httpOnly;
+    private $setOnDetection;
+    private $setOnSwitch;
     
-    public function __construct($name, $ttl, $path, $domain = null, $secure, $httpOnly)
+    public function __construct($name, $ttl, $path, $domain = null, $secure, $httpOnly, $setOnDetection, $setOnSwitch)
     {
         $this->name = $name;
         $this->ttl = $ttl;
@@ -31,6 +33,8 @@ class LocaleCookie
         $this->domain = $domain;
         $this->secure = $secure;
         $this->httpOnly = $httpOnly;
+        $this->setOnDetection = $setOnDetection;
+        $this->setOnSwitch = $setOnSwitch;
     }
     
     public function getLocaleCookie($locale)
@@ -39,6 +43,16 @@ class LocaleCookie
         $expire = $this->computeExpireTime();
         $cookie = new Cookie($this->name, $value, $expire, $this->path, $this->domain, $this->secure, $this->httpOnly);
         return $cookie;
+    }
+    
+    public function setCookieOnDetection()
+    {
+        return $this->setOnDetection;
+    }
+    
+    public function setCookieOnSwitch()
+    {
+        return $this->setOnSwitch;
     }
     
     private function computeExpireTime()
