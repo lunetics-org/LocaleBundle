@@ -11,8 +11,14 @@
             <argument>%lunetics_locale.router_guesser.check_query%</argument>
         </service>
         
+        <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
+            <argument>%lunetics_locale.guessing_order%</argument>
+            <argument type="service" id="lunetics_locale.router_guesser" />
+        </service>
+        
         <service id="lunetics_locale.request_listener" class="%lunetics_locale.request_listener.class%">
-            <argument type="service" id="logger"/>
+            <argument>%locale%</argument>
+            <argument type="service" id="lunetics_locale.guesser_manager" />
             <tag name="kernel.event_listener" event="kernel.request" method="onRequest"/>
         </service>
     </services>
