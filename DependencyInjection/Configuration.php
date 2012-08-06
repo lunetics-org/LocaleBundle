@@ -67,6 +67,9 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('cookie')
                     ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('set_on_detection')->defaultFalse()->end()
+                        ->scalarNode('set_on_switch')->defaultTrue()->end()
                         ->scalarNode('class')->defaultValue('Lunetics\LocaleBundle\Cookie\LocaleCookie')->end()
                         ->scalarNode('name')->defaultValue('lunetics_locale')->end()
                         ->scalarNode('ttl')->defaultValue('86400')->end()
@@ -74,6 +77,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('domain')->defaultValue(null)->end()
                         ->scalarNode('secure')->defaultFalse()->end()
                         ->scalarNode('httpOnly')->defaultTrue()->end()
+                     ->end()
                 ->end()
             ->end();
 
