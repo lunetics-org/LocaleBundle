@@ -1,5 +1,5 @@
 {
-    "name": "lunetics/locale-bundle",
+    "name": "kwattroit/locale-bundle",
     "description": "A Bundle for switching Languages",
     "keywords": ["locale", "bundle", "multilanguage", "router", "browser", "cookie", "language"],
     "type": "symfony-bundle",
