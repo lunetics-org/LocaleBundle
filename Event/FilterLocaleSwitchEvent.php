@@ -10,9 +10,6 @@
 namespace Lunetics\LocaleBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Routing\RequestContextAwareInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
@@ -20,30 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 class FilterLocaleSwitchEvent extends Event
 {
     protected $locale;
-    
-    protected $request;
-    
-    protected $router;
 
-    public function __construct(Request $request, RequestContextAwareInterface $router = null, $locale)
+    public function __construct($locale)
     {
         $this->locale = $locale;
-        $this->request = $request;
-        $this->router = $router;
     }
 
     public function getLocale()
     {
         return $this->locale;
-    }
-    
-    public function getRequest()
-    {
-        return $this->request;
-    }
-    
-    public function getRouter()
-    {
-        return $this->router;
     }
 }

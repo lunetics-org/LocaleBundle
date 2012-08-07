@@ -20,8 +20,8 @@ class LocaleSwitchHelper extends Helper
     protected $templating;
     
     protected $templates = array(
-        'links' => 'LuneticsLocaleBundle:Switcher:switch_links.html.twig',
-        'form' => 'LuneticsLocaleBundle:Switcher:switch_form.html.twig'
+        'links' => 'LuneticsLocaleBundle:Switcher:switcher_links.html.twig',
+        'form' => 'LuneticsLocaleBundle:Switcher:switcher_form.html.twig'
     );
     
     protected $view;
@@ -36,7 +36,8 @@ class LocaleSwitchHelper extends Helper
     {
         $this->templating = $templating;
         if(array_key_exists($template, $this->templates)){
-            $this->view = $templates[$template];
+            $this->view = $this->templates[$template];
+            return;
         }
         $this->view = $template;
         
