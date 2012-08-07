@@ -15,7 +15,7 @@ The locale can be guessed from different parameters in your applications :
 
 ## Documentation
 
-Read the documentation for Symfony 2.1
+[Read the Documentation for 2.1](https://github.com/lunetics/LocaleBundle/blob/2.1/Resources/doc/index.markdown)
 
 ## License
 
