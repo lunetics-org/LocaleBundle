@@ -69,6 +69,7 @@
         
         <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
             <argument type="service" id="templating" />
+            <argument>%lunetics_locale.switch.template%</argument>
             <tag name="templating.helper" alias="switch" />
         </service>
         
