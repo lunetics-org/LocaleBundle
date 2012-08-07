@@ -79,6 +79,11 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('httpOnly')->defaultTrue()->end()
                      ->end()
                 ->end()
+                ->arrayNode('switcher')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('template')->defaultValue('form')->end()
+                    ->end()
             ->end();
 
         return $treeBuilder;

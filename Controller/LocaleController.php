@@ -1,96 +1,50 @@
 <?php
-
+/**
+ * This file is part of the LuneticsLocaleBundle package.
+ * 
+ * <https://github.com/lunetics/LocaleBundle/>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that is distributed with this source code.
+ */
 namespace Lunetics\LocaleBundle\Controller;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
+use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 
 /**
  * Controller for the Switch Locale
+ * 
+ * @author Matthias Breddin <mb@lunetics.com/>
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
  */
 class LocaleController
 {
-    protected $request;
-    protected $router;
-    protected $session;
-    protected $redirectToRoute;
-    protected $redirectToUrl;
-    protected $useReferrer;
-    protected $allowedLanguages;
-
+    private $request;
+    private $router;
+    
     /**
-     * Constructor for the Locale Switch Servicecontroller
-     *
-     * @param \Symfony\Component\Routing\RouterInterface $router
-     * @param \Symfony\Component\HttpFoundation\Session  $session
-     * @param                                            $redirectToRoute
-     * @param                                            $redirectToUrl
-     * @param                                            $useReferrer
-     * @param                                            $allowedLanguages
+     * Constructor
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\Routing\RequestContextAwareInterface $router
      */
-    public function __construct(RouterInterface $router,
-                                Session $session,
-                                $redirectToRoute,
-                                $redirectToUrl,
-                                $useReferrer,
-                                $allowedLanguages)
+    public function __construct(Request $request, RequestContextAwareInterface $router = null)
     {
-        $this->router           = $router;
-        $this->session          = $session;
-        $this->redirectToRoute  = $redirectToRoute;
-        $this->redirectToUrl    = $redirectToUrl;
-        $this->useReferrer      = $useReferrer;
-        $this->allowedLanguages = $allowedLanguages;
+        $this->router = $router;
+        $this->request = $request;
     }
-
+    
     /**
      * Action for locale switch
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param                                           $_locale The locale to set
-     *
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\RedirectResponse
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function switchAction(Request $request, $_locale)
+    public function switchAction($_locale)
     {
-        // Check if the Language is allowed
-        if (!in_array(\Locale::getPrimaryLanguage($_locale), $this->allowedLanguages)) {
-            throw new NotFoundHttpException('This language is not available');
-        }
-
-        // tries to detect a Region from the user-provided locales
-        $providedLanguages = $request->getLanguages();
-        $locales           = array();
-        foreach ($providedLanguages as $locale) {
-            if (strpos($locale . '_', $_locale) !== false && strlen($locale) > 2) {
-                $locales[] = $locale;
-            }
-        }
-
-        if (count($locales) > 0) {
-            $this->session->set('localeIdentified', $locales[0]);
-        } else {
-            $this->session->set('localeIdentified', $_locale);
-        }
-
-        // Add the listener
-        $this->session->set('setLocaleCookie', true);
-
-        // Redirect the User
-        if ($request->headers->has('referer') && true === $this->useReferrer) {
-            return new RedirectResponse($request->headers->get('referer'));
-        }
-
-        if (null !== $this->redirectToRoute) {
-            return new RedirectResponse($this->router->generate($this->redirectToRoute));
-        }
-        return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
-
+        $event = new FilterLocaleSwitchEvent($this->request, $this->router, $_locale);
+        $dispatcher = new EventDispatcher();
+        $dispatcher->dispatch(LocaleBundleEvents::onLocaleSwitch, $event);
     }
 }
