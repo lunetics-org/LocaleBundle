@@ -31,11 +31,16 @@ class LocaleController
     protected $useReferrer = true;
     
     protected $redirectToRoute = null;
+    
+    protected $redirectToUrl;
+    
     /**
      * Action for locale switch
      */
     public function switchAction(Request $request, $_locale)
     {
+        $this->redirectToUrl = $request->attributes->get('_route');
+        
         $validator = new LocaleValidator();
         $validator->validate($_locale);
         
