@@ -26,7 +26,7 @@ class LocaleSwitcherExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'locale_switcher_show' => new \Twig_Function_Method($this, 'renderSwitcher', array('is_safe' => array('html')))
+            'locale_switcher' => new \Twig_Function_Method($this, 'renderSwitcher', array('is_safe' => array('html')))
         );
     }
     
