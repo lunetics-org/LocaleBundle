@@ -39,7 +39,7 @@ class LocaleController
      */
     public function switchAction(Request $request, $_locale)
     {
-        $this->redirectToUrl = $request->attributes->get('_route');
+        $this->redirectToUrl = '/';
         
         $validator = new LocaleValidator();
         $validator->validate($_locale);
