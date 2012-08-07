@@ -2,6 +2,9 @@
 
 This bundle allows you to guess the Locale from different parameters in your Symfony2 applications.
 
+https://secure.travis-ci.org/lunetics/LocaleBundle.png
+
+
 ## Background
 
 The locale can be guessed from different parameters in your applications :
