@@ -35,6 +35,8 @@
             <argument>%lunetics_locale.cookie.domain%</argument>
             <argument>%lunetics_locale.cookie.secure%</argument>
             <argument>%lunetics_locale.cookie.httpOnly%</argument>
+            <argument>%lunetics_locale.cookie.set_on_detection%</argument>
+            <argument>%lunetics_locale.cookie.set_on_switch%</argument>
         </service>
         
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
