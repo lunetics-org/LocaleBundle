@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
+use Lunetics\LocaleBundle\Validator\LocaleValidator;
 
 /**
  * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
@@ -63,6 +64,8 @@ class LocaleListener
         $request = $event->getRequest();
         $manager = $this->guesserManager;
         if($locale = $manager->runLocaleGuessing($request)){
+            $validator = new LocaleValidator();
+            $validator->validate($locale);
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setDefaultLocale($locale);
             $this->identifiedLocale = $locale;
