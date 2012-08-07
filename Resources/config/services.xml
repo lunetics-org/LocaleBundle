@@ -47,7 +47,7 @@
             <call method="setEventDispatcher">
                 <argument type="service" id="event_dispatcher"/>
             </call>
-            <tag name="kernel.event_listener" event="kernel.request" method="onRequest"/>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
         </service>
     </services>
 </container>
