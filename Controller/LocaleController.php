@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\Validator\LocaleValidator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Controller for the Switch Locale
