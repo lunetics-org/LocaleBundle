@@ -106,6 +106,7 @@ class LocaleListener
         $cookie = $this->localeCookie->getLocaleCookie($this->identifiedLocale);
         $response->headers->setCookie($cookie);
         $this->logEvent('Locale Cookie set to [ %s ]', $this->identifiedLocale);
+        return $response;
     }
     
     /**
