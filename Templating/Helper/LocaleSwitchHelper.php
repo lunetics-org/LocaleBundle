@@ -26,8 +26,8 @@ class LocaleSwitchHelper extends Helper
      */
     public function renderSwitch($localesInfos = array(), $template)
     {
-        $templatesNamespace = 'LuneticsLocaleBundle:Switcher:';
-        return $this->templating->render($templatesNamespace.$template, $localesInfos);
+        $templatesNamespace = 'LuneticsLocaleBundle:Switcher:switcher_links.html.twig';
+        return $this->templating->render($templatesNamespace, $localesInfos);
     }
     
     /**
