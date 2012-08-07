@@ -82,7 +82,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('switcher')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('template')->defaultValue('form')->end()
+                        ->scalarNode('template')->defaultValue('links')->end()
                     ->end()
             ->end();
 

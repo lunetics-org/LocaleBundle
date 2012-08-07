@@ -10,10 +10,10 @@
 namespace Lunetics\LocaleBundle\Controller;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
+use Lunetics\LocaleBundle\Validator\LocaleValidator;
 
 /**
  * Controller for the Switch Locale
@@ -23,27 +23,28 @@ use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
  */
 class LocaleController
 {
-    private $request;
-    private $router;
+    protected $useReferrer = true;
     
-    /**
-     * Constructor
-     * 
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Routing\RequestContextAwareInterface $router
-     */
-    public function __construct(Request $request, RequestContextAwareInterface $router = null)
-    {
-        $this->router = $router;
-        $this->request = $request;
-    }
-    
+    protected $redirectToRoute = null;
     /**
      * Action for locale switch
      */
-    public function switchAction($_locale)
+    public function switchAction(Request $request, $_locale)
     {
-        $event = new FilterLocaleSwitchEvent($this->request, $this->router, $_locale);
+        $validator = new LocaleValidator();
+        $validator->validate($_locale);
+        
+        // Redirect the User
+        if ($request->headers->has('referer') && true === $this->useReferrer) {
+            return new RedirectResponse($request->headers->get('referer'));
+        }
+
+        if (null !== $this->redirectToRoute) {
+            return new RedirectResponse($this->container->get('router')->generate($this->redirectToRoute));
+        }
+        return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
+        
+        $event = new FilterLocaleSwitchEvent($_locale);
         $dispatcher = new EventDispatcher();
         $dispatcher->dispatch(LocaleBundleEvents::onLocaleSwitch, $event);
     }

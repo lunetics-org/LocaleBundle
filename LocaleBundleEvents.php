@@ -9,7 +9,7 @@
  */
 namespace Lunetics\LocaleBundle;
 
-final class LocalBundleEvents
+final class LocaleBundleEvents
 {
 	/**
 	* The lunetics_locale.switch event is thrown each time a User manually switch to another locale.
