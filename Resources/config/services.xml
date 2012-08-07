@@ -60,5 +60,15 @@
             <argument type="service" id="service_container" />
             <tag name="twig.extension" />
         </service>
+        
+        <service id="lunetics_locale.twig" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
+            <argument type="service" id="service_container" />
+            <tag name="twig.extension" />
+        </service>
+        
+        <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
+            <argument type="service" id="templating" />
+            <tag name="templating.helper" alias="switch" />
+        </service>
     </services>
 </container>
