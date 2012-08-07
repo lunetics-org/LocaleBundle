@@ -24,7 +24,7 @@ class TargetInformationBuilder
      * 
      * Will return something like this (let's say current locale is fr :
      * 
-     * current_route: http://app_dev.php/...
+     * current_route: hello_route
      * current_locale: fr
      * locales:
      *   en:
