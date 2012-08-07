@@ -1,8 +1,15 @@
-## Refactoring
+# IMPORTANT
 
-This bundle is in refactoring state. You can see the vision the bundle will take by looking inside the comments of the PR #5 or looking into the Wiki.
+The master branch is currently for Symfony 2.0.x.
 
-You can follow the refactoring by looking into the `rework` branch. The `master` branch remains the last stable version for the Symfony 2.0.* framework.
+THIS BRANCH WILL BE REPLACED BY A MASTER VERSION CURRENTLY IN SYNC WITH 2.1.X
+
+IF YOU ARE USING SYMFONY 2.0, PLEASE UPDATE YOUR COMPOSER.JSON AND USE THE 2.0 BRANCH INSTEAD.
+
+MASTER VERSION WILL BE REPLACED ON 15 AUG 2012.
+
+[2.1 Version](https://github.com/lunetics/LocaleBundle/tree/2.1)
+
 
 # Information
 
