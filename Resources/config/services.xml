@@ -54,6 +54,7 @@
         
         <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
             <argument type="service" id="templating" />
+            <argument>%lunetics_locale.switch.template%</argument>
         </service>
         
         <service id="lunetics_locale.twig" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
@@ -69,6 +70,17 @@
         <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
             <argument type="service" id="templating" />
             <tag name="templating.helper" alias="switch" />
+        </service>
+        
+        <service id="lunetics_locale.switcher_controller" class="Lunetics\LocaleBundle\Controller\LocaleController" scope="request">
+            <argument type="service" id="request"/>
+            <argument type="service" id="router"/>
+        </service>
+        
+        <service id="lunetics_locale.switch_listener" class="Lunetics\LocaleBundle\EventListener\SwitchListener">
+            <argument type="service" id="lunetics_locale.locale_cookie"/>
+            <argument type="service" id="event_dispatcher"/>
+            <tag name="kernel.event_listener" event="lunetics_locale.switch" method="onLocaleSwitch"/>
         </service>
     </services>
 </container>

@@ -1,10 +1,20 @@
 <?php
-
+/**
+ * This file is part of the LuneticsLocaleBundle package.
+ * 
+ * <https://github.com/lunetics/LocaleBundle/>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that is distributed with this source code.
+ */
 namespace Lunetics\LocaleBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
 
+/**
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ */
 class LocaleSwitcherExtension extends \Twig_Extension
 {
     protected $container;
