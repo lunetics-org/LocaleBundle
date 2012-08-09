@@ -18,6 +18,13 @@ use Symfony\Component\Locale\Locale;
  */
 class TargetInformationBuilder
 {   
+    private $route;
+    
+    public function __construct($route = null)
+    {
+        $this->route = $route;
+    }
+    
     /**
      * Builds a bunch of informations in order to build a switcher template
      * for custom needs
@@ -41,7 +48,7 @@ class TargetInformationBuilder
     public function getTargetInformations(Request $request, RouterInterface $router, $allowedLocales)
     {
         $infos = array();
-        $route = $request->attributes->get('_route');
+        $route = null !== $this->route ? $this->route : $request->attributes->get('_route');
         $infos['current_locale'] = $request->getLocale();
         $infos['current_route'] = $route;
         $targetLocales = $allowedLocales;
