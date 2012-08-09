@@ -50,12 +50,12 @@ class LocaleSwitcherExtension extends \Twig_Extension
     }
     
     /**
-     *
+     * @param string $route A route name for which the switch has to be made
      * @param array $parameters
      */
-    public function renderSwitcher($parameters = array())
+    public function renderSwitcher($route = null, $parameters = array())
     {
-        $infosBuilder = new TargetInformationBuilder();
+        $infosBuilder = new TargetInformationBuilder($route);
         $request = $this->container->get('request');
         $router = $this->container->get('router');
         $allowedLocales = $this->container->getParameter('lunetics_locale.allowed_locales');
