@@ -20,5 +20,19 @@ class LocaleCookieTest extends \PHPUnit_Framework_TestCase
         $localeCookie = new LocaleCookie('lunetics_locale', 86400, '/', null, false, true, false, true);
         $cookie = $localeCookie->getLocaleCookie('en');
         $this->assertTrue($cookie instanceof Cookie);
+        $this->assertEquals('lunetics_locale', $cookie->getName());
+        $this->assertEquals('en', $cookie->getValue());
+        $this->assertEquals('/', $cookie->getPath());
+        $this->assertEquals(null, $cookie->getDomain());
+        $this->assertTrue($cookie->isHttpOnly());
+        $this->assertFalse($cookie->isSecure());
+        print_r($cookie->getExpiresTime());
+        $this->assertTrue($cookie->getExpiresTime() > mktime());
+        $this->assertTrue($cookie->getExpiresTime() < mktime() + 86400);
+    }
+
+    public function testCookieExpiresDateTime()
+    {
+
     }
 }

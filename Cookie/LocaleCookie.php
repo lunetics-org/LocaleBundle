@@ -1,9 +1,9 @@
 <?php
 /**
  * This file is part of the LuneticsLocaleBundle package.
- * 
+ *
  * <https://github.com/lunetics/LocaleBundle/>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
@@ -24,7 +24,7 @@ class LocaleCookie
     private $httpOnly;
     private $setOnDetection;
     private $setOnSwitch;
-    
+
     public function __construct($name, $ttl, $path, $domain = null, $secure, $httpOnly, $setOnDetection, $setOnSwitch)
     {
         $this->name = $name;
@@ -36,30 +36,32 @@ class LocaleCookie
         $this->setOnDetection = $setOnDetection;
         $this->setOnSwitch = $setOnSwitch;
     }
-    
+
     public function getLocaleCookie($locale)
     {
         $value = $locale;
         $expire = $this->computeExpireTime();
         $cookie = new Cookie($this->name, $value, $expire, $this->path, $this->domain, $this->secure, $this->httpOnly);
+
         return $cookie;
     }
-    
+
     public function setCookieOnDetection()
     {
         return $this->setOnDetection;
     }
-    
+
     public function setCookieOnSwitch()
     {
         return $this->setOnSwitch;
     }
-    
+
     private function computeExpireTime()
     {
         $expiretime = time() + $this->ttl;
         $date = new \DateTime();
         $date->setTimestamp($expiretime);
+
         return $date;
     }
 }

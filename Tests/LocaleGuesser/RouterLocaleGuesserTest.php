@@ -13,7 +13,7 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $guesser = new RouterLocaleGuesser();
         $this->assertTrue($guesser instanceof LocaleGuesserInterface);
     }
-    
+
     public function testLocaleIsIdentifiedFromRequestQuery()
     {
         $request = $this->getRequestWithLocaleQuery();
@@ -21,7 +21,7 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $guesser->guessLocale($request);
         $this->assertEquals('en', $guesser->getIdentifiedLocale());
     }
-    
+
     public function testLocaleIsNotIdentifiedIfCheckQueryIsFalse()
     {
         $request = $this->getRequestWithLocaleQuery('fr');
@@ -29,10 +29,11 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $guesser->guessLocale($request);
         $this->assertEquals(false, $guesser->getIdentifiedLocale());
     }
-    
+
     private function getRequestWithLocaleQuery($locale = 'en')
     {
         $request = Request::create('/hello-world', 'GET', array('_locale' => $locale));
+
         return $request;
     }
 }

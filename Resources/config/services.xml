@@ -4,23 +4,23 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 <parameters>
         <parameter key="lunetics_locale.request_listener.class">Lunetics\LocaleBundle\EventListener\LocaleListener</parameter>
-        <parameter key="lunetics_locale.guesser_manager.class">Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager</parameter>       
+        <parameter key="lunetics_locale.guesser_manager.class">Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager</parameter>
     </parameters>
     <services>
-        
+
         <service id="lunetics_locale.router_guesser" class="%lunetics_locale.router_guesser.class%">
             <argument>%lunetics_locale.router_guesser.check_query%</argument>
         </service>
-        
+
         <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
             <argument>%locale%</argument>
             <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
-        
+
         <service id="lunetics_locale.cookie_guesser" class="%lunetics_locale.cookie_guesser.class%">
             <argument>%lunetics_locale.cookie.name%</argument>
         </service>
-        
+
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="lunetics_locale.router_guesser" />
@@ -29,7 +29,7 @@
             <argument>null</argument>
             <argument type="service" id="logger" />
         </service>
-        
+
         <service id="lunetics_locale.locale_cookie" class="%lunetics_locale.cookie.class%">
             <argument>%lunetics_locale.cookie.name%</argument>
             <argument>%lunetics_locale.cookie.ttl%</argument>
@@ -40,7 +40,7 @@
             <argument>%lunetics_locale.cookie.set_on_detection%</argument>
             <argument>%lunetics_locale.cookie.set_on_switch%</argument>
         </service>
-        
+
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
             <argument>%locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
@@ -51,28 +51,28 @@
             </call>
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
         </service>
-        
+
         <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
             <argument type="service" id="templating" />
             <argument>%lunetics_locale.switch.template%</argument>
         </service>
-        
+
         <service id="lunetics_locale.twig" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
             <argument type="service" id="service_container" />
             <tag name="twig.extension" />
         </service>
-        
+
         <service id="lunetics_locale.twig" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
             <argument type="service" id="service_container" />
             <tag name="twig.extension" />
         </service>
-        
+
         <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
             <argument type="service" id="templating" />
             <argument>%lunetics_locale.switcher.template%</argument>
             <tag name="templating.helper" alias="switch" />
         </service>
-        
+
         <service id="lunetics_locale.switcher_controller" class="Lunetics\LocaleBundle\Controller\LocaleController" scope="request">
         </service>
     </services>

@@ -1,9 +1,9 @@
 <?php
 /**
  * This file is part of the LuneticsLocaleBundle package.
- * 
+ *
  * <https://github.com/lunetics/LocaleBundle/>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
@@ -18,32 +18,32 @@ use Symfony\Component\Templating\EngineInterface;
 class LocaleSwitchHelper extends Helper
 {
     protected $templating;
-    
+
     protected $templates = array(
         'links' => 'LuneticsLocaleBundle:Switcher:switcher_links.html.twig',
         'form' => 'LuneticsLocaleBundle:Switcher:switcher_form.html.twig'
     );
-    
+
     protected $view;
-    
+
     /**
      * Constructor
-     * 
-     * @param EngineInterface $templating 
-     * @param string $template The Twig Template that renders the switch
+     *
+     * @param EngineInterface $templating
+     * @param string          $template   The Twig Template that renders the switch
      */
     public function __construct(EngineInterface $templating, $template)
     {
         $this->templating = $templating;
-        if(array_key_exists($template, $this->templates)){
+        if (array_key_exists($template, $this->templates)) {
             $this->view = $this->templates[$template];
+
             return;
         }
         $this->view = $template;
-        
-        
+
     }
-    
+
     /**
      *
      * @param array $viewParams
@@ -52,10 +52,10 @@ class LocaleSwitchHelper extends Helper
     {
         return $this->templating->render($this->view, $viewParams);
     }
-    
+
     /**
      *
-     * @return string The name of the helper 
+     * @return string The name of the helper
      */
     public function getName()
     {

@@ -28,7 +28,7 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
         unset($config['guessing_order']);
         $loader->load(array($config), new ContainerBuilder());
     }
-    
+
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */

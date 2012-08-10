@@ -17,7 +17,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $guessersMap = $manager->getGuessingServices();
         $this->assertTrue($guessersMap['router'] instanceof LocaleGuesserInterface);
     }
-    
+
     public function testLocaleIsIdentifiedByTheRouterGuessingService()
     {
         $request = $this->getRequestWithLocaleQuery('fr');
@@ -27,7 +27,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $guessing = $manager->runLocaleGuessing($request);
         $this->assertEquals('fr', $guessing);
     }
-    
+
     public function testLocaleIsNotIdentifiedIfNoQueryParamsExist()
     {
         $request = $this->getRequestWithoutLocaleQuery();
@@ -37,16 +37,18 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $guessing = $manager->runLocaleGuessing($request);
         $this->assertEquals(false, $guessing);
     }
-    
+
     private function getRequestWithLocaleQuery($locale = 'en')
     {
         $request = Request::create('/hello-world', 'GET', array('_locale' => $locale));
+
         return $request;
     }
-    
+
     private function getRequestWithoutLocaleQuery()
     {
         $request = Request::create('/hello-world', 'GET');
+
         return $request;
     }
 }

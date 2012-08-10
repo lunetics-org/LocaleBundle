@@ -1,9 +1,9 @@
 <?php
 /**
  * This file is part of the LuneticsLocaleBundle package.
- * 
+ *
  * <https://github.com/lunetics/LocaleBundle/>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface LocaleGuesserInterface
 {
-    function guessLocale(Request $request);
-    
-    function getIdentifiedLocale();
+    public function guessLocale(Request $request);
+
+    public function getIdentifiedLocale();
 }

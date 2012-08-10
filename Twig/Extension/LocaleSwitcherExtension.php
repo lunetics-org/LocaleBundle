@@ -1,9 +1,9 @@
 <?php
 /**
  * This file is part of the LuneticsLocaleBundle package.
- * 
+ *
  * <https://github.com/lunetics/LocaleBundle/>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
@@ -18,17 +18,17 @@ use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
 class LocaleSwitcherExtension extends \Twig_Extension
 {
     protected $container;
-    
+
     /**
      * Constructor
-     * 
-     * @param ContainerInterface $container 
+     *
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
-    
+
     /**
      *
      * @return array The added functions
@@ -39,7 +39,7 @@ class LocaleSwitcherExtension extends \Twig_Extension
             'locale_switcher' => new \Twig_Function_Method($this, 'renderSwitcher', array('is_safe' => array('html')))
         );
     }
-    
+
     /**
      *
      * @return string The name of the extension
@@ -48,10 +48,10 @@ class LocaleSwitcherExtension extends \Twig_Extension
     {
         return 'locale_switcher';
     }
-    
+
     /**
-     * @param string $route A route name for which the switch has to be made
-     * @param array $parameters
+     * @param string $route      A route name for which the switch has to be made
+     * @param array  $parameters
      */
     public function renderSwitcher($route = null, $parameters = array())
     {
@@ -61,6 +61,7 @@ class LocaleSwitcherExtension extends \Twig_Extension
         $allowedLocales = $this->container->getParameter('lunetics_locale.allowed_locales');
 
         $infos = $infosBuilder->getTargetInformations($request, $router, $allowedLocales, $parameters);
+
         return $this->container->get('lunetics_locale.switcher_helper')->renderSwitch($infos, 'switcher_links.html.twig');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * This file is part of the LuneticsLocaleBundle package.
- * 
+ *
  * <https://github.com/lunetics/LocaleBundle/>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
@@ -25,17 +25,17 @@ use Lunetics\LocaleBundle\Validator\LocaleValidator;
 class LocaleListener
 {
     private $defaultLocale;
-    
+
     private $guesserManager;
-    
+
     private $logger;
-    
+
     private $dispatcher;
-    
+
     private $localeCookie;
-    
+
     private $identifiedLocale;
-    
+
     public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LocaleCookie $localeCookie, LoggerInterface $logger = null)
     {
         $this->defaultLocale = $defaultLocale;
@@ -43,40 +43,42 @@ class LocaleListener
         $this->logger = $logger;
         $this->localeCookie = $localeCookie;
     }
-    
+
     /**
      * Called at the "kernel.request" event
-     * 
+     *
      * Call the LocaleGuesserManager to guess the locale
      * by the activated guessers
-     * 
+     *
      * Sets the identified locale as default locale to the request
-     * 
+     *
      * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
-    {        
-        if($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+    {
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
             $this->logEvent('Request is not a "MASTER_REQUEST" : SKIPPING...');
+
             return;
         }
-        
+
         $request = $event->getRequest();
         $manager = $this->guesserManager;
-        if($locale = $manager->runLocaleGuessing($request)){
+        if ($locale = $manager->runLocaleGuessing($request)) {
             $validator = new LocaleValidator();
             $validator->validate($locale);
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setDefaultLocale($locale);
             $this->identifiedLocale = $locale;
-            if($this->localeCookie->setCookieOnDetection()){
+            if ($this->localeCookie->setCookieOnDetection()) {
                 $this->addCookieResponseListener();
             }
+
             return;
         }
         $request->setDefaultLocale($this->defaultLocale);
     }
-    
+
     /**
      * DI Setter for the EventDispatcher
      *
@@ -86,7 +88,7 @@ class LocaleListener
     {
         $this->dispatcher = $dispatcher;
     }
-    
+
     /**
      * Method to add the ResponseListener which sets the cookie. Should only be called once
      */
@@ -97,10 +99,10 @@ class LocaleListener
                 array($this, 'onResponse')
             );
     }
-    
+
     /**
      * Called at the kernel.response event to attach the cookie to the request
-     * 
+     *
      * @param Event $event
      */
     public function onResponse(Event $event)
@@ -109,12 +111,13 @@ class LocaleListener
         $cookie = $this->localeCookie->getLocaleCookie($this->identifiedLocale);
         $response->headers->setCookie($cookie);
         $this->logEvent('Locale Cookie set to [ %s ]', $this->identifiedLocale);
+
         return $response;
     }
-    
+
     /**
      * Log detection events
-     * 
+     *
      * @param type $logMessage
      * @param type $parameters
      */

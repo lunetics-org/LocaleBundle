@@ -1,9 +1,9 @@
 <?php
 /**
  * This file is part of the LuneticsLocaleBundle package.
- * 
+ *
  * <https://github.com/lunetics/LocaleBundle/>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
@@ -41,15 +41,11 @@ class LuneticsLocaleExtension extends Extension
 
     public function bindParameters(ContainerBuilder $container, $name, $config)
     {
-        if(is_array($config) && empty($config[0]))
-        {
-            foreach ($config as $key => $value) 
-            {
+        if (is_array($config) && empty($config[0])) {
+            foreach ($config as $key => $value) {
                 $this->bindParameters($container, $name.'.'.$key, $value);
             }
-        }
-        else
-            {
+        } else {
                 $container->setParameter($name, $config);
             }
     }

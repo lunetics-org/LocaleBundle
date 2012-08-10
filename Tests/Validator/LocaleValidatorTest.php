@@ -12,21 +12,21 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new LocaleValidator();
         $this->assertTrue($validator->validate($locale));
     }
-    
+
     public function testLocaleWithVariantIsValid()
     {
         $locale = 'fr_BE';
         $validator = new LocaleValidator();
         $this->assertTrue($validator->validate($locale));
     }
-    
+
     public function testLocaleWithSameVariantIsValid()
     {
         $locale = 'fr_FR';
         $validator = new LocaleValidator();
         $this->assertTrue($validator->validate($locale));
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -36,7 +36,7 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new LocaleValidator();
         $validator->validate($locale);
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      */

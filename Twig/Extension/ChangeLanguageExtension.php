@@ -49,7 +49,7 @@ class ChangeLanguageExtension extends AbstractLocaleAwareExtension
      */
     public function setShowForeignLanguageNames($showForeignLanguageNames)
     {
-        $this->showForeignLanguageNames = (boolean)$showForeignLanguageNames;
+        $this->showForeignLanguageNames = (boolean) $showForeignLanguageNames;
     }
 
     /**
@@ -60,7 +60,7 @@ class ChangeLanguageExtension extends AbstractLocaleAwareExtension
      */
     public function setShowFirstUppercase($showFirstUppercase)
     {
-        $this->showFirstUppercase = (boolean)$showFirstUppercase;
+        $this->showFirstUppercase = (boolean) $showFirstUppercase;
     }
 
     /**
@@ -70,7 +70,7 @@ class ChangeLanguageExtension extends AbstractLocaleAwareExtension
      */
     public function setShowLanguagetitle($showLanguagetitle)
     {
-        $this->showLanguagetitle = (boolean)$showLanguagetitle;
+        $this->showLanguagetitle = (boolean) $showLanguagetitle;
     }
 
 
