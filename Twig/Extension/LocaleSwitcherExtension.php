@@ -59,8 +59,8 @@ class LocaleSwitcherExtension extends \Twig_Extension
         $request = $this->container->get('request');
         $router = $this->container->get('router');
         $allowedLocales = $this->container->getParameter('lunetics_locale.allowed_locales');
-        
-        $infos = $infosBuilder->getTargetInformations($request, $router, $allowedLocales);
+
+        $infos = $infosBuilder->getTargetInformations($request, $router, $allowedLocales, $parameters);
         return $this->container->get('lunetics_locale.switcher_helper')->renderSwitch($infos, 'switcher_links.html.twig');
     }
 }
