@@ -58,11 +58,13 @@ class TargetInformationBuilder
             // No need to build route and locale names for current locale
             if(0 !== strpos($request->getLocale(), $locale)) {
                 $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
+                $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
                 $paramteters['_locale'] = $locale;
                 $targetRoute = $router->generate($route, $paramteters);
                 
                 $infos['locales'][$locale] = array(
-                    'locale_current_language' => $targetLocaleTargetLang,
+                    'locale_current_language' => $targetLocaleCurrentLang,
+                    'locale_target_language' => $targetLocaleTargetLang,
                     'link' => $targetRoute,
                     'locale' => $locale,
                     );
