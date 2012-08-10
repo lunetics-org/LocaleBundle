@@ -58,7 +58,8 @@ class LocaleCookie
     private function computeExpireTime()
     {
         $expiretime = time() + $this->ttl;
-        $date = new \DateTime($expiretime);
+        $date = new \DateTime();
+        $date->setTimestamp($expiretime);
         return $date;
     }
 }
