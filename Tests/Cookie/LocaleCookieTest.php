@@ -27,8 +27,8 @@ class LocaleCookieTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertFalse($cookie->isSecure());
         print_r($cookie->getExpiresTime());
-        $this->assertTrue($cookie->getExpiresTime() > mktime());
-        $this->assertTrue($cookie->getExpiresTime() < mktime() + 86400);
+        $this->assertTrue($cookie->getExpiresTime() > time());
+        $this->assertTrue($cookie->getExpiresTime() < time() + 86400);
     }
 
     public function testCookieExpiresDateTime()
