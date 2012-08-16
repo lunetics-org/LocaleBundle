@@ -3,7 +3,6 @@
 namespace Lunetics\LocaleBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Common base class for Twig extensions dealing with the current locale.
@@ -65,4 +64,3 @@ abstract class AbstractLocaleAwareExtension extends \Twig_Extension
     }
 
 }
-
