@@ -40,6 +40,10 @@ class LocaleController
         $validator = new LocaleValidator();
         $validator->validate($_locale);
 
+        $event = new FilterLocaleSwitchEvent($_locale);
+        $dispatcher = new EventDispatcher();
+        $dispatcher->dispatch(LocaleBundleEvents::onLocaleSwitch, $event);
+
         // Redirect the User
         if ($request->headers->has('referer') && true === $this->useReferrer) {
             return new RedirectResponse($request->headers->get('referer'));
@@ -50,9 +54,5 @@ class LocaleController
         }
 
         return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
-
-        $event = new FilterLocaleSwitchEvent($_locale);
-        $dispatcher = new EventDispatcher();
-        $dispatcher->dispatch(LocaleBundleEvents::onLocaleSwitch, $event);
     }
 }
