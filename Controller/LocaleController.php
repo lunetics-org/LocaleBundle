@@ -50,9 +50,5 @@ class LocaleController
         }
 
         return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . $this->redirectToUrl);
-
-        $event = new FilterLocaleSwitchEvent($_locale);
-        $dispatcher = new EventDispatcher();
-        $dispatcher->dispatch(LocaleBundleEvents::onLocaleSwitch, $event);
     }
 }
