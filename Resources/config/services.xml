@@ -57,13 +57,15 @@
             <argument>%lunetics_locale.switch.template%</argument>
         </service>
 
-        <service id="lunetics_locale.twig" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
-            <argument type="service" id="service_container" />
-            <tag name="twig.extension" />
+        <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
+            <argument type="service" id="templating" />
+            <argument>%lunetics_locale.switch.template%</argument>
         </service>
 
-        <service id="lunetics_locale.twig" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
-            <argument type="service" id="service_container" />
+        <service id="lunetics_locale.twig.change_language" class="Lunetics\LocaleBundle\Twig\Extension\ChangeLanguageExtension">
+            <call method="setServiceContainer">
+                <argument type="service" id="service_container"/>
+            </call>
             <tag name="twig.extension" />
         </service>
 
