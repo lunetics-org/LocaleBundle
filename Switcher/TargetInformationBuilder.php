@@ -46,21 +46,22 @@ class TargetInformationBuilder
      * @param  array           $parameters
      * @return array           Informations for the switcher template
      */
-    public function getTargetInformations(Request $request, RouterInterface $router, $allowedLocales, $paramteters = array())
+    public function getTargetInformations(Request $request, RouterInterface $router, $allowedLocales, $parameters = array())
     {
         $infos = array();
         $route = null !== $this->route ? $this->route : $request->attributes->get('_route');
         $infos['current_locale'] = $request->getLocale();
         $infos['current_route'] = $route;
         $targetLocales = $allowedLocales;
+        $parameters = array_merge($request->attributes->get('_route_params'), $request->query->all(), $parameters);
 
         foreach ($targetLocales as $locale) {
             // No need to build route and locale names for current locale
             if (0 !== strpos($request->getLocale(), $locale)) {
                 $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
                 $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
-                $paramteters['_locale'] = $locale;
-                $targetRoute = $router->generate($route, $paramteters);
+                $parameters['_locale'] = $locale;
+                $targetRoute = $router->generate($route, $parameters);
 
                 $infos['locales'][$locale] = array(
                     'locale_current_language' => $targetLocaleCurrentLang,
