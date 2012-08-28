@@ -57,12 +57,13 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
         // Get the Preferred Language from the Browser
         $preferredLanguage = $request->getPreferredLanguage();
         $providedLanguages = $request->getLanguages();
+        $primaryLanguage = \Locale::getPrimaryLanguage($preferredLanguage);
 
-        if (!$preferredLanguage OR count($providedLanguages) === 0) {
+        if (!$preferredLanguage || !$primaryLanguage || count($providedLanguages) === 0) {
             return false;
         }
 
-        if (!in_array(\Locale::getPrimaryLanguage($preferredLanguage), $this->allowedLocales)) {
+        if (!in_array($primaryLanguage, $this->allowedLocales)) {
             $availableLanguages = $this->allowedLocales;
             $map = function($v) use ($availableLanguages) {
                 if (in_array(\Locale::getPrimaryLanguage($v), $availableLanguages)) {
@@ -77,7 +78,7 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
                 return true;
             }
         } else {
-            $this->identifiedLocale = $preferredLanguage;
+            $this->identifiedLocale = $primaryLanguage;
             $this->setSessionLocale($this->identifiedLocale);
 
             return true;
