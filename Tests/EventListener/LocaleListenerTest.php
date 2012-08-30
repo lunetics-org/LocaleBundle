@@ -61,7 +61,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
-        $this->assertEquals('fr_FR', $request->getLocale());
+        $this->assertEquals('fr', $request->getLocale());
     }
 
     /**
@@ -76,7 +76,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
-        $this->assertEquals('fr_FR', $request->getLocale());
+        $this->assertEquals('fr', $request->getLocale());
     }
 
     /**
