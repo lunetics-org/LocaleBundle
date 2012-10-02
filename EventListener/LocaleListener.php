@@ -56,13 +56,14 @@ class LocaleListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+        $request = $event->getRequest();
+
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST && !$request->isXmlHttpRequest()) {
             $this->logEvent('Request is not a "MASTER_REQUEST" : SKIPPING...');
 
             return;
         }
 
-        $request = $event->getRequest();
         $manager = $this->guesserManager;
         if ($locale = $manager->runLocaleGuessing($request)) {
             $validator = new LocaleValidator();
