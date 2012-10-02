@@ -107,6 +107,17 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $request->getLocale());
     }
 
+    public function testAjaxRequestsAreHandled()
+    {
+        $request = $this->getRequestWithRouterParam();
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+        $manager = $this->getGuesserManager(array(0 => 'browser'));
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
+        $event = $this->getEvent($request);
+        $listener->onKernelRequest($event);
+        $this->assertEquals('en', $request->getLocale());
+    }
+
     private function getEvent(Request $request)
     {
         return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
