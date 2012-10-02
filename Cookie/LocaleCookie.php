@@ -64,4 +64,9 @@ class LocaleCookie
 
         return $date;
     }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 }

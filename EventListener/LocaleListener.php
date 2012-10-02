@@ -70,7 +70,7 @@ class LocaleListener
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setDefaultLocale($locale);
             $this->identifiedLocale = $locale;
-            if ($this->localeCookie->setCookieOnDetection()) {
+            if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName())) {
                 $this->addCookieResponseListener();
             }
 
