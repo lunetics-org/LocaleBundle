@@ -21,7 +21,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
     public function testLocaleIsIdentifiedByTheRouterGuessingService()
     {
         $request = $this->getRequestWithLocaleQuery('fr');
-        $routerGuesser = new RouterLocaleGuesser();
+        $routerGuesser = new RouterLocaleGuesser(true, array('en', 'fr'));
         $order = array(0 => 'router', 1 => 'browser');
         $manager = new LocaleGuesserManager($order, $routerGuesser);
         $guessing = $manager->runLocaleGuessing($request);
@@ -31,7 +31,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
     public function testLocaleIsNotIdentifiedIfNoQueryParamsExist()
     {
         $request = $this->getRequestWithoutLocaleQuery();
-        $routerGuesser = new RouterLocaleGuesser();
+        $routerGuesser = new RouterLocaleGuesser(true, array('fr', 'de', 'en'));
         $order = array(0 => 'router', 1 => 'browser');
         $manager = new LocaleGuesserManager($order, $routerGuesser);
         $guessing = $manager->runLocaleGuessing($request);

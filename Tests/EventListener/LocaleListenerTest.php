@@ -19,7 +19,9 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     public function testDefaultLocaleWithoutParams()
     {
         $listener = new LocaleListener('fr', $this->getGuesserManager(), $this->getLocaleCookie());
-        $event = $this->getEvent($request = Request::create('/'));
+        $request = Request::create('/');
+        $request->headers->set('Accept-language', '');
+        $event = $this->getEvent($request);
 
         $listener->onKernelRequest($event);
         $this->assertEquals('fr', $request->getLocale());
@@ -118,6 +120,18 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $request->getLocale());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testNotAllowedLocalesAreRejected()
+    {
+        $request = $this->getRequestWithRouterParam('ru');
+        $manager = $this->getGuesserManager(array(0 => 'router'));
+        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
+        $event = $this->getEvent($request);
+        $listener->onKernelRequest($event);
+    }
+
     private function getEvent(Request $request)
     {
         return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
@@ -126,8 +140,8 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     private function getGuesserManager($order = array(1 => 'router', 2 => 'browser'))
     {
         $defaultLocale = 'en';
-        $allowedLocales = array('de', 'fr', 'nl');
-        $routerGuesser = new RouterLocaleGuesser();
+        $allowedLocales = array('de', 'fr', 'nl', 'es', 'en');
+        $routerGuesser = new RouterLocaleGuesser(true, $allowedLocales);
         $browserGuesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
         $cookieGuesser = new CookieLocaleGuesser('lunetics_locale');
         $manager = new LocaleGuesserManager($order, $routerGuesser, $browserGuesser, $cookieGuesser);

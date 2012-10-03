@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\Validator\LocaleValidator;
 
 /**
  * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
@@ -20,14 +21,17 @@ class RouterLocaleGuesser implements LocaleGuesserInterface
 
     private $identifiedLocale = null;
 
+    private $allowedLocales;
+
     /**
      * Constructor
      *
      * @param boolean $checkQuery
      */
-    public function __construct($checkQuery = true)
+    public function __construct($checkQuery = true, array $allowedLocales = array('en'))
     {
         $this->checkQuery = $checkQuery;
+        $this->allowedLocales = $allowedLocales;
     }
 
     /**
@@ -41,16 +45,19 @@ class RouterLocaleGuesser implements LocaleGuesserInterface
      */
     public function guessLocale(Request $request)
     {
+        $validator = new LocaleValidator();
         if ($this->checkQuery) {
-            if ($request->query->has('_locale')) {
+            if ($request->query->has('_locale') && $validator->validate($request->query->get('_locale'), $this->allowedLocales)) {
                 $this->identifiedLocale = $request->query->get('_locale');
 
                 return true;
             }
         }
         if ($locale = $request->attributes->get('_locale')) {
-            $this->identifiedLocale = $locale;
-
+            if ($validator->validate($locale, $this->allowedLocales)){
+                $this->identifiedLocale = $locale;
+            }
+            
             return true;
         }
 

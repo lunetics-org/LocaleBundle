@@ -22,7 +22,7 @@ class LocaleValidator
      * @return string                    The cleaned locale if needed
      * @throws \InvalidArgumentException When the locale is not a valid locale
      */
-    public function validate($locale)
+    public function validate($locale, array $allowedLocales = array())
     {
         $splittedLocale = explode('_', $locale);
         $primary = count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
@@ -35,6 +35,13 @@ class LocaleValidator
             $loc = strtolower($primary).'_'.strtoupper($variant);
             if (!in_array($loc, Locale::getLocales())) {
                 throw new \InvalidArgumentException(sprintf('The locale %s is not a valid locale', $primary));
+            }
+        }
+
+        // Check against an array of allowed locales
+        if (!empty($allowedLocales)){
+            if (!in_array($locale, $allowedLocales)){
+                throw new \InvalidArgumentException(sprintf('The locale %s is not allowed by the application configuration', $locale));
             }
         }
 

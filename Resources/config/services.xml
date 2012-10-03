@@ -10,6 +10,7 @@
 
         <service id="lunetics_locale.router_guesser" class="%lunetics_locale.router_guesser.class%">
             <argument>%lunetics_locale.router_guesser.check_query%</argument>
+            <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
 
         <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
