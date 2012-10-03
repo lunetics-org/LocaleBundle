@@ -28,7 +28,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequestWithBrowserPreferences();
         $guesser = $this->getGuesser();
         $guesser->guessLocale($request);
-        $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
+        $this->assertEquals('fr', $guesser->getIdentifiedLocale());
     }
 
     public function testLocaleIsNotIdentifiedIsBrowserPreferencesIsEmpty()
