@@ -22,7 +22,14 @@
 
         <service id="lunetics_locale.cookie_guesser" class="%lunetics_locale.cookie_guesser.class%">
             <argument>%lunetics_locale.cookie.name%</argument>
+            <argument>%lunetics_locale.allowed_locales%</argument>
             <tag name="lunetics_locale.guesser" alias="cookie" />
+        </service>
+
+        <service id="lunetics_locale.session_guesser" class="%lunetics_locale.session_guesser.class%">
+            <argument type="service" id="session" />
+            <argument>%lunetics_locale.session.variable%</argument>
+            <tag name="lunetics_locale.guesser" alias="session"/>
         </service>
 
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">

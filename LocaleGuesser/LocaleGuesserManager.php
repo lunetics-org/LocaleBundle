@@ -113,4 +113,15 @@ class LocaleGuesserManager
             $this->logger->info(sprintf($logMessage, $parameters));
         }
     }
+
+    /**
+     * Returns the current guessingorder
+     *
+     * @return array
+     */
+    public function getGuessingOrder()
+    {
+        return $this->guessingOrder;
+    }
+
 }

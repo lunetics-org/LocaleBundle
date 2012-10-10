@@ -85,6 +85,11 @@ class LocaleListener
             if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName())) {
                 $this->addCookieResponseListener();
             }
+            if (in_array('session', $manager->getGuessingOrder())) {
+                /** @var $session \Lunetics\LocaleBundle\LocaleGuesser\SessionLocaleGuesser */
+                $session = $manager->getGuesser('session');
+                $session->setSessionLocale($this->identifiedLocale);
+            }
 
             return;
         }
