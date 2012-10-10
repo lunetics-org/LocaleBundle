@@ -11,23 +11,22 @@
         <service id="lunetics_locale.router_guesser" class="%lunetics_locale.router_guesser.class%">
             <argument>%lunetics_locale.router_guesser.check_query%</argument>
             <argument>%lunetics_locale.allowed_locales%</argument>
+            <tag name="lunetics_locale.guesser" alias="router" />
         </service>
 
         <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
             <argument>%locale%</argument>
             <argument>%lunetics_locale.allowed_locales%</argument>
+            <tag name="lunetics_locale.guesser" alias="browser" />
         </service>
 
         <service id="lunetics_locale.cookie_guesser" class="%lunetics_locale.cookie_guesser.class%">
             <argument>%lunetics_locale.cookie.name%</argument>
+            <tag name="lunetics_locale.guesser" alias="cookie" />
         </service>
 
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
             <argument>%lunetics_locale.guessing_order%</argument>
-            <argument type="service" id="lunetics_locale.router_guesser" />
-            <argument type="service" id="lunetics_locale.browser_guesser" />
-            <argument type="service" id="lunetics_locale.cookie_guesser" />
-            <argument>null</argument>
             <argument type="service" id="logger" />
         </service>
 

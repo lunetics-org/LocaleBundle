@@ -20,7 +20,10 @@ use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 use Lunetics\LocaleBundle\Validator\LocaleValidator;
 
 /**
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * Locale Listener
+ *
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
+ * @author Matthias Breddin <mb@lunetics.com>
  */
 class LocaleListener
 {
@@ -36,6 +39,14 @@ class LocaleListener
 
     private $identifiedLocale;
 
+    /**
+     * Construct the guessermanager
+     *
+     * @param string               $defaultLocale
+     * @param LocaleGuesserManager $guesserManager
+     * @param LocaleCookie         $localeCookie
+     * @param LoggerInterface      $logger
+     */
     public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LocaleCookie $localeCookie, LoggerInterface $logger = null)
     {
         $this->defaultLocale = $defaultLocale;
@@ -95,10 +106,10 @@ class LocaleListener
      */
     public function addCookieResponseListener()
     {
-            $this->dispatcher->addListener(
-                KernelEvents::RESPONSE,
-                array($this, 'onResponse')
-            );
+        $this->dispatcher->addListener(
+            KernelEvents::RESPONSE,
+            array($this, 'onResponse')
+        );
     }
 
     /**
@@ -119,13 +130,13 @@ class LocaleListener
     /**
      * Log detection events
      *
-     * @param type $logMessage
-     * @param type $parameters
+     * @param string $logMessage
+     * @param string $parameters
      */
     private function logEvent($logMessage, $parameters = null)
     {
         if (null !== $this->logger) {
-                $this->logger->info(sprintf($logMessage, $parameters));
-            }
+            $this->logger->info(sprintf($logMessage, $parameters));
+        }
     }
 }
