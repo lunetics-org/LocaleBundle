@@ -47,14 +47,22 @@ You need to activate and define the order of the locale guessers. This is done i
 ````
 lunetics_locale:
   guessing_order:
+    - session
     - cookie
     - router
     - browser
 ````
-With the example above, the guessers will be called in the order you defined as 1. cookie 2. router 3. browser
+With the example above, the guessers will be called in the order you defined as 1. session 2. cookie 2. router 3. browser.
 
-### Locale Cookies
+Note that the session and cookie guessers only retrieve previously identified and saved locales by the router or browser guesser
 
+### Locale Cookies / Session 
+
+The session and cookie guesser is usually used when you do not use locales in the uri's and you guess it from the user browser preferences. When doing this,
+
+ it is good to set *session* and/or *cookie* as the first guesser to not try to detect the locale at each request.
+
+#### Cookie
 You can set a cookie when a locale has been identified, simply activate it in the configuration:
 
 ````
@@ -62,8 +70,17 @@ lunetics_locale:
   cookie:
     set_on_detection: true
 ````
-This behavior is usually used when you do not use locales in the uri's and you guess it from the user browser preferences. When doing this,
- it is good to set *cookie* as the first guesser to not try to detect the locale at each request.
+This is most useful for unregistered and returning visitors.
+
+#### Session
+
+The session guesser will automatically save a previously identified locale into the session and retrieve it from the session. It should be best on the first place on the guessing_order.
+
+### Custom Guessers
+
+Read more about creating your own guesser here:
+
+[Custom Locale Guesser](guesser.md)
 
 ### Switch to another locale
 

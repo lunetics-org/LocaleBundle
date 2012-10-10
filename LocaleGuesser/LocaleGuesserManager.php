@@ -12,109 +12,116 @@ namespace Lunetics\LocaleBundle\LocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * Locale Guesser Manager
+ *
+ * This class is responsible for adding services with the 'lunetics_locale.guesser'
+ * alias tag and run the detection.
+ *
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
+ * @author Matthias Breddin <mb@lunetics.com>
  */
 class LocaleGuesserManager
 {
     private $guessingOrder;
 
-    private $routerLocaleGuesser;
-
-    private $browserLocaleGuesser;
-
-    private $cookieLocaleGuesser;
-
-    private $customGuessingService;
-
-    private $guessersMap;
+    private $guessers;
 
     private $logger;
 
     /**
      * Constructor
      *
-     * @param array                  $guessingOrder
-     * @param LocaleGuesserInterface $routerGuesser
-     * @param LocaleGuesserInterface $browserGuesser
-     * @param LocaleGuesserInterface $cookieGuesser
-     * @param LocaleGuesserInterface $customGuessingService
-     * @param LoggerInterface        $logger
+     * @param array           $guessingOrder Config Value for the guessing order
+     * @param LoggerInterface $logger        The Logger
      */
-    public function __construct(array $guessingOrder, LocaleGuesserInterface $routerGuesser, LocaleGuesserInterface $browserGuesser = null,
-                                LocaleGuesserInterface $cookieGuesser = null, LocaleGuesserInterface $customGuessingService = null,
-                                LoggerInterface $logger = null)
+    public function __construct(array $guessingOrder, LoggerInterface $logger = null)
     {
         $this->guessingOrder = $guessingOrder;
-        $this->routerLocaleGuesser = $routerGuesser;
-        $this->browserLocaleGuesser = $browserGuesser;
-        $this->cookieLocaleGuesser = $cookieGuesser;
-        $this->customGuessingService = $customGuessingService;
         $this->logger = $logger;
-        $this->mapGuessersToServices();
+    }
+
+    /**
+     * Adds a guesser to this manager
+     *
+     * @param LocaleGuesserInterface $guesser The Guesser Service
+     * @param string                 $alias   Alias of the Service
+     */
+    public function addGuesser(LocaleGuesserInterface $guesser, $alias)
+    {
+        $this->guessers[$alias] = $guesser;
+    }
+
+    /**
+     * Returns the guesser
+     *
+     * @param string $alias
+     *
+     * @return LocaleGuesserInterface|null
+     */
+    public function getGuesser($alias)
+    {
+        if (array_key_exists($alias, $this->guessers)) {
+            return $this->guessers[$alias];
+        } else {
+            return null;
+        }
     }
 
     /**
      * Loops through all the activated Locale Guessers and
-     * calls the guessLocale methode and passing the current request
+     * calls the guessLocale methode and passing the current request.
      *
-     * @param  Request $request
+     * @param Request $request
+     *
+     * @throws InvalidConfigurationException
+     *
      * @return boolean false if no locale is identified
-     * @return string  the locale identified by the guessers
+     * @return bool the locale identified by the guessers
      */
     public function runLocaleGuessing(Request $request)
     {
-        foreach ($this->guessingOrder as $key => $guesser) {
-            $guessingService = $this->guessersMap[$guesser];
-            if (null !== $guessingService) {
-                $this->logEvent('%s Guessing Service Loaded', ucfirst($guesser));
-                if ($guessingService->guessLocale($request)) {
-                    $locale = $guessingService->getIdentifiedLocale();
-                    $this->logEvent('Locale has been identified : ( %s )', $locale);
-
-                    return $locale;
-                }
-                $this->logEvent('Locale has not been identified by the %s Guessing Service', ucfirst($guesser));
+        foreach ($this->guessingOrder as $guesser) {
+            if (null === $this->getGuesser($guesser)) {
+                throw new InvalidConfigurationException(sprintf('Locale guesser service "%s" does not exist.', $guesser));
             }
+            $guesserService = $this->getGuesser($guesser);
+            $this->logEvent('Locale %s Guessing Service Loaded', ucfirst($guesser));
+            if (false !== $guesserService->guessLocale($request)) {
+                $locale = $guesserService->getIdentifiedLocale();
+                $this->logEvent('Locale has been identified by guessing service: ( %s )', ucfirst($guesser));
+
+                return $locale;
+            }
+            $this->logEvent('Locale has not been identified by the %s guessing service', ucfirst($guesser));
         }
 
         return false;
     }
 
     /**
-     * Returns the Locale Guessing Services mapped by guesser names
-     *
-     * @return array the guessing services
-     */
-    public function getGuessingServices()
-    {
-        return $this->guessersMap;
-    }
-
-    /**
-     * Links the guesser names to the correspondant services
-     */
-    private function mapGuessersToServices()
-    {
-        $this->guessersMap = array(
-            'router' => $this->routerLocaleGuesser,
-            'browser' => $this->browserLocaleGuesser,
-            'cookie' => $this->cookieLocaleGuesser,
-            'custom' => $this->customGuessingService
-        );
-    }
-
-    /**
      * Log detection events
      *
-     * @param type $logMessage
-     * @param type $parameters
+     * @param string $logMessage
+     * @param string $parameters
      */
     private function logEvent($logMessage, $parameters = null)
     {
         if (null !== $this->logger) {
-                $this->logger->info(sprintf($logMessage, $parameters));
-            }
+            $this->logger->info(sprintf($logMessage, $parameters));
+        }
     }
+
+    /**
+     * Returns the current guessingorder
+     *
+     * @return array
+     */
+    public function getGuessingOrder()
+    {
+        return $this->guessingOrder;
+    }
+
 }

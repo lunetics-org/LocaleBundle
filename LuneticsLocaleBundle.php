@@ -10,10 +10,25 @@
 namespace Lunetics\LocaleBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+use Lunetics\LocaleBundle\DependencyInjection\Compiler\GuesserCompilerPass;
 
 /**
- * @author Lunetics <http://www.lunetics.com/>
+ * LocaleBundle
+ *
+ * @author Matthias Breddin <mb@lunetics.com>
  */
 class LuneticsLocaleBundle extends Bundle
 {
+    /**
+     * Add CompilerPass
+     * @param ContainerBuilder $container
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new GuesserCompilerPass);
+    }
 }
