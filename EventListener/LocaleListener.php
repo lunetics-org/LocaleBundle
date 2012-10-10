@@ -82,8 +82,11 @@ class LocaleListener
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setDefaultLocale($locale);
             $this->identifiedLocale = $locale;
-            if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName())) {
-                $this->addCookieResponseListener();
+
+            if (in_array('cookie', $manager->getGuessingOrder())) {
+                if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName())) {
+                    $this->addCookieResponseListener();
+                }
             }
             if (in_array('session', $manager->getGuessingOrder())) {
                 /** @var $session \Lunetics\LocaleBundle\LocaleGuesser\SessionLocaleGuesser */
