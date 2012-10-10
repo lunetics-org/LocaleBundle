@@ -33,8 +33,9 @@ class GuesserCompilerPass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition('lunetics_locale.guesser_manager');
+        $taggedServiceIds = $container->findTaggedServiceIds('lunetics_locale.guesser');
 
-        foreach ($container->findTaggedServiceIds('lunetics_locale.guesser') as $id => $tagAttributes) {
+        foreach ($taggedServiceIds as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall('addGuesser', array(new Reference($id), $attributes["alias"]));
             }
