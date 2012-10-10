@@ -34,10 +34,13 @@ class GuesserCompilerPass implements CompilerPassInterface
 
         $definition = $container->getDefinition('lunetics_locale.guesser_manager');
         $taggedServiceIds = $container->findTaggedServiceIds('lunetics_locale.guesser');
+        $neededServices = $container->getParameter('lunetics_locale.guessing_order');
 
         foreach ($taggedServiceIds as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
-                $definition->addMethodCall('addGuesser', array(new Reference($id), $attributes["alias"]));
+                if (in_array($attributes['alias'], $neededServices)) {
+                    $definition->addMethodCall('addGuesser', array(new Reference($id), $attributes["alias"]));
+                }
             }
         }
     }
