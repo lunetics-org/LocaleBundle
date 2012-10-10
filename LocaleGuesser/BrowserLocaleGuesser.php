@@ -10,11 +10,10 @@
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * @author Lunetics <http://www.lunetics.com/>
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * @author Matthias Breddin <mb@lunetics.com>
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
 class BrowserLocaleGuesser implements LocaleGuesserInterface
 {
@@ -24,13 +23,11 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
 
     private $identifiedLocale;
 
-    private $session;
-
     /**
      * Constructor
      *
-     * @param type  $defaultLocale
-     * @param array $allowedLocales
+     * @param string $defaultLocale  The default locale
+     * @param array  $allowedLocales Array of allowed locales
      */
     public function __construct($defaultLocale, array $allowedLocales)
     {
@@ -41,19 +38,12 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
     /**
      * Guess the locale based on browser settings
      *
-     * @param  Request $request
+     * @param Request $request
+     *
      * @return boolean
      */
     public function guessLocale(Request $request)
     {
-        $this->session = $request->getSession();
-
-        if ($this->sessionLocaleExist()) {
-            $this->identifiedLocale = $this->session->get('lunetics_locale');
-
-            return true;
-        }
-
         // Get the Preferred Language from the Browser
         $preferredLanguage = $request->getPreferredLanguage();
         $providedLanguages = $request->getLanguages();
@@ -72,13 +62,11 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
             $result = array_values(array_filter($providedLanguages, $map));
             if (!empty($result)) {
                 $this->identifiedLocale = $result[0];
-                $this->setSessionLocale($this->identifiedLocale);
 
                 return true;
             }
         } else {
             $this->identifiedLocale = $preferredLanguage;
-            $this->setSessionLocale($this->identifiedLocale);
 
             return true;
         }
@@ -93,21 +81,5 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
         }
 
         return $this->identifiedLocale;
-    }
-
-    public function sessionLocaleExist()
-    {
-        if ($this->session instanceof Session && $this->session->has('lunetics_locale')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function setSessionLocale($locale)
-    {
-        if ($this->session instanceof Session && $this->session->has('lunetics_locale')) {
-            $this->session->set('lunetics_locale', $locale);
-        }
     }
 }

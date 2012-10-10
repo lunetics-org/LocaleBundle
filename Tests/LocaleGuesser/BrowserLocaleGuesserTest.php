@@ -39,14 +39,6 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $guesser->getIdentifiedLocale());
     }
 
-    public function testLocaleIsRetrievedFromSessionIfSet()
-    {
-        $request = $this->getRequestWithSessionLocale();
-        $guesser = $this->getGuesser();
-        $guesser->guessLocale($request);
-        $this->assertEquals('ru', $guesser->getIdentifiedLocale());
-    }
-
     private function getGuesser($defaultLocale = 'en', $allowedLocales = array('en','fr','de'))
     {
         $guesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
