@@ -10,7 +10,6 @@
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Matthias Breddin <mb@lunetics.com>
@@ -63,7 +62,6 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
             $result = array_values(array_filter($providedLanguages, $map));
             if (!empty($result)) {
                 $this->identifiedLocale = $result[0];
-                $this->setSessionLocale($this->identifiedLocale);
 
                 return true;
             }
