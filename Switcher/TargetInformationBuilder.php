@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\Switcher;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Locale\Locale;
 
@@ -61,7 +62,12 @@ class TargetInformationBuilder
                 $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
                 $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
                 $parameters['_locale'] = $locale;
-                $targetRoute = $router->generate($route, $parameters);
+                try {
+                    $targetRoute = $router->generate($route, $parameters);
+                } catch (RouteNotFoundException $e) {
+                    // skip routes for which we cannot generate a url for the given locale
+                    continue;
+                }
 
                 $infos['locales'][$locale] = array(
                     'locale_current_language' => $targetLocaleCurrentLang,
