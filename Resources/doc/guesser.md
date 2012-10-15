@@ -60,7 +60,8 @@ class AcmeLocaleGuesser implements LocaleGuesserInterface
 4. Add the guesser to the config
 --------------------------------
 Add the Service alias tag name to the order in `app/config/config.yml`:
-``` yaml
+
+```yaml
 lunetics_locale:
     guessing_order:
         - session
@@ -68,3 +69,4 @@ lunetics_locale:
         - acme
         - ...
 ```
+
