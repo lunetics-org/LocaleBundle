@@ -80,7 +80,7 @@ The session guesser will automatically save a previously identified locale into 
 
 Read more about creating your own guesser here:
 
-[Custom Locale Guesser](LocaleBundle/blob/master/Resources/doc/guesser.md)
+[Custom Locale Guesser](guesser.md)
 
 ### Switch to another locale
 
