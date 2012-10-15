@@ -56,6 +56,7 @@ class AcmeLocaleGuesser implements LocaleGuesserInterface
         return $this->identifiedLocale;
     }
 }
+```
 
 4. Add the guesser to the config
 --------------------------------
