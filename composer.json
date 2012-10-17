@@ -22,6 +22,11 @@
         "symfony/yaml": "2.1.*",
         "symfony/locale": "2.1.*"
     },
+    "require-dev": {
+       	"twig/twig": "1.*",
+        "ext-intl": "*"
+    },
+
     "autoload": {
         "psr-0": { "Lunetics\\LocaleBundle": "" }
     },

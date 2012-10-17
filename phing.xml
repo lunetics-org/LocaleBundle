@@ -7,14 +7,15 @@
     <property name="dir.docs" value="${dir.build}/docs"/>
     <property name="dir.docs.phpdoc" value="${dir.docs}/phpdoc"/>
     <property name="dir.reports" value="${dir.build}/logs"/>
+    <property name="dir.reports.phpunit" value="${dir.build}/phpunit"/>
     <property name="dir.reports.pdepend" value="${dir.reports}/pdepend"/>
     <property name="dir.reports.coverage" value="${dir.reports}/coverage"/>
 
     <!-- Filesets -->
     <fileset id="sourcecode" dir="${dir.src}">
         <include name="**/*.php"/>
-        <exclude name="**/*Test*"/>
-        <exclude name="vendor/" />
+        <exclude name="Tests/"/>
+        <exclude name="vendor/"/>
     </fileset>
 
     <!-- Default target -->
@@ -24,7 +25,7 @@
 
     <!-- Doc target -->
     <target name="build:doc"
-            depends="build:prepare, doc:phpdoc"
+            depends="build:prepare, doc:phpdoc2"
             description="Generates app API documentation."/>
 
     <!-- Check target -->
@@ -34,7 +35,7 @@
 
     <!-- Test target -->
     <target name="build:test"
-            depends="test:unit"
+            depends="test:unit, test:report"
             description="Executes all tests.."/>
 
     <!-- Project build clean -->
@@ -54,6 +55,7 @@
         <mkdir dir="${dir.reports}"/>
         <mkdir dir="${dir.reports.coverage}"/>
         <mkdir dir="${dir.reports.pdepend}"/>
+        <mkdir dir="${dir.reports.phpunit}"/>
     </target>
 
     <target name="build:getcomposer" description="Installing composer">
@@ -68,15 +70,15 @@
             description="Installing dependencies">
         <echo msg="Installing dependencies"/>
         <exec
-                command="php composer.phar install --no-ansi"
+                command="php composer.phar install --no-ansi --dev"
                 passthru="true"/>
     </target>
 
     <!-- PHPDOC API documentation target -->
-    <target name="doc:phpdoc" description="Generate API documentation.">
+    <target name="doc:phpdoc2" description="Generate API documentation.">
         <echo msg="Generating API documentation with PHPDoc..."/>
         <phpdoc2 title="${phing.project.name} :: API Documentation"
-                destdir="${dir.docs.phpdoc}">
+                 destdir="${dir.docs.phpdoc}">
             <fileset refid="sourcecode"/>
         </phpdoc2>
     </target>
@@ -124,8 +126,40 @@
     <!-- Unit tests -->
     <target name="test:unit" description="Executes unit tests.">
         <echo msg="Running unit tests ..."/>
-        <exec
-                command="phpunit --testdox --log-junit ${dir.reports}/phpunit.xml --coverage-clover ${dir.reports.coverage}/clover.xml --coverage-html ${dir.reports.coverage}/ -c phpunit.xml.dist"/>
+        <!-- Using usual exec method, till the coverage report works after phpunit (phpunit unloads the composer autoload
+        <echo msg="Setting up Coverage Database ..."/>
+        <coverage-setup database="${dir.reports}/coverage.db">
+            <fileset refid="sourcecode"/>
+        </coverage-setup>
+
+        <echo msg="Running unit tests ..."/>
+        <phpunit codecoverage="true"
+                 bootstrap="Tests/bootstrap.php"
+                 printsummary="true"
+                 haltonfailure="true"
+                 haltonerror="true">
+            <formatter todir="${dir.reports}"
+                       type="xml"/>
+            <batchtest>
+                <fileset dir="Tests">
+                    <include name="**/*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+        <coverage-report outfile="${dir.reports}/coverage.xml" />
+        -->
+        <exec command="phpunit --testdox --log-junit '${dir.reports}/phpunit.xml' --coverage-clover '${dir.reports}/clover.xml' --coverage-html '${dir.reports.coverage}' -c phpunit.xml.dist"
+              passthru="true"/>
+
     </target>
+
+    <target name="test:report" description="Generating unit test reports.">
+        <echo msg="Generating unit test reports ..."/>
+        <phpunitreport infile="${dir.reports}/phpunit.xml"
+                       format="noframes"
+                       todir="${dir.reports.phpunit}"
+                />
+    </target>
+
 
 </project>
