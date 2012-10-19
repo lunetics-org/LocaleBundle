@@ -28,12 +28,13 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
     /**
      * Constructor
      *
-     * @param array $allowedLocales Array of allowed locales
+     * @param array $allowedLocales         Array of allowed locales
+     * @param bool  $intlExtensionInstalled Wether the intl extension is installed
      */
-    public function __construct(array $allowedLocales)
+    public function __construct(array $allowedLocales, $intlExtensionInstalled = false)
     {
         $this->allowedLocales = $allowedLocales;
-        $this->intlExtension = extension_loaded('intl');
+        $this->intlExtension = $intlExtensionInstalled;
     }
 
     /**
