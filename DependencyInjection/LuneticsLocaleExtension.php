@@ -30,6 +30,7 @@ class LuneticsLocaleExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $this->bindParameters($container, $this->getAlias(), $config);
+        $container->setParameter('lunetics_locale.intl_extension_installed', extension_loaded('intl'));
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
     }
