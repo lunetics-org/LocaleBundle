@@ -80,7 +80,7 @@ class LocaleListener
             $validator = new LocaleValidator();
             $validator->validate($locale);
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
-            $request->setDefaultLocale($locale);
+            $request->setLocale($locale);
             $this->identifiedLocale = $locale;
 
             if (in_array('cookie', $manager->getGuessingOrder())) {
