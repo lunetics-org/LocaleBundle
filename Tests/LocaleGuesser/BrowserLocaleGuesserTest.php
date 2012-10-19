@@ -64,7 +64,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function testRestrictionWithLocalesOnly()
     {
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser('en', array('fr_FR', 'en_US'));
+        $guesser = $this->getGuesser(array('fr_FR', 'en_US'));
         $guesser->guessLocale($request);
         $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
     }
@@ -72,7 +72,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function testRestrictionWithLocalesOnlyNotIdentified()
     {
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser('en', array('fr_CH', 'en_GB'));
+        $guesser = $this->getGuesser(array('fr_CH', 'en_GB'));
         $guesser->guessLocale($request);
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
@@ -80,7 +80,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function testReturnCorrectLocaleForLanguage()
     {
         $request = $this->getRequestWithBrowserPreferencesMultipleLangLocales();
-        $guesser = $this->getGuesser('en', array('fr_FR', 'en_US'));
+        $guesser = $this->getGuesser(array('fr_FR', 'en_US'));
         $guesser->guessLocale($request);
         $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
     }
@@ -89,23 +89,23 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getRequestWithBrowserPreferencesMultipleLangLocales();
 
-        $guesser = $this->getGuesser('en', array('de', 'en_GB'));
+        $guesser = $this->getGuesser(array('de', 'en_GB'));
         $guesser->guessLocale($request);
         $this->assertEquals('en_GB', $guesser->getIdentifiedLocale());
 
-        $guesser = $this->getGuesser('en', array('fr', 'en_GB'));
+        $guesser = $this->getGuesser(array('fr', 'en_GB'));
         $guesser->guessLocale($request);
         $this->assertEquals('fr_CH', $guesser->getIdentifiedLocale());
 
-        $guesser = $this->getGuesser('en', array('en_GB', 'fr'));
+        $guesser = $this->getGuesser(array('en_GB', 'fr'));
         $guesser->guessLocale($request);
         $this->assertEquals('fr_CH', $guesser->getIdentifiedLocale());
 
-        $guesser = $this->getGuesser('en', array('fr_FR', 'en'));
+        $guesser = $this->getGuesser(array('fr_FR', 'en'));
         $guesser->guessLocale($request);
         $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
 
-        $guesser = $this->getGuesser('en', array('en', 'fr_FR',));
+        $guesser = $this->getGuesser(array('en', 'fr_FR',));
         $guesser->guessLocale($request);
         $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
     }
@@ -113,7 +113,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function testLocaleIsNotIdentifiedIsNoMatchedLanguage()
     {
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser('en', array('ar', 'es'));
+        $guesser = $this->getGuesser(array('ar', 'es'));
         $guesser->guessLocale($request);
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
@@ -121,7 +121,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function testLocaleIsNotIdentifiedIsNoMatchedLanguageTestFallbackForNoIntlExtension()
     {
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser('en', array('ar', 'es'));
+        $guesser = $this->getGuesser(array('ar', 'es'));
         $reflectionClass = new \ReflectionClass($guesser);
         $property = $reflectionClass->getProperty('intlExtension');
         $property->setAccessible(true);
@@ -130,9 +130,9 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
-    private function getGuesser($defaultLocale = 'en', $allowedLocales = array('en', 'fr', 'de'))
+    private function getGuesser($allowedLocales = array('en', 'fr', 'de'))
     {
-        $guesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
+        $guesser = new BrowserLocaleGuesser($allowedLocales);
 
         return $guesser;
     }

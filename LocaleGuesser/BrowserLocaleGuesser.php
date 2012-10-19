@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class BrowserLocaleGuesser implements LocaleGuesserInterface
 {
-    private $defaultLocale;
-
     private $allowedLocales;
 
     private $identifiedLocale;
@@ -30,12 +28,10 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
     /**
      * Constructor
      *
-     * @param string $defaultLocale  The default locale
-     * @param array  $allowedLocales Array of allowed locales
+     * @param array $allowedLocales Array of allowed locales
      */
-    public function __construct($defaultLocale, array $allowedLocales)
+    public function __construct(array $allowedLocales)
     {
-        $this->defaultLocale = $defaultLocale;
         $this->allowedLocales = $allowedLocales;
         $this->intlExtension = extension_loaded('intl');
     }

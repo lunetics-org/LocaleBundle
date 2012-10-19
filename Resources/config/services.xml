@@ -15,7 +15,6 @@
         </service>
 
         <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
-            <argument>%locale%</argument>
             <argument>%lunetics_locale.allowed_locales%</argument>
             <tag name="lunetics_locale.guesser" alias="browser" />
         </service>
