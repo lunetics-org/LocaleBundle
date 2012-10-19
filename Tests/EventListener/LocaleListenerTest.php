@@ -143,7 +143,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $allowedLocales = array('de', 'fr', 'nl', 'es', 'en');
         $manager = new LocaleGuesserManager($order);
         $routerGuesser = new RouterLocaleGuesser(true, $allowedLocales);
-        $browserGuesser = new BrowserLocaleGuesser($defaultLocale, $allowedLocales);
+        $browserGuesser = new BrowserLocaleGuesser($allowedLocales);
         $cookieGuesser = new CookieLocaleGuesser('lunetics_locale');
         $manager->addGuesser($routerGuesser, 'router');
         $manager->addGuesser($browserGuesser, 'browser');
