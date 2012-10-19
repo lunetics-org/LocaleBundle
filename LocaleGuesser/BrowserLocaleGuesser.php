@@ -133,9 +133,9 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
         $providedLanguages = array();
         foreach ($availableLocales as $locale) {
             if ($this->intlExtension) {
-                $language = $this->getPrimaryLanguage($locale);
-            } else {
                 $language = \Locale::getPrimaryLanguage($locale);
+            } else {
+                $language = $this->getPrimaryLanguage($locale);
             }
             if ($language) {
                 $providedLanguages[] = $language;
