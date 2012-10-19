@@ -3,13 +3,17 @@ language: php
 php:
   - 5.3
   - 5.4
+env:
+  - SYMFONY_VERSION=2.1.*
+  - SYMFONY_VERSION=dev-master
 
 before_script:
-  - curl -s http://getcomposer.org/installer | php --
-  - php composer.phar install
+  - composer require symfony/framework-bundle:${SYMFONY_VERSION}
+  - composer install --dev
 
-script: phpunit
+script: phpunit --coverage-text
 
 notifications:
   email:
     - willemsen.christophe@gmail.com
+    - mb@lunetics.com
