@@ -78,6 +78,7 @@
         </service>
 
         <service id="lunetics_locale.switcher_controller" class="Lunetics\LocaleBundle\Controller\LocaleController" scope="request">
+            <argument type="service" id="router" />
         </service>
     </services>
 </container>
