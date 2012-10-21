@@ -27,7 +27,7 @@ interface LocaleGuesserInterface
     public function guessLocale(Request $request);
 
     /**
-     * @return bool|mixed|string
+     * @return mixed
      */
     public function getIdentifiedLocale();
 }
