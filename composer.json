@@ -23,6 +23,7 @@
     },
     "require-dev": {
        	"twig/twig": "1.*",
+        "symfony/validator": ">=2.1,<2.3-dev",
         "ext-intl": "*"
     },
     "suggest": {
