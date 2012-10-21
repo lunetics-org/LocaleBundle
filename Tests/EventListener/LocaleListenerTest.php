@@ -129,19 +129,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $request->getLocale());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testNotAllowedLocalesAreRejected()
-    {
-        $this->markTestIncomplete('Should we still throw exceptions when using the validator?');
-        $request = $this->getRequestWithRouterParam('ru');
-        $manager = $this->getGuesserManager(array(0 => 'router'));
-        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
-        $event = $this->getEvent($request);
-        $listener->onKernelRequest($event);
-    }
-
     private function getEvent(Request $request)
     {
         return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
