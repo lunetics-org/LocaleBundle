@@ -5,12 +5,18 @@
 <parameters>
         <parameter key="lunetics_locale.request_listener.class">Lunetics\LocaleBundle\EventListener\LocaleListener</parameter>
         <parameter key="lunetics_locale.guesser_manager.class">Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager</parameter>
+        <parameter key="lunetics_locale.information.class">Lunetics\LocaleBundle\LocaleInformaion\LocaleInformation</parameter>
     </parameters>
     <services>
 
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
+        </service>
+
+        <service id="lunetics_locale.information" class="%lunetics_locale.information.class%">
+            <argument type="service" id="lunetics_locale.validator.meta" />
+            <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
 
         <service id="lunetics_locale.locale_cookie" class="%lunetics_locale.cookie.class%">
