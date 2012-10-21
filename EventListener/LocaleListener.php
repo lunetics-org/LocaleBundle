@@ -17,7 +17,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
-use Lunetics\LocaleBundle\Validator\LocaleValidator;
 
 /**
  * Locale Listener
@@ -27,25 +26,43 @@ use Lunetics\LocaleBundle\Validator\LocaleValidator;
  */
 class LocaleListener
 {
+    /**
+     * @var string Default framework locale
+     */
     private $defaultLocale;
 
+    /**
+     * @var LocaleGuesserManager
+     */
     private $guesserManager;
 
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
+    /**
+     * @var EventDispatcher
+     */
     private $dispatcher;
 
+    /**
+     * @var LocaleCookie
+     */
     private $localeCookie;
 
+    /**
+     * @var string
+     */
     private $identifiedLocale;
 
     /**
      * Construct the guessermanager
      *
-     * @param string               $defaultLocale
-     * @param LocaleGuesserManager $guesserManager
-     * @param LocaleCookie         $localeCookie
-     * @param LoggerInterface      $logger
+     * @param string               $defaultLocale  Framework default locale
+     * @param LocaleGuesserManager $guesserManager Locale Guesser Manager
+     * @param LocaleCookie         $localeCookie   Locale Cookie
+     * @param LoggerInterface      $logger         Logger
      */
     public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LocaleCookie $localeCookie, LoggerInterface $logger = null)
     {
@@ -77,8 +94,6 @@ class LocaleListener
 
         $manager = $this->guesserManager;
         if ($locale = $manager->runLocaleGuessing($request)) {
-            $validator = new LocaleValidator();
-            $validator->validate($locale);
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setLocale($locale);
             $this->identifiedLocale = $locale;
@@ -124,6 +139,8 @@ class LocaleListener
      * Called at the kernel.response event to attach the cookie to the request
      *
      * @param Event $event
+     *
+     * @return \Symfony\Component\HttpFoundation\Response;
      */
     public function onResponse(Event $event)
     {

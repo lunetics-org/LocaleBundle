@@ -29,6 +29,9 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('strict_mode')
+                    ->defaultFalse()
+                ->end()
                 ->arrayNode('allowed_locales')
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()

@@ -40,6 +40,18 @@ lunetics_locale:
     - de
 ```
 
+#### Strict Mode
+
+``` yaml
+lunetics_locale:
+  strict_mode: true # defaults to false
+```
+You can set a **'strict_mode'**, where only EXACTLY! the allowed locales will be tested. For example:
+* If your user has a browser locale with `de_DE` and `de`, the locale `de` will be chosen!
+* If your user has a browser locale with `de` and you only explicit allow `de_DE`, no locale will be detected!
+
+We encourage you to use the non-strict mode, that'll also choose the best region locale for your user.
+
 ### Guessers
 
 You need to activate and define the order of the locale guessers. This is done in one step in the configuration :
