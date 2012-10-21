@@ -56,7 +56,9 @@ class CookieLocaleGuesser implements LocaleGuesserInterface
      */
     public function guessLocale(Request $request)
     {
-        if ($request->cookies->has($this->localeCookieName) && $this->metaValidator->isAllowed($request->cookies->get($this->localeCookieName))) {
+        if ($request->cookies->has($this->localeCookieName)
+                && $this->metaValidator->isAllowed($request->cookies->get($this->localeCookieName))
+        ) {
             $this->identifiedLocale = $request->cookies->get($this->localeCookieName);
 
             return true;
