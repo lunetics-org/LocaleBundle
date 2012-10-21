@@ -72,13 +72,6 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
             return true;
         }
 
-        /**$primaryLanguage = $this->getPrimaryLanguage($preferredLocale);
-        if ($validator->isAllowed($primaryLanguage)) {
-        $this->identifiedLocale = $preferredLocale;
-
-        return true;
-        }**/
-
         // Get a list of available and allowed locales and return the first result
         $matchLocale = function ($v) use ($validator) {
             return $validator->isAllowed($v);
