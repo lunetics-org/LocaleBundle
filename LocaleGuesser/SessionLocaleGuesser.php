@@ -11,9 +11,10 @@ namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 /**
- * This guesser class checks the session for a var
+ * Locale Guesser for retrieving a previously deteced locale from the session
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
@@ -30,6 +31,10 @@ class SessionLocaleGuesser implements LocaleGuesserInterface
     private $identifiedLocale;
 
     /**
+     * @var MetaValidator
+     */
+    private $metaValidator;
+    /**
      * @var Session
      */
     private $session;
@@ -37,11 +42,13 @@ class SessionLocaleGuesser implements LocaleGuesserInterface
     /**
      * Constructor
      *
-     * @param Session $session         Session
-     * @param string  $sessionVariable Key value for the Session
+     * @param Session       $session         Session
+     * @param MetaValidator $metaValidator   MetaValidator
+     * @param string        $sessionVariable Key value for the Session
      */
-    public function __construct(Session $session, $sessionVariable = 'lunetics_locale')
+    public function __construct(Session $session, MetaValidator $metaValidator, $sessionVariable = 'lunetics_locale')
     {
+        $this->metaValidator = $metaValidator;
         $this->session = $session;
         $this->sessionVariable = $sessionVariable;
     }
@@ -56,6 +63,10 @@ class SessionLocaleGuesser implements LocaleGuesserInterface
     public function guessLocale(Request $request)
     {
         if ($this->session->has($this->sessionVariable)) {
+            $locale = $this->session->get($this->sessionVariable);
+            if (!$this->metaValidator->isAllowed($locale)) {
+                return false;
+            }
             $this->identifiedLocale = $this->session->get($this->sessionVariable);
 
             return true;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the LuneticsLocaleBundle package.
+ *
+ * <https://github.com/lunetics/LocaleBundle/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that is distributed with this source code.
+ */
 
 namespace Lunetics\LocaleBundle\Tests\EventListener;
 
@@ -8,6 +16,7 @@ use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -83,7 +92,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Router is prio 1
-     * Request DOES NOT contains _locale parameter in router
+     * Request DOES NOT contains _locale parameter in rou$defaultLocale = 'en';ter
      * Request contains browser locale preferences
      */
     public function testThatGuesserIsNotCalledIfNotInGuessingOrder()
@@ -120,18 +129,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $request->getLocale());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testNotAllowedLocalesAreRejected()
-    {
-        $request = $this->getRequestWithRouterParam('ru');
-        $manager = $this->getGuesserManager(array(0 => 'router'));
-        $listener = new LocaleListener('en', $manager, $this->getLocaleCookie());
-        $event = $this->getEvent($request);
-        $listener->onKernelRequest($event);
-    }
-
     private function getEvent(Request $request)
     {
         return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
@@ -139,17 +136,44 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getGuesserManager($order = array(1 => 'router', 2 => 'browser'))
     {
-        $defaultLocale = 'en';
-        $allowedLocales = array('de', 'fr', 'nl', 'es', 'en');
+        $allowedLocales = array('de', 'fr', 'fr_FR', 'nl', 'es', 'en');
+        $metaValidator = $this->getMetaValidatorMock();
+        $callBack = function ($v) use ($allowedLocales) {
+            return in_array($v, $allowedLocales);
+        };
+        $metaValidator->expects($this->any())
+                ->method('isAllowed')
+                ->will($this->returnCallback($callBack));
+
         $manager = new LocaleGuesserManager($order);
-        $routerGuesser = new RouterLocaleGuesser(true, $allowedLocales);
-        $browserGuesser = new BrowserLocaleGuesser($allowedLocales);
-        $cookieGuesser = new CookieLocaleGuesser('lunetics_locale');
+        $routerGuesser = new RouterLocaleGuesser($metaValidator, true);
+        $browserGuesser = new BrowserLocaleGuesser($metaValidator);
+        $cookieGuesser = new CookieLocaleGuesser($metaValidator, 'lunetics_locale');
         $manager->addGuesser($routerGuesser, 'router');
         $manager->addGuesser($browserGuesser, 'browser');
         $manager->addGuesser($cookieGuesser, 'cookie');
 
         return $manager;
+    }
+
+    /**
+     * @return LocaleGuesserInterface
+     */
+    private function getGuesserMock()
+    {
+        $mock = $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface')->disableOriginalConstructor()->getMock();
+
+        return $mock;
+    }
+
+    /**
+     * @return MetaValidator
+     */
+    private function getMetaValidatorMock()
+    {
+        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
+
+        return $mock;
     }
 
     private function getRequestWithRouterParam($routerLocale = 'es')

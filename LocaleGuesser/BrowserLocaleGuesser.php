@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 /**
  * Locale Guesser for detecing the locale from the browser Accept-language string
@@ -19,26 +20,35 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class BrowserLocaleGuesser implements LocaleGuesserInterface
 {
-    private $allowedLocales;
-
+    /**
+     * @var string
+     */
     private $identifiedLocale;
 
+    /**
+     * @var bool
+     */
     private $intlExtension;
+
+    /**
+     * @var MetaValidator
+     */
+    private $metaValidator;
 
     /**
      * Constructor
      *
-     * @param array $allowedLocales         Array of allowed locales
-     * @param bool  $intlExtensionInstalled Wether the intl extension is installed
+     * @param MetaValidator $metaValidator          MetaValidator
+     * @param bool          $intlExtensionInstalled Wether the intl extension is installed
      */
-    public function __construct(array $allowedLocales, $intlExtensionInstalled = false)
+    public function __construct(MetaValidator $metaValidator, $intlExtensionInstalled = false)
     {
-        $this->allowedLocales = $allowedLocales;
+        $this->metaValidator = $metaValidator;
         $this->intlExtension = $intlExtensionInstalled;
     }
 
     /**
-     * Guess the locale based on browser settings
+     * Guess the locale based on the browser settings
      *
      * @param Request $request
      *
@@ -46,58 +56,30 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
      */
     public function guessLocale(Request $request)
     {
+        $validator = $this->metaValidator;
         // Get the preferred locale from the Browser.
         $preferredLocale = $request->getPreferredLanguage();
         $availableLocales = $request->getLanguages();
-        $allowedLocales = $this->allowedLocales;
-
 
         if (!$preferredLocale OR count($availableLocales) === 0) {
             return false;
         }
 
         // If the preferred primary locale is allowed, return the locale.
-        if (in_array($preferredLocale, $allowedLocales)) {
+        if ($validator->isAllowed($preferredLocale)) {
             $this->identifiedLocale = $preferredLocale;
 
             return true;
         }
 
-        if ($this->intlExtension) {
-            $primaryLanguage = \Locale::getPrimaryLanguage($preferredLocale);
-        } else {
-            $primaryLanguage = $this->getPrimaryLanguage($preferredLocale);
-        }
+        // Get a list of available and allowed locales and return the first result
+        $matchLocale = function ($v) use ($validator) {
+            return $validator->isAllowed($v);
+        };
 
-        if (!in_array($primaryLanguage, $allowedLocales)) {
-
-            // Try to find a full locale (Language + country)
-            $matchLocale = function ($v) use ($allowedLocales) {
-                if (in_array($v, $allowedLocales)) {
-                    return true;
-                }
-
-                return false;
-            };
-
-            $result = array_values(array_filter($availableLocales, $matchLocale));
-
-            if (!empty($result)) {
-                $this->identifiedLocale = $result[0];
-
-                return true;
-            }
-
-            // Try to find a language
-            $availableLanguages = $this->compileLanguageArray($availableLocales);
-            $result = array_values(array_filter($availableLanguages, $matchLocale));
-            if (!empty($result)) {
-                $this->identifiedLocale = $result[0];
-
-                return true;
-            }
-        } else {
-            $this->identifiedLocale = $preferredLocale;
+        $result = array_values(array_filter($availableLocales, $matchLocale));
+        if (!empty($result)) {
+            $this->identifiedLocale = $result[0];
 
             return true;
         }
@@ -114,36 +96,12 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
      */
     private function getPrimaryLanguage($locale)
     {
-        $primaryLanguage = substr($locale, 0, 2);
-        if (preg_match('/[a-z]{2}/', $primaryLanguage)) {
-            return $primaryLanguage;
+        if ($this->intlExtension) {
+            return \Locale::getPrimaryLanguage($locale);
         }
+        $splittedLocale = explode('_', $locale);
 
-        return null;
-    }
-
-    /**
-     * Compiles a list of all available languages from a locale list
-     *
-     * @param array $availableLocales
-     *
-     * @return array
-     */
-    private function compileLanguageArray(array $availableLocales = array())
-    {
-        $providedLanguages = array();
-        foreach ($availableLocales as $locale) {
-            if ($this->intlExtension) {
-                $language = \Locale::getPrimaryLanguage($locale);
-            } else {
-                $language = $this->getPrimaryLanguage($locale);
-            }
-            if ($language) {
-                $providedLanguages[] = $language;
-            }
-        }
-
-        return array_unique($providedLanguages);
+        return count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
     }
 
     /**

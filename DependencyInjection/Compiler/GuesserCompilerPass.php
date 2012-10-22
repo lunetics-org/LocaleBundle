@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class GuesserCompilerPass implements CompilerPassInterface
 {
     /**
-     * Compilerpass for Timezone Guessers
+     * Compilerpass for Locale Guessers
      *
      * @param ContainerBuilder $container
      */

@@ -10,54 +10,65 @@
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
-use Lunetics\LocaleBundle\Validator\LocaleValidator;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 /**
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * Locale Guesser for detecing the locale in the router
+ *
+ * @author Matthias Breddin <mb@lunetics.com>
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
 class RouterLocaleGuesser implements LocaleGuesserInterface
 {
+    /**
+     * @var bool
+     */
     private $checkQuery;
 
-    private $identifiedLocale = null;
+    /**
+     * @var string
+     */
+    private $identifiedLocale;
 
-    private $allowedLocales;
+    /**
+     * @var MetaValidator
+     */
+    private $metaValidator;
 
     /**
      * Constructor
      *
-     * @param boolean $checkQuery
+     * @param MetaValidator $metaValidator MetaValidator
+     * @param boolean       $checkQuery    Wether to check the query for a locale
      */
-    public function __construct($checkQuery = true, array $allowedLocales = array('en'))
+    public function __construct(MetaValidator $metaValidator, $checkQuery = true)
     {
+        $this->metaValidator = $metaValidator;
         $this->checkQuery = $checkQuery;
-        $this->allowedLocales = $allowedLocales;
     }
 
     /**
      * Method that guess the locale based on the Router parameters
      *
-     * The Symfony\Component\HttpKernel\EventListener\LocaleListener
-     * does not check for query parameters
+     * @param Request $request
      *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @return boolean                                   true if locale is detected, false otherwise
+     * @return boolean True if locale is detected, false otherwise
      */
     public function guessLocale(Request $request)
     {
-        $validator = new LocaleValidator();
-        if ($this->checkQuery) {
-            if ($request->query->has('_locale') && $validator->validate($request->query->get('_locale'), $this->allowedLocales)) {
+        $localeValidator = $this->metaValidator;
+        if ($this->checkQuery && $request->query->has('_locale')) {
+            if ($localeValidator->isAllowed($request->query->get('_locale'))) {
                 $this->identifiedLocale = $request->query->get('_locale');
 
                 return true;
             }
         }
         if ($locale = $request->attributes->get('_locale')) {
-            if ($validator->validate($locale, $this->allowedLocales)){
+            if ($localeValidator->isAllowed($locale)) {
                 $this->identifiedLocale = $locale;
             }
-            
+
             return true;
         }
 
@@ -65,10 +76,7 @@ class RouterLocaleGuesser implements LocaleGuesserInterface
     }
 
     /**
-     * Returns the Identified Locale
-     *
-     * @return string If a locale has been identified in the route parameters
-     * @return false  otherwise
+     * {@inheritDoc}
      */
     public function getIdentifiedLocale()
     {
