@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * This file is part of the LuneticsLocaleBundle package.
+ *
+ * <https://github.com/lunetics/LocaleBundle/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that is distributed with this source code.
+ */
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
@@ -8,131 +15,141 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('\Locale')) {
-            $this->markTestSkipped('The intl extension can not be found');
-        }
-    }
-
     public function testGuesserExtendsInterface()
     {
-        $guesser = $this->getGuesser();
+        $metaValidator = $this->getMetaValidatorMock();
+        $guesser = $this->getGuesser($metaValidator);
         $this->assertTrue($guesser instanceof LocaleGuesserInterface);
+    }
+
+    public function testNoPreferredLocale()
+    {
+        $metaValidator = $this->getMetaValidatorMock();
+        $guesser = $this->getGuesser($metaValidator);
+        $request = Request::create('/');
+        $request->headers->set('Accept-language', '');
+        $this->assertFalse($guesser->guessLocale($request));
+        $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
     public function testLocaleIsIdentifiedFromBrowser()
     {
+        $metaValidator = $this->getMetaValidatorMock();
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser();
-        $guesser->guessLocale($request);
+        $guesser = $this->getGuesser($metaValidator);
+
+        $metaValidator->expects($this->once())
+                ->method('isAllowed')
+                ->will($this->returnValue(true));
+
+        $this->assertTrue($guesser->guessLocale($request));
         $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
     }
+
 
     public function testLocaleIsIdentifiedFromBrowserTestFallbackForNoIntlExtension()
     {
+        $metaValidator = $this->getMetaValidatorMock();
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser();
+        $guesser = $this->getGuesser($metaValidator);
+
         $reflectionClass = new \ReflectionClass($guesser);
         $property = $reflectionClass->getProperty('intlExtension');
         $property->setAccessible(true);
         $property->setValue($guesser, false);
-        $guesser->guessLocale($request);
-        $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
-    }
 
-    public function testLocaleIsNotIdentifiedIsBrowserPreferencesIsEmpty()
-    {
-        $request = $this->getRequestWithEmptyBrowserPreferences();
-        $guesser = $this->getGuesser();
-        $guesser->guessLocale($request);
-        $this->assertEquals(false, $guesser->getIdentifiedLocale());
-    }
+        $metaValidator->expects($this->once())
+                ->method('isAllowed')
+                ->with('fr_FR')
+                ->will($this->returnValue(true));
 
-    public function testLocaleIsNotIdentifiedIsBrowserPreferencesIsEmptyTestFallbackForNoIntlExtension()
-    {
-        $request = $this->getRequestWithEmptyBrowserPreferences();
-        $guesser = $this->getGuesser();
-        $reflectionClass = new \ReflectionClass($guesser);
-        $property = $reflectionClass->getProperty('intlExtension');
-        $property->setAccessible(true);
-        $property->setValue($guesser, false);
-        $guesser->guessLocale($request);
-        $this->assertEquals(false, $guesser->getIdentifiedLocale());
-    }
-
-    public function testRestrictionWithLocalesOnly()
-    {
-        $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser(array('fr_FR', 'en_US'));
-        $guesser->guessLocale($request);
-        $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
-    }
-
-    public function testRestrictionWithLocalesOnlyNotIdentified()
-    {
-        $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser(array('fr_CH', 'en_GB'));
-        $guesser->guessLocale($request);
-        $this->assertFalse($guesser->getIdentifiedLocale());
-    }
-
-    public function testReturnCorrectLocaleForLanguage()
-    {
-        $request = $this->getRequestWithBrowserPreferencesMultipleLangLocales();
-        $guesser = $this->getGuesser(array('fr_FR', 'en_US'));
-        $guesser->guessLocale($request);
-        $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
-    }
-
-    public function testEnsureCorrectLocaleForAllowedLocales()
-    {
-        $request = $this->getRequestWithBrowserPreferencesMultipleLangLocales();
-
-        $guesser = $this->getGuesser(array('de', 'en_GB'));
-        $guesser->guessLocale($request);
-        $this->assertEquals('en_GB', $guesser->getIdentifiedLocale());
-
-        $guesser = $this->getGuesser(array('fr', 'en_GB'));
-        $guesser->guessLocale($request);
-        $this->assertEquals('fr_CH', $guesser->getIdentifiedLocale());
-
-        $guesser = $this->getGuesser(array('en_GB', 'fr'));
-        $guesser->guessLocale($request);
-        $this->assertEquals('fr_CH', $guesser->getIdentifiedLocale());
-
-        $guesser = $this->getGuesser(array('fr_FR', 'en'));
-        $guesser->guessLocale($request);
-        $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
-
-        $guesser = $this->getGuesser(array('en', 'fr_FR',));
-        $guesser->guessLocale($request);
+        $this->assertTrue($guesser->guessLocale($request));
         $this->assertEquals('fr_FR', $guesser->getIdentifiedLocale());
     }
 
     public function testLocaleIsNotIdentifiedIsNoMatchedLanguage()
     {
+        $metaValidator = $this->getMetaValidatorMock();
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser(array('ar', 'es'));
-        $guesser->guessLocale($request);
+        $guesser = $this->getGuesser($metaValidator);
+
+        $metaValidator->expects($this->any())
+                ->method('isAllowed')
+                ->will($this->returnValue(false));
+        $this->assertFalse($guesser->guessLocale($request));
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
     public function testLocaleIsNotIdentifiedIsNoMatchedLanguageTestFallbackForNoIntlExtension()
     {
+        $metaValidator = $this->getMetaValidatorMock();
         $request = $this->getRequestWithBrowserPreferences();
-        $guesser = $this->getGuesser(array('ar', 'es'));
+        $guesser = $this->getGuesser($metaValidator);
+
         $reflectionClass = new \ReflectionClass($guesser);
         $property = $reflectionClass->getProperty('intlExtension');
         $property->setAccessible(true);
         $property->setValue($guesser, false);
+
+        $metaValidator->expects($this->any())
+                ->method('isAllowed')
+                ->will($this->returnValue(false));
+
         $guesser->guessLocale($request);
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
-    private function getGuesser($allowedLocales = array('en', 'fr', 'de'))
+    public function correctLocales()
     {
-        $guesser = new BrowserLocaleGuesser($allowedLocales);
+        return array(
+            'strict 1' => array(array('en', 'de', 'fr'), 'fr', true),
+            'unstrict 1' => array(array('en', 'de', 'fr'), 'fr_CH', false),
+            'strict 2' => array(array('de', 'en_GB', 'fr', 'fr_FR'), 'fr', true),
+            'unstrict 2' => array(array('de', 'en_GB', 'fr', 'fr_FR'), 'fr_CH', false),
+            'strict 3' => array(array('en', 'en_GB', 'fr', 'fr'), 'fr', true),
+            'unstrict 3' => array(array('en', 'en_GB', 'fr', 'fr_CH'), 'fr_CH', false),
+            'strict 4' => array(array('fr', 'en_GB'), 'fr', true),
+            'unstrict 4' => array(array('fr', 'en_GB'), 'fr_CH', false),
+            'strict 5' => array(array('fr_LI', 'en'), 'en', true),
+            'unstrict 5' => array(array('fr_LI', 'en'), 'en_GB', false)
+        );
+    }
+
+    /**
+     * @dataProvider correctLocales
+     *
+     * @param array  $allowedLocales
+     * @param string $result
+     */
+    public function testEnsureCorrectLocaleForAllowedLocales($allowedLocales, $result, $strict)
+    {
+        $metaValidator = $this->getMetaValidatorMock();
+        $request = $this->getRequestWithBrowserPreferencesMultipleLangLocales();
+        $guesser = $this->getGuesser($metaValidator, $allowedLocales);
+
+        // Emulate a simple validator for strict mode
+        $metaValidator->expects($this->atLeastOnce())
+                ->method('isAllowed')
+                ->will($this->returnCallback(function ($v) use ($allowedLocales, $strict) {
+            if (in_array($v, $allowedLocales)) {
+                return true;
+            } elseif (!$strict) {
+                $splittedLocale = explode('_', $v);
+                $v = count($splittedLocale) > 1 ? $splittedLocale[0] : $v;
+
+                return in_array($v, $allowedLocales);
+            }
+
+            return false;
+        }));
+
+        $this->assertTrue($guesser->guessLocale($request));
+        $this->assertEquals($result, $guesser->getIdentifiedLocale());
+    }
+
+    private function getGuesser($metaValidator, $allowedLocales = array('en', 'fr', 'de'))
+    {
+        $guesser = new BrowserLocaleGuesser($metaValidator, $allowedLocales);
 
         return $guesser;
     }
@@ -153,11 +170,10 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
-    private function getRequestWithEmptyBrowserPreferences()
+    private function getMetaValidatorMock()
     {
-        $request = Request::create('/');
-        $request->headers->set('Accept-language', '');
+        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
 
-        return $request;
+        return $mock;
     }
 }

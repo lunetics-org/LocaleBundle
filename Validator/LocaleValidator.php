@@ -9,42 +9,104 @@
  */
 namespace Lunetics\LocaleBundle\Validator;
 
-use Symfony\Component\Locale\Locale;
+use Symfony\Component\Locale\Locale as SymfonyLocale;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+
 
 /**
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * Validator for a locale
+ *
+ * @author Matthias Bredin <mb@lunetics.com>
  */
-class LocaleValidator
+class LocaleValidator extends ConstraintValidator
 {
     /**
-     *
-     * @param  string                    $locale The locale to be validated
-     * @return string                    The cleaned locale if needed
-     * @throws \InvalidArgumentException When the locale is not a valid locale
+     * @var bool
      */
-    public function validate($locale, array $allowedLocales = array())
+    private $intlExtension;
+
+    /**
+     * @var array
+     */
+    private $iso3166;
+
+    /**
+     * @var array
+     */
+    private $iso639;
+
+    /**
+     * @var array
+     */
+    private $script;
+
+    /**
+     * Constructor
+     *
+     * @param bool  $intlExtension Wether the intl extension is installed
+     * @param array $iso3166       Array of valid iso3166 codes
+     * @param array $iso639        Array of valid iso639 codes
+     * @param array $script        Array of valid locale scripts
+     */
+    public function __construct($intlExtension = false, array $iso3166 = array(), array $iso639 = array(), array $script = array())
     {
-        $splittedLocale = explode('_', $locale);
-        $primary = count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
-        $variant = count($splittedLocale) > 1 ? $splittedLocale[1] : null;
-        if (!in_array($primary, Locale::getLocales())) {
-            throw new \InvalidArgumentException(sprintf('The locale %s is not a valid locale', $primary));
-        }
-        //If a variant is set and is not different from the primary language, check for variant validity
-        if (null !== $variant && strtolower($primary) != strtolower($variant)) {
-            $loc = strtolower($primary).'_'.strtoupper($variant);
-            if (!in_array($loc, Locale::getLocales())) {
-                throw new \InvalidArgumentException(sprintf('The locale %s is not a valid locale', $primary));
-            }
+        $this->intlExtension = $intlExtension;
+        $this->iso3166 = $iso3166;
+        $this->iso639 = $iso639;
+        $this->script = $script;
+    }
+
+    /**
+     * Validates a Locale
+     *
+     * @param string     $locale     The locale to be validated
+     * @param Constraint $constraint Locale Constraint
+     *
+     * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
+     */
+    public function validate($locale, Constraint $constraint)
+    {
+        if (null === $locale || '' === $locale) {
+            return;
         }
 
-        // Check against an array of allowed locales
-        if (!empty($allowedLocales)){
-            if (!in_array($locale, $allowedLocales)){
-                throw new \InvalidArgumentException(sprintf('The locale %s is not allowed by the application configuration', $locale));
-            }
+        if (!is_scalar($locale) && !(is_object($locale) && method_exists($locale, '__toString'))) {
+            throw new UnexpectedTypeException($locale, 'string');
         }
 
-        return true;
+        $locale = (string) $locale;
+
+        if ($this->intlExtension) {
+            $primary = SymfonyLocale::getPrimaryLanguage($locale);
+            $region = SymfonyLocale::getRegion($locale);
+            if ((null !== $region && strtolower($primary) != strtolower($region)) && !in_array($locale, SymfonyLocale::getLocales())) {
+                $this->context->addViolation($constraint->message, array('%string%' => $locale));
+            }
+        } else {
+            $splittedLocale = explode('_', $locale);
+            $splitCount = count($splittedLocale);
+
+            if ($splitCount == 1) {
+                $primary = $splittedLocale[0];
+                if (!in_array($primary, $this->iso639)) {
+                    $this->context->addViolation($constraint->message, array('%string%' => $locale));
+                }
+            } elseif ($splitCount == 2) {
+                $primary = $splittedLocale[0];
+                $region = $splittedLocale[1];
+                if (!in_array($primary, $this->iso639) && !in_array($region, $this->iso3166)) {
+                    $this->context->addViolation($constraint->message, array('%string%' => $locale));
+                }
+            } elseif ($splitCount > 2) {
+                $primary = $splittedLocale[0];
+                $script = $splittedLocale[1];
+                $region = $splittedLocale[2];
+                if (!in_array($primary, $this->iso639) && !in_array($region, $this->iso3166) && !in_array($script, $this->script)) {
+                    $this->context->addViolation($constraint->message, array('%string%' => $locale));
+                }
+            }
+        }
     }
 }

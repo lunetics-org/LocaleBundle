@@ -5,36 +5,18 @@
 <parameters>
         <parameter key="lunetics_locale.request_listener.class">Lunetics\LocaleBundle\EventListener\LocaleListener</parameter>
         <parameter key="lunetics_locale.guesser_manager.class">Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager</parameter>
+        <parameter key="lunetics_locale.information.class">Lunetics\LocaleBundle\LocaleInformaion\LocaleInformation</parameter>
     </parameters>
     <services>
-
-        <service id="lunetics_locale.router_guesser" class="%lunetics_locale.router_guesser.class%">
-            <argument>%lunetics_locale.router_guesser.check_query%</argument>
-            <argument>%lunetics_locale.allowed_locales%</argument>
-            <tag name="lunetics_locale.guesser" alias="router" />
-        </service>
-
-        <service id="lunetics_locale.browser_guesser" class="%lunetics_locale.browser_guesser.class%">
-            <argument>%lunetics_locale.allowed_locales%</argument>
-            <argument>%lunetics_locale.intl_extension_installed%</argument>
-            <tag name="lunetics_locale.guesser" alias="browser" />
-        </service>
-
-        <service id="lunetics_locale.cookie_guesser" class="%lunetics_locale.cookie_guesser.class%">
-            <argument>%lunetics_locale.cookie.name%</argument>
-            <argument>%lunetics_locale.allowed_locales%</argument>
-            <tag name="lunetics_locale.guesser" alias="cookie" />
-        </service>
-
-        <service id="lunetics_locale.session_guesser" class="%lunetics_locale.session_guesser.class%">
-            <argument type="service" id="session" />
-            <argument>%lunetics_locale.session.variable%</argument>
-            <tag name="lunetics_locale.guesser" alias="session"/>
-        </service>
 
         <service id="lunetics_locale.guesser_manager" class="%lunetics_locale.guesser_manager.class%">
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
+        </service>
+
+        <service id="lunetics_locale.information" class="%lunetics_locale.information.class%">
+            <argument type="service" id="lunetics_locale.validator.meta" />
+            <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
 
         <service id="lunetics_locale.locale_cookie" class="%lunetics_locale.cookie.class%">

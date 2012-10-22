@@ -25,10 +25,19 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
  */
 class LocaleGuesserManager
 {
+    /**
+     * @var array
+     */
     private $guessingOrder;
 
+    /**
+     * @var array
+     */
     private $guessers;
 
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     /**
