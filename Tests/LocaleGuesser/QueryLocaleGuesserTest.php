@@ -9,23 +9,23 @@
  */
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
-use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
+use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
+class QueryLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
     public function testGuesserExtendsInterface()
     {
-        $guesser = new RouterLocaleGuesser($this->getMetaValidatorMock());
+        $guesser = new QueryLocaleGuesser($this->getMetaValidatorMock());
         $this->assertTrue($guesser instanceof LocaleGuesserInterface);
     }
 
-    public function testLocaleIsIdentified()
+    public function testLocaleIsIdentifiedFromRequestQuery()
     {
-        $request = $this->getRequestWithLocaleParameter();
+        $request = $this->getRequestWithLocaleQuery();
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser = new RouterLocaleGuesser($metaValidator, false);
+        $guesser = new QueryLocaleGuesser($metaValidator);
 
         $metaValidator->expects($this->once())
                 ->method('isAllowed')
@@ -36,17 +36,19 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $guesser->getIdentifiedLocale());
     }
 
-    public function testLocaleIsNotIdentified()
+    public function testLocaleIsNotIdentifiedFromRequestQuery()
     {
-        $request = $this->getRequestWithLocaleQuery('fr');
+        $request = $this->getRequestWithLocaleQuery();
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser = new RouterLocaleGuesser($metaValidator, false);
+        $guesser = new QueryLocaleGuesser($metaValidator);
 
-        $metaValidator->expects($this->never())
-                ->method('isAllowed');
+        $metaValidator->expects($this->once())
+                ->method('isAllowed')
+                ->with('en')
+                ->will($this->returnValue(false));
 
-        $guesser->guessLocale($request);
-        $this->assertEquals(false, $guesser->getIdentifiedLocale());
+        $this->assertFalse($guesser->guessLocale($request));
+        $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
     private function getRequestWithLocaleParameter($locale = 'en')

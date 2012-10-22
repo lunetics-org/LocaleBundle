@@ -84,6 +84,7 @@ class LocaleListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        /** @var $request \Symfony\Component\HttpFoundation\Request */
         $request = $event->getRequest();
 
         if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST && !$request->isXmlHttpRequest()) {
@@ -93,20 +94,28 @@ class LocaleListener
         }
 
         $manager = $this->guesserManager;
-        if ($locale = $manager->runLocaleGuessing($request)) {
+
+        if ($result = $manager->runLocaleGuessing($request)) {
+            $guesser = $result['guesser'];
+            $locale = $result['locale'];
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setLocale($locale);
             $this->identifiedLocale = $locale;
 
+            $forceSet = in_array($guesser, array('query'));
+
+            if ($forceSet) {
+                $this->logEvent('Force setting [ %s ]', $locale);
+            }
             if (in_array('cookie', $manager->getGuessingOrder())) {
-                if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName())) {
+                if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName()) || $forceSet) {
                     $this->addCookieResponseListener();
                 }
             }
             if (in_array('session', $manager->getGuessingOrder())) {
                 /** @var $session \Lunetics\LocaleBundle\LocaleGuesser\SessionLocaleGuesser */
                 $session = $manager->getGuesser('session');
-                $session->setSessionLocale($this->identifiedLocale);
+                $session->setSessionLocale($this->identifiedLocale, $forceSet);
             }
 
             return;
