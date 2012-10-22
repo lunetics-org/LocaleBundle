@@ -47,18 +47,18 @@ class TargetInformationBuilder
      * @param  array           $parameters
      * @return array           Informations for the switcher template
      */
-    public function getTargetInformations(Request $request, RouterInterface $router, $allowedLocales, $parameters = array())
+    public function getTargetInformations(Request $request, RouterInterface $router, $allowedLocales, $showCurrentLocale = false, $parameters = array())
     {
         $infos = array();
         $route = null !== $this->route ? $this->route : $request->attributes->get('_route');
         $infos['current_locale'] = $request->getLocale();
         $infos['current_route'] = $route;
         $targetLocales = $allowedLocales;
-        $parameters = array_merge($request->attributes->get('_route_params'), $request->query->all(), $parameters);
+        $parameters = array_merge((array) $request->attributes->get('_route_params'), $request->query->all(), (array) $parameters);
 
         foreach ($targetLocales as $locale) {
-            // No need to build route and locale names for current locale
-            if (0 !== strpos($request->getLocale(), $locale)) {
+            $strpos = 0 === strpos($request->getLocale(), $locale);
+            if ($showCurrentLocale && $strpos || !$strpos) {
                 $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
                 $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
                 $parameters['_locale'] = $locale;
@@ -74,7 +74,7 @@ class TargetInformationBuilder
                     'locale_target_language' => $targetLocaleTargetLang,
                     'link' => $targetRoute,
                     'locale' => $locale,
-                    );
+                );
             }
         }
 

@@ -13,10 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
 
 /**
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
+ * @author Matthias Breddin <mb@lunetics.com>
  */
 class LocaleSwitcherExtension extends \Twig_Extension
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
     /**
@@ -59,8 +63,9 @@ class LocaleSwitcherExtension extends \Twig_Extension
         $request = $this->container->get('request');
         $router = $this->container->get('router');
         $allowedLocales = $this->container->getParameter('lunetics_locale.allowed_locales');
+        $showCurrentLocale = $this->container->getParameter('lunetics_locale.switcher.show_current_locale');
 
-        $infos = $infosBuilder->getTargetInformations($request, $router, $allowedLocales, $parameters);
+        $infos = $infosBuilder->getTargetInformations($request, $router, $allowedLocales, $showCurrentLocale, $parameters);
 
         return $this->container->get('lunetics_locale.switcher_helper')->renderSwitch($infos, 'switcher_links.html.twig');
     }
