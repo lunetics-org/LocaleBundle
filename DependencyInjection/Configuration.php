@@ -112,7 +112,15 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('template')->defaultValue('links')->end()
                         ->scalarNode('show_current_locale')->defaultFalse()->end()
-                        ->scalarNode('use_controller')->defaultTrue()->end()
+                        ->scalarNode('redirect_to_route')->defaultNull()->end()
+                        ->scalarNode('redirect_statuscode')->defaultValue('302')->end()
+                        ->scalarNode('use_controller')->defaultTrue()
+                            ->validate()
+                                ->ifNull(function($v) {return $v['switcher']['redirect_to_route'];})
+                                ->thenInvalid('You need to specify a default fallback route for the use_controller configuration')
+                             ->end()
+                        ->end()
+                        ->scalarNode('use_referrer')->defaultTrue()->end()
                     ->end()
             ->end();
 
