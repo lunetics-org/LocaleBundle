@@ -112,6 +112,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('template')->defaultValue('links')->end()
                         ->scalarNode('show_current_locale')->defaultFalse()->end()
+                        ->scalarNode('use_controller')->defaultTrue()->end()
                     ->end()
             ->end();
 
