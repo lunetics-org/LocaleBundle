@@ -54,6 +54,8 @@ class LocaleController
     public function switchAction(Request $request)
     {
         $_locale = $request->attributes->get('_locale', $request->getLocale());
+        $statusCode = $request->attributes->get('statusCode', $this->statusCode);
+        $redirectToRoute = $request->attributes->get('route', $this->redirectToRoute);
 
         $metaValidator = $this->metaValidator;
         if (!$metaValidator->isAllowed($_locale)) {
@@ -66,13 +68,13 @@ class LocaleController
 
         // Redirect the User
         if ($this->useReferrer && $request->headers->has('referer')) {
-            $response = new RedirectResponse($request->headers->get('referer'), $this->statusCode);
-        } elseif ($this->router && $this->redirectToRoute) {
-            $response = new RedirectResponse($this->router->generate($this->redirectToRoute, array('_locale' => $_locale)), $this->statusCode);
+            $response = new RedirectResponse($request->headers->get('referer'), $statusCode);
+        } elseif ($this->router && $redirectToRoute) {
+            $response = new RedirectResponse($this->router->generate($redirectToRoute, array('_locale' => $_locale)), $statusCode);
         } else {
             // TODO: this seems broken, as it will not handle if the site runs in a subdir
             // TODO: also it doesn't handle the locale at all and can therefore lead to an infinite redirect
-            $response = new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . '/', $this->statusCode);
+            $response = new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . '/', $statusCode);
         }
         $response->setVary('accept-language');
 
