@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Controller;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 /**
  * Controller for the Switch Locale
@@ -24,19 +25,22 @@ class LocaleController
     protected $router;
     protected $useReferrer;
     protected $redirectToRoute;
+    protected $metaValidator;
 
     /**
      * @param RouterInterface $router          Router Service
+     * @param MetaValidator   $metaValidator   MetaValidator for locales
      * @param bool            $useReferrer     From Config
      * @param null            $redirectToRoute From Config
      * @param string          $statusCode      From Config
      */
-    public function __construct(RouterInterface $router = null, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')
+    public function __construct(RouterInterface $router = null, MetaValidator $metaValidator, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')
     {
         $this->router = $router;
+        $this->metaValidator = $metaValidator;
         $this->useReferrer = $useReferrer;
-        $this->statusCode = $statusCode;
         $this->redirectToRoute = $redirectToRoute;
+        $this->statusCode = $statusCode;
     }
 
     /**
@@ -44,11 +48,17 @@ class LocaleController
      *
      * @param Request $request
      *
+     * @throws \InvalidArgumentException
      * @return RedirectResponse
      */
     public function switchAction(Request $request)
     {
         $_locale = $request->attributes->get('_locale', $request->getLocale());
+
+        $metaValidator = $this->metaValidator;
+        if (!$metaValidator->isAllowed($_locale)) {
+            throw new \InvalidArgumentException(sprintf('Not allowed to switch to locale %s', $_locale));
+        }
         // Save into session
         // TODO: Build Locale Persister and decouple from the guessers
         $session = $request->getSession();

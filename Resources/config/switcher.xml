@@ -27,6 +27,7 @@
 
         <service id="lunetics_locale.switcher_controller" class="Lunetics\LocaleBundle\Controller\LocaleController" scope="request">
             <argument type="service" id="router"/>
+            <argument type="service" id="lunetics_locale.validator.meta" />
             <argument>%lunetics_locale.switcher.use_referrer%</argument>
             <argument>%lunetics_locale.switcher.redirect_to_route%</argument>
             <argument>%lunetics_locale.switcher.redirect_statuscode%</argument>
