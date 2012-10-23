@@ -40,27 +40,5 @@
             </call>
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
         </service>
-
-        <service id="lunetics_locale.switcher_helper" class="Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper">
-            <argument type="service" id="templating" />
-            <argument>%lunetics_locale.switcher.template%</argument>
-            <tag name="templating.helper" alias="switch" />
-        </service>
-
-        <service id="lunetics_locale.twig.change_language" class="Lunetics\LocaleBundle\Twig\Extension\ChangeLanguageExtension">
-            <call method="setServiceContainer">
-                <argument type="service" id="service_container"/>
-            </call>
-            <tag name="twig.extension" />
-        </service>
-
-        <service id="lunetics_locale.twig.switcher" class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
-            <argument type="service" id="service_container" />
-            <tag name="twig.extension" />
-        </service>
-
-        <service id="lunetics_locale.switcher_controller" class="Lunetics\LocaleBundle\Controller\LocaleController" scope="request">
-            <argument type="service" id="router" />
-        </service>
     </services>
 </container>
