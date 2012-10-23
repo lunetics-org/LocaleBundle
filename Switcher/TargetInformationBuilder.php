@@ -15,15 +15,33 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Locale\Locale;
 
 /**
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * Builder to generate information about the switcher links
+ *
+ * @author Matthias Breddin <mb@lunetics.com>
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
 class TargetInformationBuilder
 {
-    private $route;
+    private $request;
+    private $router;
+    private $showCurrentLocale;
+    private $useController;
+    private $allowedLocales;
 
-    public function __construct($route = null)
+    /**
+     * @param Request         $request           Request
+     * @param RouterInterface $router            Router
+     * @param array           $allowedLocales    Config Var
+     * @param bool            $showCurrentLocale Config Var
+     * @param bool            $useController     Config Var
+     */
+    public function __construct(Request $request, RouterInterface $router, $allowedLocales = array(), $showCurrentLocale = false, $useController = true)
     {
-        $this->route = $route;
+        $this->request = $request;
+        $this->router = $router;
+        $this->allowedLocales = $allowedLocales;
+        $this->showCurrentLocale = $showCurrentLocale;
+        $this->useController = $useController;
     }
 
     /**
@@ -41,29 +59,38 @@ class TargetInformationBuilder
      *     locale_target_language: English
      *     locale_current_language: Anglais
      *
-     * @param  Request         $request
-     * @param  RouterInterface $router
-     * @param  array           $allowedLocales
-     * @param  array           $parameters
+     * @param string|null $targetRoute The target route
+     * @param array       $parameters  Parameters
+     *
      * @return array           Informations for the switcher template
      */
-    public function getTargetInformations(Request $request, RouterInterface $router, $allowedLocales, $showCurrentLocale = false, $parameters = array())
+    public function getTargetInformations($targetRoute = null, $parameters = array())
     {
-        $infos = array();
-        $route = null !== $this->route ? $this->route : $request->attributes->get('_route');
+        $request = $this->request;
+        $router = $this->router;
+        $route = $request->attributes->get('_route');
+
         $infos['current_locale'] = $request->getLocale();
         $infos['current_route'] = $route;
-        $targetLocales = $allowedLocales;
+        $infos['locales'] = array();
+
         $parameters = array_merge((array) $request->attributes->get('_route_params'), $request->query->all(), (array) $parameters);
 
+        $targetLocales = $this->allowedLocales;
         foreach ($targetLocales as $locale) {
             $strpos = 0 === strpos($request->getLocale(), $locale);
-            if ($showCurrentLocale && $strpos || !$strpos) {
+            if ($this->showCurrentLocale && $strpos || !$strpos) {
                 $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
                 $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
                 $parameters['_locale'] = $locale;
                 try {
-                    $targetRoute = $router->generate($route, $parameters);
+                    if (null !== $targetRoute && "" !== $targetRoute) {
+                        $switchRoute = $router->generate($targetRoute, $parameters);
+                    } elseif ($this->useController) {
+                        $switchRoute = $router->generate('lunetics_locale_switcher', array('_locale' => $locale));
+                    } else {
+                        $switchRoute = $router->generate($route, $parameters);
+                    }
                 } catch (RouteNotFoundException $e) {
                     // skip routes for which we cannot generate a url for the given locale
                     continue;
@@ -72,7 +99,7 @@ class TargetInformationBuilder
                 $infos['locales'][$locale] = array(
                     'locale_current_language' => $targetLocaleCurrentLang,
                     'locale_target_language' => $targetLocaleTargetLang,
-                    'link' => $targetRoute,
+                    'link' => $switchRoute,
                     'locale' => $locale,
                 );
             }

@@ -30,16 +30,29 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequestWithBrowserPreferences($route);
         $request->setLocale($locale);
         $request->attributes->set('_route', $route);
-        $router = $this->getRoute();
+        $router = $this->getRouter();
+        $count = count($allowedLocales) - 1;
+        if ($count >= 1) {
+            $router->expects($this->exactly($count))
+                    ->method('generate')
+                    ->with($this->equalTo('route_foo'), $this->anything())
+                    ->will($this->returnValue($route . '_generated'));
+        } else {
+            $router->expects($this->never())
+                    ->method('generate');
+        }
 
-        $targetInformationBuilder = new TargetInformationBuilder($route . 'hello');
-        $targetInformation = $targetInformationBuilder->getTargetInformations(
-            $request,
-            $router,
-            $allowedLocales
-        );
-        $this->assertEquals($route . 'hello', $targetInformation['current_route']);
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales);
+        $targetInformation = $targetInformationBuilder->getTargetInformations('route_foo');
+
+        $this->assertEquals($route, $targetInformation['current_route']);
+        foreach ($allowedLocales as $check) {
+            if (0 !== strpos($locale, $check)) {
+                $this->assertEquals($route . '_generated', $targetInformation['locales'][$check]['link']);
+            }
+        }
     }
+
 
     /**
      * @dataProvider locales
@@ -48,58 +61,120 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getRequestWithBrowserPreferences($route);
         $request->setLocale($locale);
-        $request->attributes->set('_route', $route . 'hello');
-        $router = $this->getRoute();
-
-        $targetInformationBuilder = new TargetInformationBuilder();
-        $targetInformation = $targetInformationBuilder->getTargetInformations(
-            $request,
-            $router,
-            $allowedLocales
-        );
-        $this->assertEquals($route . 'hello', $targetInformation['current_route']);
-    }
-
-    /**
-     * @dataProvider locales
-     */
-    public function testInformationBuilder($route, $locale, $allowedLocales)
-    {
-        $request = $this->getRequestWithBrowserPreferences();
-        $request->setLocale($locale);
-        $router = $this->getRoute();
-
-        $targetInformationBuilder = new TargetInformationBuilder($route);
-        $targetInformation = $targetInformationBuilder->getTargetInformations(
-            $request,
-            $router,
-            $allowedLocales
-        );
-        $this->assertEquals($locale, $targetInformation['current_locale']);
-        if (count($allowedLocales) > 1) {
-            $this->assertCount(count($allowedLocales) - 1, $targetInformation['locales']);
-            $this->assertArrayNotHasKey($locale, $targetInformation['locales']);
+        $request->attributes->set('_route', $route);
+        $router = $this->getRouter();
+        $count = count($allowedLocales) - 1;
+        if ($count >= 1) {
+            $router->expects($this->exactly($count))
+                    ->method('generate')
+                    ->with($this->equalTo('lunetics_locale_switcher'), $this->anything())
+                    ->will($this->returnValue($route . '_generated'));
         } else {
-            $this->assertArrayNotHasKey('locales', $targetInformation);
+            $router->expects($this->never())
+                    ->method('generate');
+        }
+
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales);
+        $targetInformation = $targetInformationBuilder->getTargetInformations();
+
+        $this->assertEquals($route, $targetInformation['current_route']);
+        foreach ($allowedLocales as $check) {
+            if (0 !== strpos($locale, $check)) {
+                $this->assertEquals($route . '_generated', $targetInformation['locales'][$check]['link']);
+            }
         }
     }
 
     /**
      * @dataProvider locales
      */
+    public function testNotProvideRouteInInformationBuilderNoRouter($route, $locale, $allowedLocales)
+    {
+        $request = $this->getRequestWithBrowserPreferences($route);
+        $request->setLocale($locale);
+        $request->attributes->set('_route', $route);
+        $router = $this->getRouter();
+        $count = count($allowedLocales) - 1;
+        if ($count >= 1) {
+            $router->expects($this->exactly($count))
+                    ->method('generate')
+                    ->with($this->equalTo($route), $this->anything())
+                    ->will($this->returnValue($route . '_generated'));
+        } else {
+            $router->expects($this->never())
+                    ->method('generate');
+        }
+
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales, false, false);
+        $targetInformation = $targetInformationBuilder->getTargetInformations();
+
+        $this->assertEquals($route, $targetInformation['current_route']);
+        foreach ($allowedLocales as $check) {
+            if (0 !== strpos($locale, $check)) {
+                $this->assertEquals($route . '_generated', $targetInformation['locales'][$check]['link']);
+            }
+        }
+    }
+
+    /**
+     * @dataProvider locales
+     *
+     */
+    public function testInformationBuilder($route, $locale, $allowedLocales)
+    {
+        $request = $this->getRequestWithBrowserPreferences($route);
+        $request->setLocale($locale);
+        $request->attributes->set('_route', $route);
+        $router = $this->getRouter();
+
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales);
+        $targetInformation = $targetInformationBuilder->getTargetInformations();
+        $this->assertEquals($locale, $targetInformation['current_locale']);
+        $count = count($allowedLocales) - 1;
+        if ($count >= 1) {
+            $this->assertCount($count, $targetInformation['locales']);
+        } else {
+            $this->assertCount(0, $targetInformation['locales']);
+        }
+    }
+
+    /**
+     * @dataProvider locales
+     *
+     */
+    public function testInformationBuilderWithParams($route, $locale, $allowedLocales)
+    {
+        $request = $this->getRequestWithBrowserPreferences($route);
+        $request->setLocale($locale);
+        $request->attributes->set('_route', $route);
+        $router = $this->getRouter();
+
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales, false, false);
+        if (count($allowedLocales) > 1) {
+            $router->expects($this->atLeastOnce())
+                    ->method('generate')
+                    ->with($this->equalTo($route), $this->arrayHasKey('foo'));
+
+            $targetInformationBuilder->getTargetInformations(null, array('foo' => 'bar'));
+        }
+    }
+
+
+    /**
+     * @dataProvider locales
+     */
     public function testShowCurrentLocale($route, $locale, $allowedLocales)
     {
-        $request = $this->getRequestWithBrowserPreferences();
+        $request = $this->getRequestWithBrowserPreferences($route);
         $request->setLocale($locale);
-        $router = $this->getRoute();
+        $request->attributes->set('_route', $route);
+        $router = $this->getRouter();
 
-        $targetInformationBuilder = new TargetInformationBuilder($route);
-        $targetInformation = $targetInformationBuilder->getTargetInformations(
-            $request,
-            $router,
-            $allowedLocales,
-            true
-        );
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales, true);
+        $targetInformation = $targetInformationBuilder->getTargetInformations();
+
+        $this->assertEquals($locale, $targetInformation['current_locale']);
+
         $this->assertCount(count($allowedLocales), $targetInformation['locales']);
         foreach ($allowedLocales as $allowed) {
             $this->assertArrayHasKey($allowed, $targetInformation['locales']);
@@ -114,7 +189,7 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
-    private function getRoute()
+    private function getRouter()
     {
         return $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->disableOriginalConstructor()->getMock();
     }
