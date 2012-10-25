@@ -15,6 +15,7 @@ use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
+use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,20 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     public function testCustomLocaleIsSetWhenParamsExist()
     {
         $listener = new LocaleListener('fr', $this->getGuesserManager(), $this->getLocaleCookie());
-        $event = $this->getEvent($request = Request::create('/', 'GET', array('_locale' => 'de')));
+        $request = Request::create('/', 'GET');
+        $request->attributes->set('_locale', 'de');
+        $event = $this->getEvent($request);
+
+        $listener->onKernelRequest($event);
+        $this->assertEquals('de', $request->getLocale());
+    }
+
+    public function testCustomLocaleIsSetWhenQueryExist()
+    {
+        $listener = new LocaleListener('fr', $this->getGuesserManager(array(0 => 'router', 1 => 'query', 2 => 'browser')), $this->getLocaleCookie());
+        $request = Request::create('/', 'GET');
+        $request->query->set('_locale', 'de');
+        $event = $this->getEvent($request);
 
         $listener->onKernelRequest($event);
         $this->assertEquals('de', $request->getLocale());
@@ -146,9 +160,11 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnCallback($callBack));
 
         $manager = new LocaleGuesserManager($order);
-        $routerGuesser = new RouterLocaleGuesser($metaValidator, true);
+        $routerGuesser = new RouterLocaleGuesser($metaValidator);
         $browserGuesser = new BrowserLocaleGuesser($metaValidator);
         $cookieGuesser = new CookieLocaleGuesser($metaValidator, 'lunetics_locale');
+        $queryGuesser = new QueryLocaleGuesser($metaValidator, '_locale');
+        $manager->addGuesser($queryGuesser, 'query');
         $manager->addGuesser($routerGuesser, 'router');
         $manager->addGuesser($browserGuesser, 'browser');
         $manager->addGuesser($cookieGuesser, 'cookie');

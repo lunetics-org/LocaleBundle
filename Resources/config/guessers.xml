@@ -4,9 +4,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
+        <service id="lunetics_locale.query_guesser" class="%lunetics_locale.query_guesser.class%">
+            <argument type="service" id="lunetics_locale.validator.meta" />
+            <argument>%lunetics_locale.query.parameter_name%</argument>
+            <tag name="lunetics_locale.guesser" alias="query"/>
+        </service>
+
         <service id="lunetics_locale.router_guesser" class="%lunetics_locale.router_guesser.class%">
             <argument type="service" id="lunetics_locale.validator.meta" />
-            <argument>%lunetics_locale.router_guesser.check_query%</argument>
             <tag name="lunetics_locale.guesser" alias="router"/>
         </service>
 
