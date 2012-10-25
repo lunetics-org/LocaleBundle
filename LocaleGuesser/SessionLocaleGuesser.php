@@ -90,11 +90,12 @@ class SessionLocaleGuesser implements LocaleGuesserInterface
     /**
      * Sets the locale in the session
      *
-     * @param string $locale
+     * @param string $locale Locale
+     * @param bool   $force  Force write session
      */
-    public function setSessionLocale($locale)
+    public function setSessionLocale($locale, $force = false)
     {
-        if (!$this->session->has($this->sessionVariable)) {
+        if (!$this->session->has($this->sessionVariable) || $force) {
             $this->session->set($this->sessionVariable, $locale);
         }
     }

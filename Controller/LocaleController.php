@@ -9,59 +9,76 @@
  */
 namespace Lunetics\LocaleBundle\Controller;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Lunetics\LocaleBundle\LocaleBundleEvents;
-use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
-use Lunetics\LocaleBundle\Validator\LocaleValidator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 /**
  * Controller for the Switch Locale
  *
- * @author Matthias Breddin <mb@lunetics.com/>
- * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
+ * @author Matthias Breddin <mb@lunetics.com>
+ * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
 class LocaleController
 {
     protected $router;
+    protected $useReferrer;
+    protected $redirectToRoute;
+    protected $metaValidator;
 
-    public function __construct(RouterInterface $router = null)
+    /**
+     * @param RouterInterface $router          Router Service
+     * @param MetaValidator   $metaValidator   MetaValidator for locales
+     * @param bool            $useReferrer     From Config
+     * @param null            $redirectToRoute From Config
+     * @param string          $statusCode      From Config
+     */
+    public function __construct(RouterInterface $router = null, MetaValidator $metaValidator, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')
     {
         $this->router = $router;
+        $this->metaValidator = $metaValidator;
+        $this->useReferrer = $useReferrer;
+        $this->redirectToRoute = $redirectToRoute;
+        $this->statusCode = $statusCode;
     }
 
     /**
      * Action for locale switch
+     *
+     * @param Request $request
+     *
+     * @throws \InvalidArgumentException
+     * @return RedirectResponse
      */
     public function switchAction(Request $request)
     {
         $_locale = $request->attributes->get('_locale', $request->getLocale());
+        $statusCode = $request->attributes->get('statusCode', $this->statusCode);
+        $redirectToRoute = $request->attributes->get('route', $this->redirectToRoute);
 
-        $validator = new LocaleValidator();
-        $validator->validate($_locale);
-
-        $event = new FilterLocaleSwitchEvent($_locale);
-        $dispatcher = new EventDispatcher();
-        $dispatcher->dispatch(LocaleBundleEvents::onLocaleSwitch, $event);
-
-        $statusCode = $request->attributes->get('statusCode');
+        $metaValidator = $this->metaValidator;
+        if (!$metaValidator->isAllowed($_locale)) {
+            throw new \InvalidArgumentException(sprintf('Not allowed to switch to locale %s', $_locale));
+        }
+        // Save into session
+        // TODO: Build Locale Persister and decouple from the guessers
+        $session = $request->getSession();
+        $session->set('lunetics_locale', $_locale);
 
         // Redirect the User
-        if ($request->attributes->get('useReferrer') && $request->headers->has('referer')) {
-            return new RedirectResponse($request->headers->get('referer'), $statusCode);
+        if ($this->useReferrer && $request->headers->has('referer')) {
+            $response = new RedirectResponse($request->headers->get('referer'), $statusCode);
+        } elseif ($this->router && $redirectToRoute) {
+            $response = new RedirectResponse($this->router->generate($redirectToRoute, array('_locale' => $_locale)), $statusCode);
+        } else {
+            // TODO: this seems broken, as it will not handle if the site runs in a subdir
+            // TODO: also it doesn't handle the locale at all and can therefore lead to an infinite redirect
+            $response = new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . '/', $statusCode);
         }
+        $response->setVary('accept-language');
 
-        if ($this->router) {
-            $route = $request->attributes->get('route');
-            if (null !== $route) {
-                return new RedirectResponse($this->router->generate($route, array('_locale' => $_locale)), $statusCode);
-            }
-        }
+        return $response;
 
-        // TODO: this seems broken, as it will not handle if the site runs in a subdir
-        // TODO: also it doesn't handle the locale at all and can therefore lead to an infinite redirect
-        return new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . '/', $statusCode);
     }
 }

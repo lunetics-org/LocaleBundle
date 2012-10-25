@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
+use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $guesserManager->runLocaleGuessing($this->getRequestWithoutLocaleQuery());
     }
 
-    public function testLocaleIsIdentifiedByTheRouterGuessingService()
+    public function testLocaleIsIdentifiedByTheQueryGuessingService()
     {
         $request = $this->getRequestWithLocaleQuery('fr');
         $metaValidator = $this->getMetaValidatorMock();
@@ -35,9 +36,10 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
                 ->with('fr')
                 ->will($this->returnValue(true));
 
-        $order = array(0 => 'router', 1 => 'browser');
+        $order = array(0 => 'query', 1 => 'router');
         $manager = new LocaleGuesserManager($order);
         $manager->addGuesser(new RouterLocaleGuesser($metaValidator), 'router');
+        $manager->addGuesser(new QueryLocaleGuesser($metaValidator), 'query');
 
         $guesserMock = $this->getGuesserMock();
         $guesserMock->expects($this->any())
@@ -45,7 +47,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue(false));
         $manager->addGuesser($guesserMock, 'browser');
         $guessing = $manager->runLocaleGuessing($request);
-        $this->assertEquals('fr', $guessing);
+        $this->assertEquals('fr', $guessing['locale']);
     }
 
     public function testLocaleIsNotIdentifiedIfNoQueryParamsExist()
@@ -56,9 +58,10 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $metaValidator->expects($this->never())
                 ->method('isAllowed');
 
-        $order = array(0 => 'router', 1 => 'browser');
+        $order = array(0 => 'query', 1 => 'router');
         $manager = new LocaleGuesserManager($order);
         $manager->addGuesser(new RouterLocaleGuesser($metaValidator), 'router');
+        $manager->addGuesser(new QueryLocaleGuesser($metaValidator), 'query');
         $guesserMock = $this->getGuesserMock();
         $guesserMock->expects($this->any())
                 ->method('guessLocale')
@@ -70,7 +73,8 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
 
     private function getRequestWithLocaleQuery($locale = 'en')
     {
-        $request = Request::create(' / hello - world', 'GET', array('_locale' => $locale));
+        $request = Request::create(' / hello - world', 'GET');
+        $request->query->set('_locale', $locale);
 
         return $request;
     }

@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\GuesserCompilerPass;
+use Lunetics\LocaleBundle\DependencyInjection\Compiler\RouterResourcePass;
 
 /**
  * LocaleBundle
@@ -30,5 +31,6 @@ class LuneticsLocaleBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new GuesserCompilerPass);
+        $container->addCompilerPass(new RouterResourcePass);
     }
 }

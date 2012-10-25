@@ -4,7 +4,7 @@ If you want to implement your own locale guesser, you need the following steps:
 
 1. Define the guesser class in the config
 -----------------------------------------
-Add the following configuration to `app/config/config.yml`:
+Add the following configuration to `app/config/guesser.yml`:
 
 ``` yaml
 lunetics_locale:    
@@ -15,8 +15,12 @@ lunetics_locale:
 2. Add the guesser as service
 ------------------
 It is important that you add exactly this tag name.
+
+Also be sure to inject the metavalidator, which checks if the locale is valid and allowed by configuration.
+
 ``` xml
 <service id="lunetics_locale.acme_guesser" class="%lunetics_locale.acme_guesser.class%">
+    <argument type="service" id="lunetics_locale.validator.meta" />
     <tag name="lunetics_locale.guesser" alias="acme" />
 </service>
 ```
@@ -35,15 +39,18 @@ namespace Acme\AcmeBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
+use Lunetics\LocaleBundle\Validator\MetaValidator
 
 class AcmeLocaleGuesser implements LocaleGuesserInterface
 {
     private $identifiedLocale;
 
+    private $metaValidator;
+
     public function guessLocale(Request $request)
     {
         // Code to identify the locale, if found:
-        if($foundLocale) {
+        if($this->metaValidator->isAllowed($foundLocale) {
             $this->identifiedLocale = $foundLocale;
             return $this->identifiedLocale;
         }

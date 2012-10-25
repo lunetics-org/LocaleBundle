@@ -11,51 +11,56 @@ namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Symfony\Component\HttpFoundation\Request;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
-
 /**
- * Locale Guesser for detecing the locale in the router
+ * This guesser class checks the session for a var
  *
  * @author Matthias Breddin <mb@lunetics.com>
- * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
-class RouterLocaleGuesser implements LocaleGuesserInterface
+class QueryLocaleGuesser implements LocaleGuesserInterface
 {
+    /**
+     * @var string
+     */
+    private $metaValidator;
+
     /**
      * @var string
      */
     private $identifiedLocale;
 
     /**
-     * @var MetaValidator
+     * @var Request
      */
-    private $metaValidator;
+    private $request;
 
     /**
      * Constructor
      *
-     * @param MetaValidator $metaValidator MetaValidator
+     * @param MetaValidator $metaValidator       MetaValidator
+     * @param string        $queryParameterName  Query parameter used
      */
-    public function __construct(MetaValidator $metaValidator)
+    public function __construct(MetaValidator $metaValidator, $queryParameterName = '_locale')
     {
+        $this->queryParameterName = $queryParameterName;
         $this->metaValidator = $metaValidator;
     }
 
     /**
-     * Method that guess the locale based on the Router parameters
+     * Guess the locale based on the session variable
      *
      * @param Request $request
      *
-     * @return boolean True if locale is detected, false otherwise
+     * @return boolean
      */
     public function guessLocale(Request $request)
     {
         $localeValidator = $this->metaValidator;
-        if ($locale = $request->attributes->get('_locale')) {
-            if ($localeValidator->isAllowed($locale)) {
-                $this->identifiedLocale = $locale;
-            }
+        if ($request->query->has($this->queryParameterName)) {
+            if ($localeValidator->isAllowed($request->query->get($this->queryParameterName))) {
+                $this->identifiedLocale = $request->query->get($this->queryParameterName);
 
-            return true;
+                return true;
+            }
         }
 
         return false;
