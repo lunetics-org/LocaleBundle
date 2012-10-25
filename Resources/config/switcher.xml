@@ -11,14 +11,6 @@
             <tag name="templating.helper" alias="switch"/>
         </service>
 
-        <service id="lunetics_locale.twig.change_language"
-                 class="Lunetics\LocaleBundle\Twig\Extension\ChangeLanguageExtension">
-            <call method="setServiceContainer">
-                <argument type="service" id="service_container"/>
-            </call>
-            <tag name="twig.extension"/>
-        </service>
-
         <service id="lunetics_locale.twig.switcher"
                  class="Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension">
             <argument type="service" id="service_container"/>
