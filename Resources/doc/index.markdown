@@ -4,7 +4,7 @@
 
 ``` yaml
 "require": {
-    "lunetics/locale-bundle": "2.1.x-dev",
+    "lunetics/locale-bundle": "dev-master",
     ....
 },
 ```
@@ -46,9 +46,10 @@ lunetics_locale:
 lunetics_locale:
   strict_mode: true # defaults to false
 ```
-You can set a **'strict_mode'**, where only EXACTLY! the allowed locales will be tested. For example:
-* If your user has a browser locale with `de_DE` and `de`, the locale `de` will be chosen!
-* If your user has a browser locale with `de` and you only explicit allow `de_DE`, no locale will be detected!
+You can enable `strict_mode`, where only the **exact** allowed locales will be matched. For example:
+
+* If your user has a browser locale with `de_DE` and `de`, and you only explicitly allow `de`, the locale `de` will be chosen.
+* If your user has a browser locale with `de` and you only explicitly allow `de_DE`, no locale will be detected.
 
 We encourage you to use the non-strict mode, that'll also choose the best region locale for your user.
 
@@ -61,12 +62,25 @@ lunetics_locale:
   guessing_order:
     - session
     - cookie
-    - router
     - browser
+    - query
+    - router
 ```
 With the example above, the guessers will be called in the order you defined as 1. session 2. cookie 2. router 3. browser.
 
-Note that the session and cookie guessers only retrieve previously identified and saved locales by the router or browser guesser
+Note that the session and cookie guessers only retrieve previously identified and saved locales by the router or browser guesser.
+
+If you use the _locale parameter as attribute/parameter in your routes, you should use the query and router guesser first.
+
+``` yaml
+lunetics_locale:
+  guessing_order:
+    - query
+    - router
+    - session
+    - cookie
+    - browser
+```
 
 ### Locale Cookies / Session 
 
@@ -86,13 +100,13 @@ This is most useful for unregistered and returning visitors.
 
 #### Session
 
-The session guesser will automatically save a previously identified locale into the session and retrieve it from the session. It should be best on the first place on the guessing_order.
+The session guesser will automatically save a previously identified locale into the session and retrieve it from the session. This guesser should always be first in your `guessing_order` configuration if you don't use the router guesser.
 
 ### Custom Guessers
 
 Read more about creating your own guesser here:
 
-[Custom Locale Guesser](guesser.md)
+[Read the full documentation for creating a custom Locale Guesser](guesser.md)
 
 ### Switch to another locale
 
@@ -102,12 +116,4 @@ You can render a default locale switcher, simply by calling the twig function in
 {{ locale_switcher() }}
 ```
 
-#### Using your own template
-
-You can define your own template in the configuration :
-
-``` yaml
-lunetics_locale:
-  switcher:
-    template: AcmeDemoBundle:MyBundle:mytemplate.html.twig
-```
+[Read the full documentation for the switcher](switcher.md)
