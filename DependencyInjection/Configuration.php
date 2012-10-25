@@ -27,6 +27,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('lunetics_locale');
 
+        $validStatuscodes = array(300, 301, 302, 303, 307);
+
         $rootNode
             ->children()
                 ->scalarNode('strict_mode')
@@ -111,17 +113,19 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('template')->defaultValue('links')->end()
-                        ->scalarNode('show_current_locale')->defaultFalse()->end()
+                        ->booleanNode('show_current_locale')->defaultFalse()->end()
                         ->scalarNode('redirect_to_route')->defaultNull()->end()
                         ->scalarNode('redirect_statuscode')->defaultValue('302')->end()
-                        ->scalarNode('use_controller')->defaultTrue()
-                            ->validate()
-                                ->ifNull(function($v) {return $v['switcher']['redirect_to_route'];})
-                                ->thenInvalid('You need to specify a default fallback route for the use_controller configuration')
-                             ->end()
-                        ->end()
-                        ->scalarNode('use_referrer')->defaultTrue()->end()
+                        ->booleanNode('use_controller')->defaultFalse()->end()
+                        ->booleanNode('use_referrer')->defaultTrue()->end()
                     ->end()
+                    ->validate()
+                        ->ifTrue(function($v) { return is_null($v['redirect_to_route']);})
+                            ->thenInvalid('You need to specify a default fallback route for the use_controller configuration')
+                        ->ifTrue(function($v) use ($validStatuscodes) { return !in_array(intval($v['redirect_statuscode']), $validStatuscodes);})
+                            ->thenInvalid(sprintf("Invalid HTTP statuscode. Available statuscodes for redirection are:\n\n%s \n\nSee reference for HTTP status codes", implode(", ",$validStatuscodes)))
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

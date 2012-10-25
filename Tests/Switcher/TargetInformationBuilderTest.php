@@ -74,7 +74,7 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
                     ->method('generate');
         }
 
-        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales);
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, $allowedLocales, false, true);
         $targetInformation = $targetInformationBuilder->getTargetInformations();
 
         $this->assertEquals($route, $targetInformation['current_route']);

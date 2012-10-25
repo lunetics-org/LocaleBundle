@@ -35,7 +35,7 @@ class TargetInformationBuilder
      * @param bool            $showCurrentLocale Config Var
      * @param bool            $useController     Config Var
      */
-    public function __construct(Request $request, RouterInterface $router, $allowedLocales = array(), $showCurrentLocale = false, $useController = true)
+    public function __construct(Request $request, RouterInterface $router, $allowedLocales = array(), $showCurrentLocale = false, $useController = false)
     {
         $this->request = $request;
         $this->router = $router;
