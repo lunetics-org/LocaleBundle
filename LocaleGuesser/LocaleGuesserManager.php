@@ -9,10 +9,11 @@
  */
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
-use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+
+use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 
 /**
  * Locale Guesser Manager
@@ -80,6 +81,18 @@ class LocaleGuesserManager
     }
 
     /**
+     * Removes a guesser from this manager
+     *
+     * @param string $alias
+     *
+     * @return bool
+     */
+    public function removeGuesser($alias)
+    {
+       unset($this->guessers[$alias]);
+    }
+
+    /**
      * Loops through all the activated Locale Guessers and
      * calls the guessLocale methode and passing the current request.
      *
@@ -102,7 +115,7 @@ class LocaleGuesserManager
                 $locale = $guesserService->getIdentifiedLocale();
                 $this->logEvent('Locale has been identified by guessing service: ( %s )', ucfirst($guesser));
 
-                return array('guesser' => $guesser, 'locale' => $locale);
+                return $locale;
             }
             $this->logEvent('Locale has not been identified by the %s guessing service', ucfirst($guesser));
         }

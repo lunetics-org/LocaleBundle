@@ -9,11 +9,12 @@
  */
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
+use Symfony\Component\HttpFoundation\Request;
+
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
@@ -46,8 +47,8 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
                 ->method('guessLocale')
                 ->will($this->returnValue(false));
         $manager->addGuesser($guesserMock, 'browser');
-        $guessing = $manager->runLocaleGuessing($request);
-        $this->assertEquals('fr', $guessing['locale']);
+        $locale = $manager->runLocaleGuessing($request);
+        $this->assertEquals('fr', $locale);
     }
 
     public function testLocaleIsNotIdentifiedIfNoQueryParamsExist()
