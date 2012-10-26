@@ -89,18 +89,30 @@ The session and cookie guesser is usually used when you do not use locales in th
  it is good to set *session* and/or *cookie* as the first guesser to not try to detect the locale at each request.
 
 #### Cookie
-You can set a cookie when a locale has been identified, simply activate it in the configuration:
+If you use the cookie guesser, it will be automatically read from the cookie and write changes into the cookie anytime the locale has changed (Even from another guesser)
 
 ``` yaml
 lunetics_locale:
   cookie:
-    set_on_detection: true
+    set_on_change: true
 ```
 This is most useful for unregistered and returning visitors.
 
 #### Session
 
 The session guesser will automatically save a previously identified locale into the session and retrieve it from the session. This guesser should always be first in your `guessing_order` configuration if you don't use the router guesser.
+
+### FilterLocaleSwitchEvent / LocaleUpdateListener
+The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocalChange` if you use either the 'session' or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.
+
+
+For example, if you don't use route / query parameters for locales, you could build an own listener for your user login, which dispatches a `LocaleBundleEvents::onLocalChange` event to set the locale for your user. You just have to use the `FilterLocaleSwitchEvent` and set the locale.
+
+``` php
+$locale = $user->getLocale();
+$localeSwitchEvent = new FilterLocaleSwitchEvent($locale);
+$this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
+```
 
 ### Custom Guessers
 

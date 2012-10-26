@@ -11,12 +11,14 @@ namespace Lunetics\LocaleBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
-use Lunetics\LocaleBundle\Cookie\LocaleCookie;
+use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
 
 /**
  * Locale Listener
@@ -47,29 +49,17 @@ class LocaleListener
     private $dispatcher;
 
     /**
-     * @var LocaleCookie
-     */
-    private $localeCookie;
-
-    /**
-     * @var string
-     */
-    private $identifiedLocale;
-
-    /**
      * Construct the guessermanager
      *
      * @param string               $defaultLocale  Framework default locale
      * @param LocaleGuesserManager $guesserManager Locale Guesser Manager
-     * @param LocaleCookie         $localeCookie   Locale Cookie
      * @param LoggerInterface      $logger         Logger
      */
-    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LocaleCookie $localeCookie, LoggerInterface $logger = null)
+    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LoggerInterface $logger = null)
     {
         $this->defaultLocale = $defaultLocale;
         $this->guesserManager = $guesserManager;
         $this->logger = $logger;
-        $this->localeCookie = $localeCookie;
     }
 
     /**
@@ -95,28 +85,17 @@ class LocaleListener
 
         $manager = $this->guesserManager;
 
-        if ($result = $manager->runLocaleGuessing($request)) {
-            $guesser = $result['guesser'];
-            $locale = $result['locale'];
+        if ($locale = $manager->runLocaleGuessing($request)) {
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setLocale($locale);
-            $this->identifiedLocale = $locale;
+            if ($manager->getGuesser('session') || $manager->getGuesser('cookie')) {
+                $localeSwitchEvent = new FilterLocaleSwitchEvent($locale);
+                $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
+            }
 
-            $forceSet = in_array($guesser, array('query'));
-
-            if ($forceSet) {
-                $this->logEvent('Force setting [ %s ]', $locale);
-            }
-            if (in_array('cookie', $manager->getGuessingOrder())) {
-                if ($this->localeCookie->setCookieOnDetection() && !$request->cookies->has($this->localeCookie->getName()) || $forceSet) {
-                    $this->addCookieResponseListener();
-                }
-            }
-            if (in_array('session', $manager->getGuessingOrder())) {
-                /** @var $session \Lunetics\LocaleBundle\LocaleGuesser\SessionLocaleGuesser */
-                $session = $manager->getGuesser('session');
-                $session->setSessionLocale($this->identifiedLocale, $forceSet);
-            }
+            $this->dispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) {
+                return $event->getResponse()->setVary('Accept-Language');
+            });
 
             return;
         }
@@ -131,34 +110,6 @@ class LocaleListener
     public function setEventDispatcher(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
-    }
-
-    /**
-     * Method to add the ResponseListener which sets the cookie. Should only be called once
-     */
-    public function addCookieResponseListener()
-    {
-        $this->dispatcher->addListener(
-            KernelEvents::RESPONSE,
-            array($this, 'onResponse')
-        );
-    }
-
-    /**
-     * Called at the kernel.response event to attach the cookie to the request
-     *
-     * @param Event $event
-     *
-     * @return \Symfony\Component\HttpFoundation\Response;
-     */
-    public function onResponse(Event $event)
-    {
-        $response = $event->getResponse();
-        $cookie = $this->localeCookie->getLocaleCookie($this->identifiedLocale);
-        $response->headers->setCookie($cookie);
-        $this->logEvent('Locale Cookie set to [ %s ]', $this->identifiedLocale);
-
-        return $response;
     }
 
     /**

@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Controller;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 /**
@@ -22,10 +23,10 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
  */
 class LocaleController
 {
-    protected $router;
-    protected $useReferrer;
-    protected $redirectToRoute;
-    protected $metaValidator;
+    private $router;
+    private $metaValidator;
+    private $useReferrer;
+    private $redirectToRoute;
 
     /**
      * @param RouterInterface $router          Router Service
@@ -61,10 +62,6 @@ class LocaleController
         if (!$metaValidator->isAllowed($_locale)) {
             throw new \InvalidArgumentException(sprintf('Not allowed to switch to locale %s', $_locale));
         }
-        // Save into session
-        // TODO: Build Locale Persister and decouple from the guessers
-        $session = $request->getSession();
-        $session->set('lunetics_locale', $_locale);
 
         // Redirect the User
         if ($this->useReferrer && $request->headers->has('referer')) {
@@ -76,7 +73,6 @@ class LocaleController
             // TODO: also it doesn't handle the locale at all and can therefore lead to an infinite redirect
             $response = new RedirectResponse($request->getScheme() . '://' . $request->getHttpHost() . '/', $statusCode);
         }
-        $response->setVary('accept-language');
 
         return $response;
 

@@ -10,12 +10,12 @@
 namespace Lunetics\LocaleBundle\Tests\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Lunetics\LocaleBundle\Controller\LocaleController;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
+use Lunetics\LocaleBundle\Controller\LocaleController;
 
-class LocaleCookieTest extends \PHPUnit_Framework_TestCase
+class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testControllerThrowsException()
     {
