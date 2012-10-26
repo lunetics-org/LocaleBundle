@@ -26,19 +26,32 @@
             <argument>%lunetics_locale.cookie.domain%</argument>
             <argument>%lunetics_locale.cookie.secure%</argument>
             <argument>%lunetics_locale.cookie.httpOnly%</argument>
-            <argument>%lunetics_locale.cookie.set_on_detection%</argument>
-            <argument>%lunetics_locale.cookie.set_on_switch%</argument>
+            <argument>%lunetics_locale.cookie.set_on_change%</argument>
+        </service>
+
+        <service id="lunetics_locale.locale_session" class="Lunetics\LocaleBundle\Session\LocaleSession">
+            <argument type="service" id="session" />
+            <argument>%lunetics_locale.session.variable%</argument>
         </service>
 
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
             <argument>%locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
-            <argument type="service" id="lunetics_locale.locale_cookie" />
             <argument type="service" id="logger" />
             <call method="setEventDispatcher">
                 <argument type="service" id="event_dispatcher"/>
             </call>
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
+        </service>
+
+        <service id="lunetics_locale.locale_update_listener" class="Lunetics\LocaleBundle\EventListener\LocaleUpdateListener" scope="request">
+            <argument type="service" id="lunetics_locale.locale_cookie" />
+            <argument type="service" id="lunetics_locale.locale_session" />
+            <argument type="service" id="request" />
+            <argument type="service" id="event_dispatcher" />
+            <argument>%lunetics_locale.guessing_order%</argument>
+            <argument type="service" id="logger" />
+            <tag name="kernel.event_listener" event="lunetics_locale.change" method="onLocaleChange" />
         </service>
     </services>
 </container>
