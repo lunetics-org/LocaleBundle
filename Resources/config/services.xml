@@ -35,13 +35,13 @@
         </service>
 
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
-            <argument>%locale%</argument>
+            <argument>%kernel.default_locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
             <argument type="service" id="logger" />
             <call method="setEventDispatcher">
                 <argument type="service" id="event_dispatcher"/>
             </call>
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="lunetics_locale.locale_update_listener" class="Lunetics\LocaleBundle\EventListener\LocaleUpdateListener" scope="request">
@@ -51,7 +51,7 @@
             <argument type="service" id="event_dispatcher" />
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
-            <tag name="kernel.event_listener" event="lunetics_locale.change" method="onLocaleChange" />
+            <tag name="kernel.event_subscriber" />
         </service>
     </services>
 </container>

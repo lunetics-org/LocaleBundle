@@ -15,17 +15,19 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\Session\LocaleSession;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
 
 /**
  * Locale Update Listener
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class LocaleUpdateListener
+class LocaleUpdateListener implements EventSubscriberInterface
 {
     /**
      * @var string
@@ -96,6 +98,8 @@ class LocaleUpdateListener
      * Update Cookie Section
      *
      * @param bool $update If cookie should be updated
+     *
+     * @return bool
      */
     public function updateCookie($update)
     {
@@ -132,6 +136,8 @@ class LocaleUpdateListener
 
     /**
      * Update Session section
+     *
+     * @return bool
      */
     public function updateSession()
     {
@@ -157,5 +163,16 @@ class LocaleUpdateListener
     private function checkGuesser($guesser)
     {
         return in_array($guesser, $this->registeredGuessers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            // must be registered after the Router to have access to the _locale and before the Symfony LocaleListener
+            LocaleBundleEvents::onLocaleChange => array('onLocaleChange')
+        );
     }
 }
