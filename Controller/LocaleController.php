@@ -56,6 +56,7 @@ class LocaleController
     {
         $_locale = $request->attributes->get('_locale', $request->getLocale());
         $statusCode = $request->attributes->get('statusCode', $this->statusCode);
+        $useReferrer = $request->attributes->get('useReferrer', $this->useReferrer);
         $redirectToRoute = $request->attributes->get('route', $this->redirectToRoute);
 
         $metaValidator = $this->metaValidator;
@@ -64,7 +65,7 @@ class LocaleController
         }
 
         // Redirect the User
-        if ($this->useReferrer && $request->headers->has('referer')) {
+        if ($useReferrer && $request->headers->has('referer')) {
             $response = new RedirectResponse($request->headers->get('referer'), $statusCode);
         } elseif ($this->router && $redirectToRoute) {
             $response = new RedirectResponse($this->router->generate($redirectToRoute, array('_locale' => $_locale)), $statusCode);
