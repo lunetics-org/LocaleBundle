@@ -23,7 +23,7 @@ class LocaleInformationTest extends BaseMetaValidator
     public function testGetAllowedLocalesFromConfiguration()
     {
         $metaValidator = $this->getMetaValidator($this->allowedLocales);
-        $information = new LocaleInformation($metaValidator, $this->allowedLocales);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock(), $this->allowedLocales);
         $this->assertSame($this->allowedLocales, $information->getAllowedLocalesFromConfiguration());
     }
 
@@ -35,7 +35,7 @@ class LocaleInformationTest extends BaseMetaValidator
     public function testGetAllAllowedLocales($intlExtension)
     {
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension);
-        $information = new LocaleInformation($metaValidator);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLocales = $information->getAllAllowedLocales();
 
         $this->assertContains('en_GB', $foundLocales);
@@ -55,7 +55,7 @@ class LocaleInformationTest extends BaseMetaValidator
     public function testGetAllAllowedLocalesStrict($intlExtension)
     {
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension, true);
-        $information = new LocaleInformation($metaValidator);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLocales = $information->getAllAllowedLocales();
         $this->assertNotContains('en_US', $foundLocales);
         $this->assertNotContains('de_AT', $foundLocales);
@@ -73,7 +73,7 @@ class LocaleInformationTest extends BaseMetaValidator
     {
         $this->markTestSkipped('symfony/locale is buggy');
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension);
-        $information = new LocaleInformation($metaValidator);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLocales = $information->getAllAllowedLocales();
         $this->assertContains('de_DE', $foundLocales);
         $this->assertContains('fr_FR', $foundLocales);
@@ -87,7 +87,7 @@ class LocaleInformationTest extends BaseMetaValidator
     public function testGetAllAllowedLanguages($intlExtension)
     {
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension);
-        $information = new LocaleInformation($metaValidator);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLanguages = $information->getAllAllowedLanguages();
         $this->assertContains('de_CH', $foundLanguages);
         $this->assertNotContains('de_LI', $foundLanguages);
@@ -101,11 +101,16 @@ class LocaleInformationTest extends BaseMetaValidator
     public function testGetAllAllowedLanguagesStrict($intlExtension)
     {
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension, true);
-        $information = new LocaleInformation($metaValidator);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLanguages = $information->getAllAllowedLanguages();
         $this->assertCount(count($this->allowedLocales), $foundLanguages);
         foreach ($foundLanguages as $locale) {
             $this->assertContains($locale, $this->allowedLocales);
         }
+    }
+
+    public function getGuesserManagerMock()
+    {
+        return $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager')->disableOriginalConstructor()->getMock();
     }
 }
