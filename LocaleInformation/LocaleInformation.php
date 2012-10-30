@@ -9,9 +9,9 @@
  */
 namespace Lunetics\LocaleBundle\LocaleInformation;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Locale\Locale;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 
 /**
  * Information about Locales
@@ -19,15 +19,18 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
 class LocaleInformation
 {
     private $metaValidator;
+    private $manager;
     private $allowedLocales;
 
     /**
-     * @param MetaValidator $metaValidator  Validator
-     * @param array         $allowedLocales Allowed locales from config
+     * @param MetaValidator        $metaValidator  Validator
+     * @param LocaleGuesserManager $manager        LocaleGuesserManager
+     * @param array                $allowedLocales Allowed locales from config
      */
-    public function __construct(MetaValidator $metaValidator, $allowedLocales = array())
+    public function __construct(MetaValidator $metaValidator, LocaleGuesserManager $manager, $allowedLocales = array())
     {
         $this->metaValidator = $metaValidator;
+        $this->manager = $manager;
         $this->allowedLocales = $allowedLocales;
     }
 
@@ -59,6 +62,18 @@ class LocaleInformation
     public function getAllAllowedLanguages()
     {
         return $this->filterAllowed(Locale::getLanguages());
+    }
+
+    /**
+     * Returns an array of preferred locales
+     *
+     * @return array
+     */
+    public function getPreferredLocales()
+    {
+        $preferredLocales = $this->filterAllowed($this->manager->getPreferredLocales());
+
+        return $preferredLocales;
     }
 
     /**

@@ -5,7 +5,7 @@
 <parameters>
         <parameter key="lunetics_locale.request_listener.class">Lunetics\LocaleBundle\EventListener\LocaleListener</parameter>
         <parameter key="lunetics_locale.guesser_manager.class">Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager</parameter>
-        <parameter key="lunetics_locale.information.class">Lunetics\LocaleBundle\LocaleInformaion\LocaleInformation</parameter>
+        <parameter key="lunetics_locale.information.class">Lunetics\LocaleBundle\LocaleInformation\LocaleInformation</parameter>
     </parameters>
     <services>
 
@@ -16,6 +16,7 @@
 
         <service id="lunetics_locale.information" class="%lunetics_locale.information.class%">
             <argument type="service" id="lunetics_locale.validator.meta" />
+            <argument type="service" id="lunetics_locale.guesser_manager" />
             <argument>%lunetics_locale.allowed_locales%</argument>
         </service>
 

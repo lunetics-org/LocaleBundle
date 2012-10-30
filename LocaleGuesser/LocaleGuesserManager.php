@@ -37,6 +37,10 @@ class LocaleGuesserManager
     private $guessers;
 
     /**
+     * @var array
+     */
+    private $preferredLocales;
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -105,6 +109,7 @@ class LocaleGuesserManager
      */
     public function runLocaleGuessing(Request $request)
     {
+        $this->preferredLocales = $request->getLanguages();
         foreach ($this->guessingOrder as $guesser) {
             if (null === $this->getGuesser($guesser)) {
                 throw new InvalidConfigurationException(sprintf('Locale guesser service "%s" does not exist.', $guesser));
@@ -134,6 +139,16 @@ class LocaleGuesserManager
         if (null !== $this->logger) {
             $this->logger->info(sprintf($logMessage, $parameters));
         }
+    }
+
+    /**
+     * Retrieves the detected preferred locales
+     *
+     * @return array
+     */
+    public function getPreferredLocales()
+    {
+        return $this->preferredLocales;
     }
 
     /**

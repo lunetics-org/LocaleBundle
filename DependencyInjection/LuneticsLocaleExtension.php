@@ -57,6 +57,7 @@ class LuneticsLocaleExtension extends Extension
         $loader->load('guessers.xml');
         $loader->load('services.xml');
         $loader->load('switcher.xml');
+        $loader->load('form.xml');
     }
     /**
      * {@inheritDoc}
