@@ -10,7 +10,9 @@
 namespace Lunetics\LocaleBundle\Switcher;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Locale\Locale;
 
@@ -70,6 +72,15 @@ class TargetInformationBuilder
         $router = $this->router;
         $route = $request->attributes->get('_route');
 
+        if (method_exists($router, 'getGenerator')) {
+            $generator = $router->getGenerator();
+            if ($generator instanceof ConfigurableRequirementsInterface) {
+                if (!$generator->isStrictRequirements()) {
+                    $strict = false;
+                }
+            }
+        }
+
         $infos['current_locale'] = $request->getLocale();
         $infos['current_route'] = $route;
         $infos['locales'] = array();
@@ -94,6 +105,15 @@ class TargetInformationBuilder
                 } catch (RouteNotFoundException $e) {
                     // skip routes for which we cannot generate a url for the given locale
                     continue;
+                } catch (InvalidParameterException $e) {
+                    // skip routes for which we cannot generate a url for the given locale
+                    continue;
+                } catch (\Exception $e) {
+                    if (isset($strict)) {
+                        $generator->setStrictRequirements(false);
+                    }
+
+                    throw $e;
                 }
 
                 $infos['locales'][$locale] = array(
@@ -103,6 +123,10 @@ class TargetInformationBuilder
                     'locale' => $locale,
                 );
             }
+        }
+
+        if (isset($strict)) {
+            $generator->setStrictRequirements(false);
         }
 
         return $infos;
