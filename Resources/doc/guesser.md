@@ -7,7 +7,7 @@ If you want to implement your own locale guesser, you need the following steps:
 Add the following configuration to `app/config/guesser.yml`:
 
 ``` yaml
-lunetics_locale:    
+lunetics_locale:
     acme_guesser:
         class: Acme\AcmeBundle\LocaleGuesser\AcmeLocaleGuesser
 ```
@@ -50,7 +50,7 @@ class AcmeLocaleGuesser implements LocaleGuesserInterface
     public function guessLocale(Request $request)
     {
         // Code to identify the locale, if found:
-        if($this->metaValidator->isAllowed($foundLocale) {
+        if ($this->metaValidator->isAllowed($foundLocale)) {
             $this->identifiedLocale = $foundLocale;
             return $this->identifiedLocale;
         }
