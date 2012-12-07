@@ -44,10 +44,9 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="lunetics_locale.locale_update_listener" class="Lunetics\LocaleBundle\EventListener\LocaleUpdateListener" scope="request">
+        <service id="lunetics_locale.locale_update_listener" class="Lunetics\LocaleBundle\EventListener\LocaleUpdateListener">
             <argument type="service" id="lunetics_locale.locale_cookie" />
             <argument type="service" id="lunetics_locale.locale_session" />
-            <argument type="service" id="request" />
             <argument type="service" id="event_dispatcher" />
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
