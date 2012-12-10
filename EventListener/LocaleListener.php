@@ -92,7 +92,7 @@ class LocaleListener implements EventSubscriberInterface
             $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
             $request->setLocale($locale);
             if ($manager->getGuesser('session') || $manager->getGuesser('cookie')) {
-                $localeSwitchEvent = new FilterLocaleSwitchEvent($locale);
+                $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
                 $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
             }
 

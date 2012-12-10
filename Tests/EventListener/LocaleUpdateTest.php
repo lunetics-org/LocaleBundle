@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 
+use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\EventListener\LocaleUpdateListener;
 use Lunetics\LocaleBundle\Session\LocaleSession;
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
@@ -42,12 +43,13 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     public function testCookieIsNotUpdatedNoGuesser()
     {
-        $listener = $this->getLocaleUpdateListener(array('session'), false, true);
+        $request = $this->getRequest(false);
+        $listener = $this->getLocaleUpdateListener(array('session'), true);
 
-        $this->assertFalse($listener->updateCookie(true));
-        $this->assertFalse($listener->updateCookie(false));
+        $this->assertFalse($listener->updateCookie($request, true));
+        $this->assertFalse($listener->updateCookie($request, false));
 
-        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent());
+        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent(false));
         $addedListeners = $this->dispatcher->getListeners(KernelEvents::RESPONSE);
 
         $this->assertSame(array(), $addedListeners);
@@ -55,8 +57,8 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     public function testCookieIsNotUpdatedOnSameLocale()
     {
-        $listener = $this->getLocaleUpdateListener(array('cookie'), true, true);
-        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent('de'));
+        $listener = $this->getLocaleUpdateListener(array('cookie'), true);
+        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent(true, 'de'));
         $addedListeners = $this->dispatcher->getListeners(KernelEvents::RESPONSE);
         $this->assertSame(array(), $addedListeners);
     }
@@ -64,16 +66,16 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     public function testCookieIsUpdatedOnChange()
     {
-        $listener = $this->getLocaleUpdateListener(array('cookie'), false, true);
-        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent());
+        $listener = $this->getLocaleUpdateListener(array('cookie'), true);
+        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent(false));
         $addedListeners = $this->dispatcher->getListeners(KernelEvents::RESPONSE);
         $this->assertContains('updateCookieOnResponse', $addedListeners[0]);
     }
 
     public function testCookieIsNotUpdatedWithFalseSetCookieOnChange()
     {
-        $listener = $this->getLocaleUpdateListener(array('cookie'), false, false);
-        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent());
+        $listener = $this->getLocaleUpdateListener(array('cookie'), false);
+        $listener->onLocaleChange($this->getFilterLocaleSwitchEvent(false));
         $addedListeners = $this->dispatcher->getListeners(KernelEvents::RESPONSE);
         $this->assertSame(array(), $addedListeners);
     }
@@ -137,16 +139,15 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($listener->updateSession());
     }
 
-    private function getFilterLocaleSwitchEvent($locale = 'fr')
+    private function getFilterLocaleSwitchEvent($withCookieSet = true, $locale = 'fr')
     {
-        return new \Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent($locale);
+        return new FilterLocaleSwitchEvent($this->getRequest($withCookieSet), $locale);
     }
 
-    private function getLocaleUpdateListener($registeredGuessers = array(), $withCookieSet = true, $updateCookie = false)
+    private function getLocaleUpdateListener($registeredGuessers = array(), $updateCookie = false)
     {
         $listener = new LocaleUpdateListener($this->getLocaleCookie($updateCookie),
             $this->session,
-            $this->getRequest($withCookieSet),
             $this->dispatcher,
             $registeredGuessers);
 

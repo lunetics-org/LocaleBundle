@@ -11,13 +11,16 @@
 namespace Lunetics\LocaleBundle\Tests\Event;
 
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
+use Symfony\Component\HttpFoundation\Request;
 
 class FilterLocaleSwitchEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testFilterLocaleSwitchEvent()
     {
+        $request = Request::create('/');
         $locale = 'de';
-        $filter = new FilterLocaleSwitchEvent($locale);
+        $filter = new FilterLocaleSwitchEvent($request, $locale);
+        $this->assertEquals('/', $filter->getRequest()->getPathInfo());
         $this->assertEquals('de', $filter->getLocale());
     }
 
@@ -27,7 +30,7 @@ class FilterLocaleSwitchEventTest extends \PHPUnit_Framework_TestCase
     public function testThrowsInvalidTypeException($locale)
     {
         $this->setExpectedException('\InvalidArgumentException');
-        new FilterLocaleSwitchEvent($locale);
+        new FilterLocaleSwitchEvent(Request::create('/'), $locale);
     }
 
     public function invalidType()

@@ -10,11 +10,11 @@
 namespace Lunetics\LocaleBundle\EventListener;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
@@ -43,11 +43,6 @@ class LocaleUpdateListener implements EventSubscriberInterface
     private $localeCookie;
 
     /**
-     * @var Request
-     */
-    private $request;
-
-    /**
      * @var array
      */
     private $registeredGuessers;
@@ -60,23 +55,20 @@ class LocaleUpdateListener implements EventSubscriberInterface
     /**
      * Construct the Locale Update Listener
      *
-     * @param LocaleCookie    $localeCookie       Locale Cookie
-     * @param LocaleSession   $session            Locale Session
-     * @param Request         $request            Request
-     * @param EventDispatcher $dispatcher         Event Dispatcher
-     * @param array           $registeredGuessers List of registered guessers
-     * @param LoggerInterface $logger             Logger
+     * @param LocaleCookie       $localeCookie       Locale Cookie
+     * @param LocaleSession      $session            Locale Session
+     * @param EventDispatcher    $dispatcher         Event Dispatcher
+     * @param array              $registeredGuessers List of registered guessers
+     * @param LoggerInterface    $logger             Logger
      */
     public function __construct(LocaleCookie $localeCookie,
                                 LocaleSession $session,
-                                Request $request,
                                 EventDispatcher $dispatcher,
                                 $registeredGuessers = array(),
                                 LoggerInterface $logger = null)
     {
         $this->localeCookie = $localeCookie;
         $this->session = $session;
-        $this->request = $request;
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->registeredGuessers = $registeredGuessers;
@@ -90,7 +82,7 @@ class LocaleUpdateListener implements EventSubscriberInterface
     public function onLocaleChange(FilterLocaleSwitchEvent $event)
     {
         $this->locale = $event->getLocale();
-        $this->updateCookie($this->localeCookie->setCookieOnChange());
+        $this->updateCookie($event->getRequest(), $this->localeCookie->setCookieOnChange());
         $this->updateSession();
     }
 
@@ -101,11 +93,11 @@ class LocaleUpdateListener implements EventSubscriberInterface
      *
      * @return bool
      */
-    public function updateCookie($update)
+    public function updateCookie(Request $request, $update)
     {
         if ($this->checkGuesser('cookie')
                 && $update === true
-                && $this->request->cookies->get($this->localeCookie->getName()) !== $this->locale
+                && $request->cookies->get($this->localeCookie->getName()) !== $this->locale
         ) {
             $this->dispatcher->addListener(KernelEvents::RESPONSE, array($this, 'updateCookieOnResponse'));
 
