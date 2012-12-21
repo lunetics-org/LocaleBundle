@@ -35,22 +35,18 @@ class LocaleSwitchHelper extends Helper
     public function __construct(EngineInterface $templating, $template)
     {
         $this->templating = $templating;
-        if (array_key_exists($template, $this->templates)) {
-            $this->view = $this->templates[$template];
-
-            return;
-        }
-        $this->view = $template;
-
+        $this->view = array_key_exists($template, $this->templates)
+            ? $this->templates[$template] : $template;
     }
 
     /**
      *
      * @param array $viewParams
      */
-    public function renderSwitch(array $viewParams = array())
+    public function renderSwitch(array $viewParams = array(), $template = null)
     {
-        return $this->templating->render($this->view, $viewParams);
+        $template = $template ?: $this->view;
+        return $this->templating->render($template, $viewParams);
     }
 
     /**
