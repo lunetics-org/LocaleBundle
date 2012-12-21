@@ -57,7 +57,7 @@ class LocaleSwitcherExtension extends \Twig_Extension
      * @param string $route      A route name for which the switch has to be made
      * @param array  $parameters
      */
-    public function renderSwitcher($route = null, $parameters = array())
+    public function renderSwitcher($route = null, $parameters = array(), $template = null)
     {
         $showCurrentLocale = $this->container->getParameter('lunetics_locale.switcher.show_current_locale');
         $useController = $this->container->getParameter('lunetics_locale.switcher.use_controller');
@@ -69,6 +69,6 @@ class LocaleSwitcherExtension extends \Twig_Extension
 
         $infos = $infosBuilder->getTargetInformations($route, $parameters);
 
-        return $this->container->get('lunetics_locale.switcher_helper')->renderSwitch($infos, 'switcher_links.html.twig');
+        return $this->container->get('lunetics_locale.switcher_helper')->renderSwitch($infos, $template);
     }
 }
