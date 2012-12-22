@@ -103,3 +103,11 @@ It's also possible to add additional parameters/attributes that can be used for 
  ``` html
 {{ locale_switcher('my_route', {'parameter1':'value1'}) }}
 ```
+
+### 3.4 Custom template
+
+It is also possible to override the default template used in the switcher by passing an optional third parameter:
+
+ ``` html
+{{ locale_switcher(null, null, 'AcmeDemoBundle:Foo:bar.html.twig') }}
+```
