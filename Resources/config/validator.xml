@@ -6,8 +6,8 @@
 
         <service id="validator.lunetics_locale.locale" class="Lunetics\LocaleBundle\Validator\LocaleValidator">
             <argument>%lunetics_locale.intl_extension_installed%</argument>
-            <argument>%lunetics_locale.intl_extension_fallback.iso639%</argument>
             <argument>%lunetics_locale.intl_extension_fallback.iso3166%</argument>
+            <argument>%lunetics_locale.intl_extension_fallback.iso639%</argument>
             <argument>%lunetics_locale.intl_extension_fallback.script%</argument>
             <tag name="validator.constraint_validator" alias="lunetics_locale.validator.locale"/>
         </service>
