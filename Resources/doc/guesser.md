@@ -2,14 +2,12 @@ Custom Guesser
 ==============
 If you want to implement your own locale guesser, you need the following steps:
 
-1. Define the guesser class in the config
+1. Define the guesser class
 -----------------------------------------
-Add the following configuration to `app/config/guesser.yml`:
+Add the following parameter to your service definition:
 
-``` yaml
-lunetics_locale:
-    acme_guesser:
-        class: Acme\AcmeBundle\LocaleGuesser\AcmeLocaleGuesser
+``` xml
+<parameter key="lunetics_locale.acme_guesser.class">Acme\AcmeBundle\LocaleGuesser\AcmeLocaleGuesser</parameter>
 ```
 
 2. Add the guesser as service
