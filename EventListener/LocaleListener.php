@@ -75,28 +75,22 @@ class LocaleListener implements EventSubscriberInterface
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        /** @var $request \Symfony\Component\HttpFoundation\Request */
         $request = $event->getRequest();
 
         $request->setDefaultLocale($this->defaultLocale);
 
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST && !$request->isXmlHttpRequest()) {
-            $this->logEvent('Request is not a "MASTER_REQUEST" : SKIPPING...');
-
-            return;
-        }
-
         $manager = $this->guesserManager;
-
-        if ($locale = $manager->runLocaleGuessing($request)) {
-            $this->logEvent('Setting [ %s ] as defaultLocale for the Request', $locale);
+        $locale = $manager->runLocaleGuessing($request);
+        if ($locale) {
+            $this->logEvent('Setting [ %s ] as locale for the (Sub-)Request', $locale);
             $request->setLocale($locale);
-            if ($manager->getGuesser('session') || $manager->getGuesser('cookie')) {
+
+            if (($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST || $request->isXmlHttpRequest())
+                && ($manager->getGuesser('session') || $manager->getGuesser('cookie'))
+            ) {
                 $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
                 $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
             }
-
-            return;
         }
     }
 
