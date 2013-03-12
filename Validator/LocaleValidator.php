@@ -80,8 +80,10 @@ class LocaleValidator extends ConstraintValidator
 
         if ($this->intlExtension) {
             $primary = SymfonyLocale::getPrimaryLanguage($locale);
-            $region = SymfonyLocale::getRegion($locale);
-            if ((null !== $region && strtolower($primary) != strtolower($region)) && !in_array($locale, SymfonyLocale::getLocales())) {
+            $region  = SymfonyLocale::getRegion($locale);
+            $locales = SymfonyLocale::getLocales();
+
+            if ((null !== $region && strtolower($primary) != strtolower($region)) && !in_array($locale, $locales) && !in_array($primary, $locales)) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
         } else {
