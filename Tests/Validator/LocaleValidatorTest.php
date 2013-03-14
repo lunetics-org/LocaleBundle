@@ -92,7 +92,7 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $this->getLocaleValidator($intlExtension)->validate('en_US', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr_FR', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr_CH', $constraint);
-
+        $this->getLocaleValidator($intlExtension)->validate('fr_US', $constraint);
     }
 
     /**
@@ -133,10 +133,11 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $constraint = new Locale();
         // Need to distinguish, since the intl fallback allows every combination of languages, script and regions
-        $this->context->expects($this->exactly($intlExtension ? 2 : 1))
+        $this->context->expects($this->exactly(1))
                 ->method('addViolation');
         $this->getLocaleValidator($intlExtension)->validate('foobar', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('de_FR', $constraint);
+        $this->getLocaleValidator($intlExtension)->validate('fr_US', $constraint);
 
 
     }

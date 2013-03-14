@@ -28,11 +28,7 @@ class MetaValidatorTest extends BaseMetaValidator
         $this->assertTrue($metaValidator->isAllowed('en_US'));
         $this->assertTrue($metaValidator->isAllowed('de'));
         $this->assertTrue($metaValidator->isAllowed('de_AT'));
-        if ($intlExtension) {
-            $this->assertFalse($metaValidator->isAllowed('de_FR'));
-        } else {
-            $this->assertTrue($metaValidator->isAllowed('de_FR'));
-        }
+        $this->assertTrue($metaValidator->isAllowed('de_FR'));
     }
 
     /**
@@ -45,12 +41,6 @@ class MetaValidatorTest extends BaseMetaValidator
         $metaValidator = $this->getMetaValidator(array('en', 'de'), $intlExtension);
         $this->assertFalse($metaValidator->isAllowed('fr'));
         $this->assertFalse($metaValidator->isAllowed('fr_FR'));
-        if ($intlExtension) {
-            $this->assertFalse($metaValidator->isAllowed('de_FR'));
-        } else {
-            $this->assertTrue($metaValidator->isAllowed('de_FR'));
-        }
-
     }
 
     /**
