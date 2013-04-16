@@ -17,15 +17,14 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": ">=2.1,<2.4-dev",
-        "symfony/yaml": ">=2.1,<2.4-dev",
-        "symfony/locale": ">=2.1,<2.4-dev",
-        "symfony/validator": ">=2.1,<2.4-dev"
+        "symfony/framework-bundle": "2.1.*",
+        "symfony/yaml": "2.1.*",
+        "symfony/locale": "2.1.*",
+        "symfony/validator": "2.1.*"
     },
     "require-dev": {
        	"twig/twig": "1.*",
-        "ext-intl": "*",
-        "symfony/form": ">=2.1,<2.4-dev"
+        "ext-intl": "*"
     },
     "suggest": {
         "ext-intl": "Needed for displaying the countryname in the locale language"
