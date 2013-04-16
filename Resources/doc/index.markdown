@@ -4,7 +4,7 @@
 
 ``` yaml
 "require": {
-    "lunetics/locale-bundle": "2.1.*@dev",
+    "lunetics/locale-bundle": "2.1.*",
     ....
 },
 ```
