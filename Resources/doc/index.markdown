@@ -113,6 +113,11 @@ $locale = $user->getLocale();
 $localeSwitchEvent = new FilterLocaleSwitchEvent($locale);
 $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
 ```
+### Custom Form Types
+
+Read more about using the custom choice Form Type here:
+
+[Read the full documentaion on usage of the custom choice Form Type](forms.md)
 
 ### Custom Guessers
 

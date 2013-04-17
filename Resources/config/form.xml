@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <service id="lunetics_locale.form.locale.choicelist" class="Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList">
+            <argument type="service" id="lunetics_locale.information" />
+            <argument>%lunetics_locale.form.languages_only%</argument>
+            <argument>%lunetics_locale.form.strict_mode%</argument>
+        </service>
+
+        <service id="form.type.lunetics_locale" class="Lunetics\LocaleBundle\Form\Extension\Type\LocaleType">
+            <argument type="service" id="lunetics_locale.form.locale.choicelist" />
+          <tag name="form.type" alias="lunetics_locale" />
+        </service>
+
+    </services>
+</container>
