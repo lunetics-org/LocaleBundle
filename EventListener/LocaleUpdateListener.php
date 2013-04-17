@@ -84,7 +84,6 @@ class LocaleUpdateListener implements EventSubscriberInterface
         $this->locale = $event->getLocale();
         $this->updateCookie($event->getRequest(), $this->localeCookie->setCookieOnChange());
         $this->updateSession();
-        $event->getRequest()->attributes->set('_locale', $event->getLocale());
     }
 
     /**
