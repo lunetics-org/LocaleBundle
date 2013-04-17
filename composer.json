@@ -25,7 +25,7 @@
     "require-dev": {
        	"twig/twig": "1.*",
         "ext-intl": "*",
-        "symfony/form": "2.1*"
+        "symfony/form": "2.1.*"
     },
     "suggest": {
         "ext-intl": "Needed for displaying the countryname in the locale language"
