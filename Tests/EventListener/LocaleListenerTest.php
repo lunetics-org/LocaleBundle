@@ -24,6 +24,7 @@ use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 use Lunetics\LocaleBundle\LocaleBundleEvents;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 
 class LocaleListenerTest extends \PHPUnit_Framework_TestCase
@@ -171,14 +172,76 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $request->getLocale());
     }
 
+    public function testOnLocacleDetectedSetVaryHeader()
+    {
+        $listener = $this->getListener();
+
+        $response = $this->getMockResponse();
+        $response
+            ->expects($this->once())
+            ->method('setVary')
+            ->with('Accept-Language')
+            ->will($this->returnValue($response));
+        ;
+
+        $filterResponseEvent = $this->getMockFilterResponseEvent();
+        $filterResponseEvent
+            ->expects($this->once())
+            ->method('getResponse')
+            ->will($this->returnValue($response))
+        ;
+
+        $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
+
+    }
+
+    public function testLogEvent()
+    {
+        $message = 'Setting [ 1 ] as locale for the (Sub-)Request';
+
+        $request = $this->getEmptyRequest();
+
+        $guesserManager = $this->getMockGuesserManager();
+        $guesserManager
+            ->expects($this->once())
+            ->method('runLocaleGuessing')
+            ->with($request)
+            ->will($this->returnValue(true));
+
+
+        $logger = $this->getMockLogger();
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with($message, array());
+
+        $listener = $this->getListener('en', $guesserManager, $logger);
+
+        $event = $this->getEvent($request);
+
+        $listener->onKernelRequest($event);
+    }
+
+    public function testGetSubscribedEvents()
+    {
+        $subscribedEvents = LocaleListener::getSubscribedEvents();
+
+        $this->assertEquals(array(array('onKernelRequest', 24)), $subscribedEvents[KernelEvents::REQUEST]);
+        $this->assertEquals(array('onLocaleDetectedSetVaryHeader'), $subscribedEvents[KernelEvents::RESPONSE]);
+    }
+
     private function getEvent(Request $request)
     {
         return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
-    private function getListener($locale, $manager)
+    private function getListener($locale = 'en', $manager = null, $logger = null)
     {
-        $listener = new LocaleListener($locale, $manager);
+        if (null === $manager) {
+            $manager = $this->getGuesserManager();
+        }
+
+        $listener = new LocaleListener($locale, $manager, $logger);
         $listener->setEventDispatcher(new \Symfony\Component\EventDispatcher\EventDispatcher());
         
         return $listener;
@@ -208,10 +271,19 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         return $manager;
     }
 
+    private function getMockGuesserManager()
+    {
+        return $this
+            ->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+    }
+
     /**
      * @return LocaleGuesserInterface
      */
-    private function getGuesserMock()
+    private function getMockGuesser()
     {
         $mock = $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface')->disableOriginalConstructor()->getMock();
 
@@ -258,5 +330,29 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $request->headers->set('Accept-language', '');
 
         return $request;
+    }
+
+    private function getMockRequest()
+    {
+        return $this->getMock('Symfony\Component\HttpFoundation\Request');
+    }
+
+    private function getMockResponse()
+    {
+        return $this->getMock('Symfony\Component\HttpFoundation\Response');
+    }
+
+    private function getMockFilterResponseEvent()
+    {
+        return $this
+            ->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+    }
+
+    private function getMockLogger()
+    {
+        return $this->getMock('Symfony\Component\HttpKernel\Log\LoggerInterface');
     }
 }

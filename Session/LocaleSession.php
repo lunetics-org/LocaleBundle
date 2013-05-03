@@ -64,11 +64,12 @@ class LocaleSession
     /**
      * Returns the locale
      *
-     * @param string $locale
+     * @param $locale
+     * @return string
      */
     public function getLocale($locale)
     {
-        $this->session->get($this->sessionVar, $locale);
+        return $this->session->get($this->sessionVar, $locale);
     }
 
     /**
