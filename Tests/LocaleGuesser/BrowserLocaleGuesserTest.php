@@ -118,8 +118,9 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider correctLocales
      *
-     * @param array  $allowedLocales
+     * @param array $allowedLocales
      * @param string $result
+     * @param bool $strict
      */
     public function testEnsureCorrectLocaleForAllowedLocales($allowedLocales, $result, $strict)
     {
