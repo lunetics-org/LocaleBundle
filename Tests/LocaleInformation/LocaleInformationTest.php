@@ -109,7 +109,24 @@ class LocaleInformationTest extends BaseMetaValidator
         }
     }
 
-    public function getGuesserManagerMock()
+    public function testGetPreferredLocales()
+    {
+        $preferredLocale = array('en', 'de');
+        $allowedLocales = array('en', 'fr', 'es');
+
+        $guesserManager = $this->getGuesserManagerMock();
+        $guesserManager
+            ->expects($this->once())
+            ->method('getPreferredLocales')
+            ->will($this->returnValue($preferredLocale))
+        ;
+
+        $info = new LocaleInformation($this->getMetaValidator($allowedLocales), $guesserManager, $allowedLocales);
+
+        $this->assertEquals(array('en'), $info->getPreferredLocales());
+    }
+
+    protected function getGuesserManagerMock()
     {
         return $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager')->disableOriginalConstructor()->getMock();
     }
