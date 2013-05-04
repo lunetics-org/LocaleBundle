@@ -13,119 +13,90 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lunetics\LocaleBundle\DependencyInjection\LuneticsLocaleExtension;
 use Symfony\Component\Yaml\Parser;
 
+/**
+ * @author Kevin Archer <ka@kevinarcher.ca>
+ */
 class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    protected $configuration;
-
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
-    public function testBundleLoadThrowsExceptionUnlessDetectorsOrderIsSet()
+    public function testLoad()
     {
         $loader = new LuneticsLocaleExtension();
-        $config = $this->getEmptyConfig();
-        unset($config['guessing_order']);
-        $loader->load(array($config), new ContainerBuilder());
+        $container = new ContainerBuilder();
+
+        $configs = $this->getFullConfig();
+
+        $loader->load($configs, $container);
+
+        $this->assertTrue($container->hasParameter('lunetics_locale.allowed_locales'));
+        $this->assertTrue($container->hasParameter('lunetics_locale.intl_extension_installed'));
+
+        if (extension_loaded('intl')) {
+            $this->assertEquals(array(), $container->getParameter('lunetics_locale.intl_extension_fallback.iso3166'));
+            $this->assertEquals(array(), $container->getParameter('lunetics_locale.intl_extension_fallback.iso639'));
+            $this->assertEquals(array(), $container->getParameter('lunetics_locale.intl_extension_fallback.script'));
+        } else {
+            $this->assertGreaterThan(0, count($container->getParameter('lunetics_locale.intl_extension_fallback.iso3166')));
+            $this->assertGreaterThan(0, count($container->getParameter('lunetics_locale.intl_extension_fallback.iso639')));
+            $this->assertGreaterThan(0, count($container->getParameter('lunetics_locale.intl_extension_fallback.script')));
+        }
+
+        $resources = $container->getResources();
+
+        $this->assertContains('validator.xml', $resources[0]->getResource());
+        $this->assertContains('guessers.xml', $resources[1]->getResource());
+        $this->assertContains('services.xml', $resources[2]->getResource());
+        $this->assertContains('switcher.xml', $resources[3]->getResource());
+        $this->assertContains('form.xml', $resources[4]->getResource());
     }
 
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "guessing_order" at path "lunetics_locale" must be configured.
      */
-    public function testBundleLoadThrowsExceptionIfNonBooleanValueIsSet()
+    public function testBundleLoadThrowsExceptionUnlessGuessingOrderIsSet()
     {
         $loader = new LuneticsLocaleExtension();
-        $config = $this->getEmptyConfig();
-        $config['router_guesser']['check_query'] = 'hello';
-        $loader->load(array($config), new ContainerBuilder());
+        $loader->load(array(), new ContainerBuilder());
     }
 
-    /**
-     * @return ContainerBuilder
-     */
-    protected function createEmptyConfiguration()
+    public function testGetAlias()
     {
-        $this->configuration = new ContainerBuilder();
         $loader = new LuneticsLocaleExtension();
-        $config = $this->getEmptyConfig();
-        $loader->load(array($config), $this->configuration);
-        $this->assertTrue($this->configuration instanceof ContainerBuilder);
+        $this->assertEquals('lunetics_locale', $loader->getAlias());
     }
 
-    /**
-     * @return ContainerBuilder
-     */
-    protected function createFullConfiguration()
+    public function testBindParameters()
     {
-        $this->configuration = new ContainerBuilder();
         $loader = new LuneticsLocaleExtension();
-        $config = $this->getFullConfig();
-        $loader->load(array($config), $this->configuration);
-        $this->assertTrue($this->configuration instanceof ContainerBuilder);
-    }
+        $container = new ContainerBuilder();
 
-    /**
-     * getEmptyConfig
-     *
-     * @return array
-     */
-    protected function getEmptyConfig()
-    {
-        $yaml = <<<EOF
-allowed_locales:
-    - de
-    - fr
-    - en
-guessing_order:
-    - router
-    - browser
-router_guesser:
-    check_query: true
-EOF;
-        $parser = new Parser();
+        $config = array(
+            'key' => 'value',
+        );
 
-        return $parser->parse($yaml);
+        $loader->bindParameters($container, $loader->getAlias(), $config);
+
+        $this->assertTrue($container->hasParameter('lunetics_locale.key'));
+        $this->assertEquals('value', $container->getParameter('lunetics_locale.key'));
     }
 
     protected function getFullConfig()
     {
         $yaml = <<<EOF
-allowed_locales:
-    - de
-    - fr
+lunetics_locale:
+  allowed_locales:
     - en
-guessing_order:
-    - router
+    - fr
+    - de
+  guessing_order:
+    - session
+    - cookie
     - browser
-router_guesser:
-    check_query: true
+    - query
+    - router
 EOF;
         $parser = new Parser();
 
         return  $parser->parse($yaml);
-    }
-
-    private function assertAlias($value, $key)
-    {
-        $this->assertEquals($value, (string) $this->configuration->getAlias($key), sprintf('%s alias is correct', $key));
-    }
-
-    private function assertParameter($value, $key)
-    {
-        $this->assertEquals($value, $this->configuration->getParameter($key), sprintf('%s parameter is correct', $key));
-    }
-
-    private function assertHasDefinition($id)
-    {
-        $this->assertTrue(($this->configuration->hasDefinition($id) ?: $this->configuration->hasAlias($id)));
-    }
-
-    private function assertNotHasDefinition($id)
-    {
-        $this->assertFalse(($this->configuration->hasDefinition($id) ?: $this->configuration->hasAlias($id)));
-    }
-
-    protected function tearDown()
-    {
-        unset($this->configuration);
     }
 }
