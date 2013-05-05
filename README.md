@@ -13,6 +13,7 @@ The locale can be guessed from different parameters in your applications :
 * In the `Route` parameters
 * In the `Browser` preferences
 * In a `Cookie` or the `Session` if the locale has already been identified
+* Based on the `Subdomain` hostname
 
 ## Documentation
 
