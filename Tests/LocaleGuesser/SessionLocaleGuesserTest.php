@@ -17,12 +17,20 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGuesserExtendsInterface()
     {
         $request = $this->getRequestWithSessionLocale();
         $guesser = $this->getGuesser($request->getSession(), $this->getMetaValidatorMock());
         $this->assertTrue($guesser instanceof LocaleGuesserInterface);
+    }
+
+    public function testGuessLocaleWithoutSessionVariable()
+    {
+        $request = $this->getRequestWithSessionLocale();
+
+        $guesser = $this->getGuesser();
+
+        $this->assertFalse($guesser->guessLocale($request));
     }
 
     public function testLocaleIsRetrievedFromSessionIfSet()
@@ -53,8 +61,25 @@ class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
-    private function getGuesser($session = null, $metaValidator)
+    public function testSetSessionLocale()
     {
+        $locale = uniqid('locale:');
+
+        $guesser = $this->getGuesser();
+        $guesser->setSessionLocale($locale, true);
+
+        $this->assertAttributeContains($locale, 'session', $guesser);
+    }
+
+    private function getGuesser($session = null, $metaValidator = null)
+    {
+        if (null === $session) {
+            $session = $this->getSession();
+        }
+
+        if (null === $metaValidator) {
+            $metaValidator = $this->getMetaValidatorMock();
+        }
 
         return new SessionLocaleGuesser($session, $metaValidator);
     }

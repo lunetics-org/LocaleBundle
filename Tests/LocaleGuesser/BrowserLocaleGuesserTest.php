@@ -53,11 +53,6 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequestWithBrowserPreferences();
         $guesser = $this->getGuesser($metaValidator);
 
-        $reflectionClass = new \ReflectionClass($guesser);
-        $property = $reflectionClass->getProperty('intlExtension');
-        $property->setAccessible(true);
-        $property->setValue($guesser, false);
-
         $metaValidator->expects($this->once())
                 ->method('isAllowed')
                 ->with('fr_FR')
@@ -86,11 +81,6 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequestWithBrowserPreferences();
         $guesser = $this->getGuesser($metaValidator);
 
-        $reflectionClass = new \ReflectionClass($guesser);
-        $property = $reflectionClass->getProperty('intlExtension');
-        $property->setAccessible(true);
-        $property->setValue($guesser, false);
-
         $metaValidator->expects($this->any())
                 ->method('isAllowed')
                 ->will($this->returnValue(false));
@@ -118,8 +108,9 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider correctLocales
      *
-     * @param array  $allowedLocales
+     * @param array $allowedLocales
      * @param string $result
+     * @param bool $strict
      */
     public function testEnsureCorrectLocaleForAllowedLocales($allowedLocales, $result, $strict)
     {
