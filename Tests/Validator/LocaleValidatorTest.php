@@ -119,7 +119,6 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $this->context->expects($this->never())
                 ->method('addViolation');
         $this->getLocaleValidator($intlExtension)->validate('zh_Hant_HK', $constraint);
-
     }
 
     /**
@@ -133,13 +132,32 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $constraint = new Locale();
         // Need to distinguish, since the intl fallback allows every combination of languages, script and regions
-        $this->context->expects($this->exactly(1))
-                ->method('addViolation');
+        $this->context->expects($this->exactly(3))
+                      ->method('addViolation');
+
         $this->getLocaleValidator($intlExtension)->validate('foobar', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('de_FR', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr_US', $constraint);
+        $this->getLocaleValidator($intlExtension)->validate('foo_bar', $constraint);
+        $this->getLocaleValidator($intlExtension)->validate('foo_bar_baz', $constraint);
 
+    }
 
+    /**
+     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
+     */
+    public function testValidateThrowsUnexpectedTypeException()
+    {
+        $validator = new LocaleValidator();
+        $validator->validate(array(), $this->getMockConstraint());
+    }
+
+    public function testValidateEmptyLocale()
+    {
+        $validator = new LocaleValidator();
+
+        $validator->validate(null, $this->getMockConstraint());
+        $validator->validate('', $this->getMockConstraint());
     }
 
     /**
@@ -165,5 +183,10 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->initialize($this->context);
 
         return $validator;
+    }
+
+    protected function getMockConstraint()
+    {
+        return $this->getMock('Symfony\Component\Validator\Constraint');
     }
 }

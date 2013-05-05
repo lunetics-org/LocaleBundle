@@ -54,8 +54,11 @@ class LocaleSwitcherExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $route      A route name for which the switch has to be made
-     * @param array  $parameters
+     * @param string $route     A route name for which the switch has to be made
+     * @param array $parameters
+     * @param string $template
+     *
+     * @return mixed
      */
     public function renderSwitcher($route = null, $parameters = array(), $template = null)
     {
