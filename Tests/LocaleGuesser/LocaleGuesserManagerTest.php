@@ -37,8 +37,20 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
                 ->with('fr')
                 ->will($this->returnValue(true));
 
+        $logger = $this->getMockLogger();
+        $logger
+            ->expects($this->at(0))
+            ->method('info', array())
+            ->with('Locale Query Guessing Service Loaded')
+        ;
+        $logger
+            ->expects($this->at(1))
+            ->method('info', array())
+            ->with('Locale has been identified by guessing service: ( Query )')
+        ;
+
         $order = array(0 => 'query', 1 => 'router');
-        $manager = new LocaleGuesserManager($order);
+        $manager = new LocaleGuesserManager($order, $logger);
         $manager->addGuesser(new RouterLocaleGuesser($metaValidator), 'router');
         $manager->addGuesser(new QueryLocaleGuesser($metaValidator), 'query');
 
@@ -70,6 +82,39 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $manager->addGuesser($guesserMock, 'browser');
         $guessing = $manager->runLocaleGuessing($request);
         $this->assertFalse($guessing);
+    }
+
+    public function testGetPreferredLocales()
+    {
+        $manager = new LocaleGuesserManager(array());
+        $value = uniqid('preferredLocales:');
+
+        $reflectionsClass = new \ReflectionClass(get_class($manager));
+        $property = $reflectionsClass->getProperty('preferredLocales');
+        $property->setAccessible(true);
+        $property->setValue($manager, $value);
+
+        $this->assertEquals($value, $manager->getPreferredLocales());
+    }
+
+    public function testGetGuessingOrder()
+    {
+        $order = array(0 => 'query', 1 => 'router');
+
+        $manager = new LocaleGuesserManager($order);
+
+        $this->assertEquals($order, $manager->getGuessingOrder());
+    }
+
+    public function testRemoveGuesser()
+    {
+        $order = array(0 => 'query', 1 => 'router');
+        $manager = new LocaleGuesserManager($order);
+
+        $manager->addGuesser($this->getGuesserMock(), 'mock');
+
+        $manager->removeGuesser('mock');
+        $this->assertNull($manager->getGuesser('mock'));
     }
 
     private function getRequestWithLocaleQuery($locale = 'en')
@@ -106,4 +151,10 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
 
         return $mock;
     }
+
+    private function getMockLogger()
+    {
+        return $this->getMock('Symfony\Component\HttpKernel\Log\LoggerInterface');
+    }
+
 }

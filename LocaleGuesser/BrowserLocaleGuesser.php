@@ -26,11 +26,6 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
     private $identifiedLocale;
 
     /**
-     * @var bool
-     */
-    private $intlExtension;
-
-    /**
      * @var MetaValidator
      */
     private $metaValidator;
@@ -38,13 +33,11 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
     /**
      * Constructor
      *
-     * @param MetaValidator $metaValidator          MetaValidator
-     * @param bool          $intlExtensionInstalled Wether the intl extension is installed
+     * @param MetaValidator $metaValidator MetaValidator
      */
-    public function __construct(MetaValidator $metaValidator, $intlExtensionInstalled = false)
+    public function __construct(MetaValidator $metaValidator)
     {
         $this->metaValidator = $metaValidator;
-        $this->intlExtension = $intlExtensionInstalled;
     }
 
     /**
@@ -85,23 +78,6 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
         }
 
         return false;
-    }
-
-    /**
-     * Fallback function for fetching the primary language, if no intl extension is installed.
-     *
-     * @param string $locale
-     *
-     * @return null|string
-     */
-    private function getPrimaryLanguage($locale)
-    {
-        if ($this->intlExtension) {
-            return \Locale::getPrimaryLanguage($locale);
-        }
-        $splittedLocale = explode('_', $locale);
-
-        return count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
     }
 
     /**
