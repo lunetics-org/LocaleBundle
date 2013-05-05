@@ -40,6 +40,7 @@ class LocaleGuesserManager
      * @var array
      */
     private $preferredLocales;
+
     /**
      * @var LoggerInterface
      */

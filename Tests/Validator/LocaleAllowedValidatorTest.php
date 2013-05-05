@@ -131,6 +131,23 @@ class LocaleAllowedValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
+     */
+    public function testValidateThrowsUnexpectedTypeException()
+    {
+        $validator = new LocaleAllowedValidator();
+        $validator->validate(array(), $this->getMockConstraint());
+    }
+
+    public function testValidateEmptyLocale()
+    {
+        $validator = new LocaleAllowedValidator();
+
+        $validator->validate(null, $this->getMockConstraint());
+        $validator->validate('', $this->getMockConstraint());
+    }
+
+    /**
      * Returns an ExecutionContext Mock
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
@@ -148,11 +165,16 @@ class LocaleAllowedValidatorTest extends \PHPUnit_Framework_TestCase
      *
      * @return LocaleAllowedValidator
      */
-    private function getLocaleValidator($allowedLocales = array(), $strictMode = false)
+    private function getLocaleValidator($allowedLocales = array(), $strictMode = false, $intlExtension = false)
     {
-        $validator = new LocaleAllowedValidator($allowedLocales, $strictMode);
+        $validator = new LocaleAllowedValidator($allowedLocales, $strictMode, $intlExtension);
         $validator->initialize($this->context);
 
         return $validator;
+    }
+
+    protected function getMockConstraint()
+    {
+        return $this->getMock('Symfony\Component\Validator\Constraint');
     }
 }

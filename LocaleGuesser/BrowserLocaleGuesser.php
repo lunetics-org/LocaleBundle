@@ -88,23 +88,6 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
     }
 
     /**
-     * Fallback function for fetching the primary language, if no intl extension is installed.
-     *
-     * @param string $locale
-     *
-     * @return null|string
-     */
-    private function getPrimaryLanguage($locale)
-    {
-        if ($this->intlExtension) {
-            return \Locale::getPrimaryLanguage($locale);
-        }
-        $splittedLocale = explode('_', $locale);
-
-        return count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getIdentifiedLocale()

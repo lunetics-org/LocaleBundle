@@ -10,6 +10,7 @@
 
 namespace Lunetics\LocaleBundle\Tests\EventListener;
 
+use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -83,7 +84,14 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
     public function testUpdateCookieOnResponse()
     {
         $event = $this->getEvent($this->getRequest());
-        $listener = $this->getLocaleUpdateListener();
+
+        $logger = $this->getMockLogger();
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with('Locale Cookie set to [ es ]');
+
+        $listener = $this->getLocaleUpdateListener(array(), false, $logger);
 
         $reflectionClass = new \ReflectionClass($listener);
         $property = $reflectionClass->getProperty('locale');
@@ -103,7 +111,14 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
     public function testUpdateSession()
     {
         $this->session->setLocale('el');
-        $listener = $this->getLocaleUpdateListener(array('session'));
+
+        $logger = $this->getMockLogger();
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with('Session var \'lunetics_locale\' set to [ tr ]');
+
+        $listener = $this->getLocaleUpdateListener(array('session'), false, $logger);
 
         $reflectionClass = new \ReflectionClass($listener);
         $property = $reflectionClass->getProperty('locale');
@@ -139,17 +154,25 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($listener->updateSession());
     }
 
+    public function testGetSubscribedEvents()
+    {
+        $subcribedEvents = LocaleUpdateListener::getSubscribedEvents();
+
+        $this->assertEquals(array('onLocaleChange'), $subcribedEvents[LocaleBundleEvents::onLocaleChange]);
+    }
+
     private function getFilterLocaleSwitchEvent($withCookieSet = true, $locale = 'fr')
     {
         return new FilterLocaleSwitchEvent($this->getRequest($withCookieSet), $locale);
     }
 
-    private function getLocaleUpdateListener($registeredGuessers = array(), $updateCookie = false)
+    private function getLocaleUpdateListener($registeredGuessers = array(), $updateCookie = false, $logger = null)
     {
         $listener = new LocaleUpdateListener($this->getLocaleCookie($updateCookie),
             $this->session,
             $this->dispatcher,
-            $registeredGuessers);
+            $registeredGuessers,
+            $logger);
 
         return $listener;
     }
@@ -172,5 +195,10 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('/', 'GET', array(), $withCookieSet ? array('lunetics_locale' => 'de') : array());
 
         return $request;
+    }
+
+    private function getMockLogger()
+    {
+        return $this->getMock('Symfony\Component\HttpKernel\Log\LoggerInterface');
     }
 }
