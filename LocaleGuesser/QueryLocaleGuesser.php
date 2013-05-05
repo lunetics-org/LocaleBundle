@@ -16,7 +16,7 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class QueryLocaleGuesser implements LocaleGuesserInterface
+class QueryLocaleGuesser extends AbstractLocaleGuesser
 {
     /**
      * @var string
@@ -24,9 +24,9 @@ class QueryLocaleGuesser implements LocaleGuesserInterface
     private $metaValidator;
 
     /**
-     * @var string
+     * @var Request
      */
-    private $identifiedLocale;
+    private $request;
 
     /**
      * Constructor
@@ -59,17 +59,5 @@ class QueryLocaleGuesser implements LocaleGuesserInterface
         }
 
         return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getIdentifiedLocale()
-    {
-        if (null === $this->identifiedLocale) {
-            return false;
-        }
-
-        return $this->identifiedLocale;
     }
 }

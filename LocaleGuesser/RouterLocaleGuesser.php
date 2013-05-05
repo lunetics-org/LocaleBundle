@@ -18,13 +18,8 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
  * @author Matthias Breddin <mb@lunetics.com>
  * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
-class RouterLocaleGuesser implements LocaleGuesserInterface
+class RouterLocaleGuesser extends AbstractLocaleGuesser
 {
-    /**
-     * @var string
-     */
-    private $identifiedLocale;
-
     /**
      * @var MetaValidator
      */
@@ -59,17 +54,5 @@ class RouterLocaleGuesser implements LocaleGuesserInterface
         }
 
         return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getIdentifiedLocale()
-    {
-        if (null === $this->identifiedLocale) {
-            return false;
-        }
-
-        return $this->identifiedLocale;
     }
 }
