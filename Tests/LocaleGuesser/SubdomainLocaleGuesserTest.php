@@ -23,7 +23,7 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
      * @param string $host
      * @param bool $allowed
      */
-    public function testGuessLocale($expected, $host, $allowed)
+    public function testGuessLocale($expected, $host, $allowed, $seperator)
     {
         $metaValidator = $this->getMockMetaValidator();
 
@@ -42,7 +42,7 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($host))
         ;
 
-        $guesser = new SubdomainLocaleGuesser($metaValidator);
+        $guesser = new SubdomainLocaleGuesser($metaValidator, $seperator);
 
         $this->assertEquals($expected, $guesser->guessLocale($request));
     }
@@ -50,10 +50,13 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function dataDomains()
     {
         return array(
-            array(true, 'en.domain', true),
-            array(false, 'fr.domain', false),
-            array(false, 'domain', null),
-            array(false, 'www.domain', false),
+            array(true,  'en.domain',    true,  null),
+            array(false, 'fr.domain',    false, null),
+            array(false, 'domain',       null,  null),
+            array(false, 'www.domain',   false, null),
+            array(true,  'en-ca.domain', true,  '-'),
+            array(true,  'fr_ca.domain', true,  '_'),
+            array(false, 'de-DE.domain', false, '_'),
         );
     }
     
