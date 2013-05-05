@@ -18,13 +18,8 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
  * @author Matthias Breddin <mb@lunetics.com>
  * @author Christophe Willemsen <willemsen.christophe@gmail.com>
  */
-class BrowserLocaleGuesser implements LocaleGuesserInterface
+class BrowserLocaleGuesser extends AbstractLocaleGuesser
 {
-    /**
-     * @var string
-     */
-    private $identifiedLocale;
-
     /**
      * @var bool
      */
@@ -85,34 +80,5 @@ class BrowserLocaleGuesser implements LocaleGuesserInterface
         }
 
         return false;
-    }
-
-    /**
-     * Fallback function for fetching the primary language, if no intl extension is installed.
-     *
-     * @param string $locale
-     *
-     * @return null|string
-     */
-    private function getPrimaryLanguage($locale)
-    {
-        if ($this->intlExtension) {
-            return \Locale::getPrimaryLanguage($locale);
-        }
-        $splittedLocale = explode('_', $locale);
-
-        return count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getIdentifiedLocale()
-    {
-        if (null === $this->identifiedLocale) {
-            return false;
-        }
-
-        return $this->identifiedLocale;
     }
 }
