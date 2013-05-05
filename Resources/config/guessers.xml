@@ -33,5 +33,10 @@
             <tag name="lunetics_locale.guesser" alias="session"/>
         </service>
 
+        <service id="lunetics_locale.subdomain_guesser" class="%lunetics_locale.subdomain_guesser.class%">
+            <argument type="service" id="lunetics_locale.validator.meta" />
+            <tag name="lunetics_locale.guesser" alias="subdomain"/>
+        </service>
+
     </services>
 </container>
