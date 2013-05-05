@@ -25,11 +25,18 @@ class SubdomainLocaleGuesser extends AbstractLocaleGuesser
     private $metaValidator;
 
     /**
-     * @param MetaValidator $metaValidator
+     * @var string
      */
-    public function __construct(MetaValidator $metaValidator)
+    private $regionSeparator;
+
+    /**
+     * @param MetaValidator $metaValidator
+     * @param string $regionSeparator
+     */
+    public function __construct(MetaValidator $metaValidator, $regionSeparator = '_')
     {
         $this->metaValidator = $metaValidator;
+        $this->regionSeparator = $regionSeparator;
     }
 
     /**
@@ -42,6 +49,10 @@ class SubdomainLocaleGuesser extends AbstractLocaleGuesser
     public function guessLocale(Request $request)
     {
         $subdomain = strstr($request->getHost(), '.', true);
+
+        if ('_' !== $this->regionSeparator) {
+            $subdomain = str_replace($this->regionSeparator, '_', $subdomain);
+        }
 
         if (false !== $subdomain && $this->metaValidator->isAllowed($subdomain)) {
             $this->identifiedLocale = $subdomain;
