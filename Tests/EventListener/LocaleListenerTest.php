@@ -226,7 +226,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     {
         $subscribedEvents = LocaleListener::getSubscribedEvents();
 
-        $this->assertEquals(array(array('onKernelRequest', 24)), $subscribedEvents[KernelEvents::REQUEST]);
+        $this->assertEquals(array(array('onKernelRequest', 15)), $subscribedEvents[KernelEvents::REQUEST]);
         $this->assertEquals(array('onLocaleDetectedSetVaryHeader'), $subscribedEvents[KernelEvents::RESPONSE]);
     }
 
