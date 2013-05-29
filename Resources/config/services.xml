@@ -42,6 +42,9 @@
             <call method="setEventDispatcher">
                 <argument type="service" id="event_dispatcher"/>
             </call>
+            <call method="setDisableVaryHeader">
+                <argument>%lunetics_locale.disable_vary_header%</argument>
+            </call>
             <tag name="kernel.event_subscriber"/>
         </service>
 

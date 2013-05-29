@@ -50,6 +50,11 @@ class LocaleListener implements EventSubscriberInterface
     private $dispatcher;
 
     /**
+     * @var boolean
+     */
+    private $disableVaryHeader = false;
+
+    /**
      * Construct the guessermanager
      *
      * @param string               $defaultLocale  Framework default locale
@@ -103,7 +108,11 @@ class LocaleListener implements EventSubscriberInterface
      */
     public function onLocaleDetectedSetVaryHeader(FilterResponseEvent $event)
     {
-        return $event->getResponse()->setVary('Accept-Language', false);
+        $response = $event->getResponse();
+        if (!$this->disableVaryHeader) {
+            $response->setVary('Accept-Language', false);
+        }
+        return $response;
     }
     /**
      * DI Setter for the EventDispatcher
@@ -113,6 +122,13 @@ class LocaleListener implements EventSubscriberInterface
     public function setEventDispatcher(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @param boolean $disableVaryHeader
+     */
+    public function setDisableVaryHeader ($disableVaryHeader) {
+        $this->disableVaryHeader = $disableVaryHeader;
     }
 
     /**
