@@ -154,7 +154,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
 
     private function getMockLogger()
     {
-        return $this->getMock('Symfony\Component\HttpKernel\Log\LoggerInterface');
+        return $this->getMock('Psr\Log\LoggerInterface');
     }
 
 }
