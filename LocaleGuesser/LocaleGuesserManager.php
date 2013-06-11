@@ -9,7 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface as PsrLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
@@ -50,9 +50,9 @@ class LocaleGuesserManager
      * Constructor
      *
      * @param array           $guessingOrder Config Value for the guessing order
-     * @param LoggerInterface $logger        The Logger
+     * @param PsrLogger       $logger        The Logger
      */
-    public function __construct(array $guessingOrder, LoggerInterface $logger = null)
+    public function __construct(array $guessingOrder, PsrLogger $logger = null)
     {
         $this->guessingOrder = $guessingOrder;
         $this->logger = $logger;
