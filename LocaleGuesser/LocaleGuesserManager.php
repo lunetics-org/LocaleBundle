@@ -9,7 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
