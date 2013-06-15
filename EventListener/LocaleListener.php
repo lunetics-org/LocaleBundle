@@ -12,7 +12,7 @@ namespace Lunetics\LocaleBundle\EventListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
