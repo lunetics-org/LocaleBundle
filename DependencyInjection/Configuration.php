@@ -34,6 +34,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('strict_mode')
                     ->defaultFalse()
                 ->end()
+                ->booleanNode('disable_vary_header')->defaultFalse()->end()
                 ->arrayNode('allowed_locales')
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()

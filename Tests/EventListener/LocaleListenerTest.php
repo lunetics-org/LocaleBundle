@@ -172,7 +172,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $request->getLocale());
     }
 
-    public function testOnLocacleDetectedSetVaryHeader()
+    public function testOnLocaleDetectedSetVaryHeader()
     {
         $listener = $this->getListener();
 
@@ -192,7 +192,23 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
+    }
 
+    public function testOnLocaleDetectedDisabledVaryHeader () {
+        $listener = $this->getListener();
+        $listener->setDisableVaryHeader(true);
+
+        $response = $this->getMockResponse();
+        $response
+            ->expects($this->never())
+            ->method('setVary');
+        $filterResponseEvent = $this->getMockFilterResponseEvent();
+        $filterResponseEvent
+            ->expects($this->any())
+            ->method('getResponse')
+            ->will($this->returnValue($response));
+
+        $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
     }
 
     public function testLogEvent()
@@ -243,7 +259,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new LocaleListener($locale, $manager, $logger);
         $listener->setEventDispatcher(new \Symfony\Component\EventDispatcher\EventDispatcher());
-        
+
         return $listener;
     }
 
