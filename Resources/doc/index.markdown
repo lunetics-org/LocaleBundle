@@ -114,7 +114,8 @@ For example, if you don't use route / query parameters for locales, you could bu
 
 ``` php
 $locale = $user->getLocale();
-$localeSwitchEvent = new FilterLocaleSwitchEvent($locale);
+$request = $this->getRequest();
+$localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
 $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
 ```
 ### Custom Form Types
