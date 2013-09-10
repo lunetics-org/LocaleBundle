@@ -73,7 +73,7 @@ class LocaleInformation
     {
         $preferredLocales = $this->filterAllowed($this->manager->getPreferredLocales());
 
-        return $preferredLocales;
+        return ($preferredLocales ? $preferredLocales : array());
     }
 
     /**
