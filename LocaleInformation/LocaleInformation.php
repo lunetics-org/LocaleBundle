@@ -73,7 +73,9 @@ class LocaleInformation
     {
         $preferredLocales = $this->filterAllowed($this->manager->getPreferredLocales());
 
-        return $preferredLocales;
+        // Make sure we return an array even if no preferred locale can be found
+        return $preferredLocales ?: array();
+
     }
 
     /**

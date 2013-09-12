@@ -109,9 +109,8 @@ class LocaleInformationTest extends BaseMetaValidator
         }
     }
 
-    public function testGetPreferredLocales()
+    private function getLocaleInformation(array $preferredLocale)
     {
-        $preferredLocale = array('en', 'de');
         $allowedLocales = array('en', 'fr', 'es');
 
         $guesserManager = $this->getGuesserManagerMock();
@@ -121,9 +120,24 @@ class LocaleInformationTest extends BaseMetaValidator
             ->will($this->returnValue($preferredLocale))
         ;
 
-        $info = new LocaleInformation($this->getMetaValidator($allowedLocales), $guesserManager, $allowedLocales);
+        return new LocaleInformation($this->getMetaValidator($allowedLocales), $guesserManager, $allowedLocales);
 
+    }
+
+    public function testGetPreferredLocales()
+    {
+        $info = $this->getLocaleInformation(array('en', 'de'));
         $this->assertEquals(array('en'), $info->getPreferredLocales());
+    }
+
+
+    /**
+     * Make sure we don't crash when a browser fails to define a preferred language.
+     */
+    public function testGetPreferredLocalesNoneDefined()
+    {
+        $info = $this->getLocaleInformation(array());
+        $this->assertEquals(array(), $info->getPreferredLocales());
     }
 
     protected function getGuesserManagerMock()
