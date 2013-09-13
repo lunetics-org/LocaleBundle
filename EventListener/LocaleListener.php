@@ -88,7 +88,7 @@ class LocaleListener implements EventSubscriberInterface
         $locale = $manager->runLocaleGuessing($request);
         if ($locale) {
             $this->logEvent('Setting [ %s ] as locale for the (Sub-)Request', $locale);
-            $request->setLocale($locale);
+            $request->attributes->set('_locale', $locale);
 
             if (($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST || $request->isXmlHttpRequest())
                 && ($manager->getGuesser('session') || $manager->getGuesser('cookie'))
