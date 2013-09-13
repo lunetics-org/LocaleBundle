@@ -40,12 +40,12 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $logger = $this->getMockLogger();
         $logger
             ->expects($this->at(0))
-            ->method('info', array())
+            ->method('debug', array())
             ->with('Locale Query Guessing Service Loaded')
         ;
         $logger
             ->expects($this->at(1))
-            ->method('info', array())
+            ->method('debug', array())
             ->with('Locale has been identified by guessing service: ( Query )')
         ;
 

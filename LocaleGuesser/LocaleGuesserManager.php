@@ -138,7 +138,7 @@ class LocaleGuesserManager
     private function logEvent($logMessage, $parameters = null)
     {
         if (null !== $this->logger) {
-            $this->logger->info(sprintf($logMessage, $parameters));
+            $this->logger->debug(sprintf($logMessage, $parameters));
         }
     }
 
