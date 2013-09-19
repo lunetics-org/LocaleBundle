@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
@@ -57,13 +57,13 @@ class LocaleUpdateListener implements EventSubscriberInterface
      *
      * @param LocaleCookie       $localeCookie       Locale Cookie
      * @param LocaleSession      $session            Locale Session
-     * @param EventDispatcher    $dispatcher         Event Dispatcher
+     * @param EventDispatcherInterface    $dispatcher         Event Dispatcher
      * @param array              $registeredGuessers List of registered guessers
      * @param LoggerInterface    $logger             Logger
      */
     public function __construct(LocaleCookie $localeCookie,
                                 LocaleSession $session,
-                                EventDispatcher $dispatcher,
+                                EventDispatcherInterface $dispatcher,
                                 $registeredGuessers = array(),
                                 LoggerInterface $logger = null)
     {
