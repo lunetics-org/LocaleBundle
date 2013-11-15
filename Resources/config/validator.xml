@@ -2,9 +2,16 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="validator.lunetics_locale.locale.class">Lunetics\LocaleBundle\Validator\LocaleValidator</parameter>
+        <parameter key="validator.lunetics_locale.locale_allowed.class">Lunetics\LocaleBundle\Validator\LocaleAllowedValidator</parameter>
+        <parameter key="lunetics_locale.validator.meta.class">Lunetics\LocaleBundle\Validator\MetaValidator</parameter>
+    </parameters>
+
     <services>
 
-        <service id="validator.lunetics_locale.locale" class="Lunetics\LocaleBundle\Validator\LocaleValidator">
+        <service id="validator.lunetics_locale.locale" class="%validator.lunetics_locale.locale.class%">
             <argument>%lunetics_locale.intl_extension_installed%</argument>
             <argument>%lunetics_locale.intl_extension_fallback.iso3166%</argument>
             <argument>%lunetics_locale.intl_extension_fallback.iso639%</argument>
@@ -12,14 +19,14 @@
             <tag name="validator.constraint_validator" alias="lunetics_locale.validator.locale"/>
         </service>
 
-        <service id="validator.lunetics_locale.locale_allowed" class="Lunetics\LocaleBundle\Validator\LocaleAllowedValidator">
+        <service id="validator.lunetics_locale.locale_allowed" class="%validator.lunetics_locale.locale_allowed.class%">
             <argument>%lunetics_locale.allowed_locales%</argument>
             <argument>%lunetics_locale.strict_mode%</argument>
             <argument>%lunetics_locale.intl_extension_installed%</argument>
             <tag name="validator.constraint_validator" alias="lunetics_locale.validator.locale_allowed"/>
         </service>
 
-        <service id="lunetics_locale.validator.meta" class="Lunetics\LocaleBundle\Validator\MetaValidator">
+        <service id="lunetics_locale.validator.meta" class="%lunetics_locale.validator.meta.class%">
             <argument type="service" id="validator"/>
         </service>
 

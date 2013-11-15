@@ -2,15 +2,20 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <services>
 
-        <service id="lunetics_locale.form.locale.choicelist" class="Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList">
+    <parameters>
+        <parameter key="lunetics_locale.form.locale.choicelist.class">Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList</parameter>
+        <parameter key="form.type.lunetics_locale.class">Lunetics\LocaleBundle\Form\Extension\Type\LocaleType</parameter>
+    </parameters>
+
+    <services>
+        <service id="lunetics_locale.form.locale.choicelist" class="%lunetics_locale.form.locale.choicelist.class%">
             <argument type="service" id="lunetics_locale.information" />
             <argument>%lunetics_locale.form.languages_only%</argument>
             <argument>%lunetics_locale.form.strict_mode%</argument>
         </service>
 
-        <service id="form.type.lunetics_locale" class="Lunetics\LocaleBundle\Form\Extension\Type\LocaleType">
+        <service id="form.type.lunetics_locale" class="%form.type.lunetics_locale.class%">
             <argument type="service" id="lunetics_locale.form.locale.choicelist" />
           <tag name="form.type" alias="lunetics_locale" />
         </service>
