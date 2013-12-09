@@ -122,7 +122,7 @@ $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEve
 
 Read more about using the custom choice Form Type here:
 
-[Read the full documentaion on usage of the custom choice Form Type](forms.md)
+[Read the full documentation on usage of the custom choice Form Type](forms.md)
 
 ### Custom Guessers
 
