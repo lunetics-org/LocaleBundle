@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="lunetics_locale.locale_session.class">Lunetics\LocaleBundle\Session\LocaleSession</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="lunetics_locale.locale_session" class="%lunetics_locale.locale_session.class%">
+            <argument type="service" id="session" />
+            <argument>%lunetics_locale.session.variable%</argument>
+        </service>
+
+    </services>
+</container>

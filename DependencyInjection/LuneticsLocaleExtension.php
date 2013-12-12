@@ -58,6 +58,11 @@ class LuneticsLocaleExtension extends Extension
         $loader->load('services.xml');
         $loader->load('switcher.xml');
         $loader->load('form.xml');
+
+        if ($container->hasDefinition("session")) {
+            $loader->load('guessers.session.xml');
+            $loader->load('services.session.xml');
+        }
     }
     /**
      * {@inheritDoc}
