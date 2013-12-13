@@ -61,9 +61,9 @@ class LocaleUpdateListener implements EventSubscriberInterface
      * @param array              $registeredGuessers List of registered guessers
      * @param LoggerInterface    $logger             Logger
      */
-    public function __construct(LocaleCookie $localeCookie,
-                                LocaleSession $session,
-                                EventDispatcherInterface $dispatcher,
+    public function __construct(EventDispatcherInterface $dispatcher,
+                                LocaleCookie $localeCookie,
+                                LocaleSession $session = null,
                                 $registeredGuessers = array(),
                                 LoggerInterface $logger = null)
     {
@@ -133,7 +133,7 @@ class LocaleUpdateListener implements EventSubscriberInterface
      */
     public function updateSession()
     {
-        if ($this->checkGuesser('session') && $this->session->hasLocaleChanged($this->locale)) {
+        if ($this->session && $this->checkGuesser('session') && $this->session->hasLocaleChanged($this->locale)) {
             if (null !== $this->logger) {
                 $this->logger->info(sprintf('Session var \'%s\' set to [ %s ]', $this->session->getSessionVar(), $this->locale));
             }

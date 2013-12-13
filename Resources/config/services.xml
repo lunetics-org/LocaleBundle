@@ -7,7 +7,6 @@
         <parameter key="lunetics_locale.request_listener.class">Lunetics\LocaleBundle\EventListener\LocaleListener</parameter>
         <parameter key="lunetics_locale.guesser_manager.class">Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager</parameter>
         <parameter key="lunetics_locale.information.class">Lunetics\LocaleBundle\LocaleInformation\LocaleInformation</parameter>
-        <parameter key="lunetics_locale.locale_session.class">Lunetics\LocaleBundle\Session\LocaleSession</parameter>
         <parameter key="lunetics_locale.locale_update_listener.class">Lunetics\LocaleBundle\EventListener\LocaleUpdateListener</parameter>
     </parameters>
 
@@ -33,11 +32,6 @@
             <argument>%lunetics_locale.cookie.set_on_change%</argument>
         </service>
 
-        <service id="lunetics_locale.locale_session" class="%lunetics_locale.locale_session.class%">
-            <argument type="service" id="session" />
-            <argument>%lunetics_locale.session.variable%</argument>
-        </service>
-
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
             <argument>%kernel.default_locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
@@ -52,9 +46,9 @@
         </service>
 
         <service id="lunetics_locale.locale_update_listener" class="%lunetics_locale.locale_update_listener.class%">
-            <argument type="service" id="lunetics_locale.locale_cookie" />
-            <argument type="service" id="lunetics_locale.locale_session" />
             <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="lunetics_locale.locale_cookie" />
+            <argument type="service" id="lunetics_locale.locale_session" on-invalid="null" />            
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
             <tag name="kernel.event_subscriber" />
