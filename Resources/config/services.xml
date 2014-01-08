@@ -52,9 +52,9 @@
         </service>
 
         <service id="lunetics_locale.locale_update_listener" class="%lunetics_locale.locale_update_listener.class%">
-            <argument type="service" id="lunetics_locale.locale_cookie" />
-            <argument type="service" id="lunetics_locale.locale_session" />
             <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="lunetics_locale.locale_cookie" />
+            <argument type="service" id="lunetics_locale.locale_session" on-invalid="null"/>
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
             <tag name="kernel.event_subscriber" />
