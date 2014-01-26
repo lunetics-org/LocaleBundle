@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\GuesserCompilerPass;
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\RouterResourcePass;
+use Lunetics\LocaleBundle\DependencyInjection\Compiler\RemoveSessionPass;
 
 /**
  * LocaleBundle
@@ -32,5 +33,6 @@ class LuneticsLocaleBundle extends Bundle
 
         $container->addCompilerPass(new GuesserCompilerPass);
         $container->addCompilerPass(new RouterResourcePass);
+        $container->addCompilerPass(new RemoveSessionPass);
     }
 }

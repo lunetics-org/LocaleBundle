@@ -168,9 +168,9 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     private function getLocaleUpdateListener($registeredGuessers = array(), $updateCookie = false, $logger = null)
     {
-        $listener = new LocaleUpdateListener($this->getLocaleCookie($updateCookie),
+        $listener = new LocaleUpdateListener($this->dispatcher,
+            $this->getLocaleCookie($updateCookie),
             $this->session,
-            $this->dispatcher,
             $registeredGuessers,
             $logger);
 
