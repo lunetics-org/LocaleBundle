@@ -24,11 +24,6 @@ class QueryLocaleGuesser extends AbstractLocaleGuesser
     private $metaValidator;
 
     /**
-     * @var Request
-     */
-    private $request;
-
-    /**
      * Constructor
      *
      * @param MetaValidator $metaValidator       MetaValidator
