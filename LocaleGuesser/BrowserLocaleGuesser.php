@@ -21,11 +21,6 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
 class BrowserLocaleGuesser extends AbstractLocaleGuesser
 {
     /**
-     * @var bool
-     */
-    private $intlExtension;
-
-    /**
      * @var MetaValidator
      */
     private $metaValidator;
