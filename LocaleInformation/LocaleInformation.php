@@ -20,18 +20,18 @@ class LocaleInformation
 {
     private $metaValidator;
     private $manager;
-    private $allowedLocales;
+    private $allowedLocalesProvider;
 
     /**
-     * @param MetaValidator        $metaValidator  Validator
-     * @param LocaleGuesserManager $manager        LocaleGuesserManager
-     * @param array                $allowedLocales Allowed locales from config
+     * @param MetaValidator           $metaValidator           Validator
+     * @param LocaleGuesserManager    $manager                 LocaleGuesserManager
+     * @param AllowedLocalesProvider  $allowedLocalesProvider  Allowed locales
      */
-    public function __construct(MetaValidator $metaValidator, LocaleGuesserManager $manager, $allowedLocales = array())
+    public function __construct(MetaValidator $metaValidator, LocaleGuesserManager $manager, AllowedLocalesProvider $allowedLocalesProvider = null)
     {
         $this->metaValidator = $metaValidator;
         $this->manager = $manager;
-        $this->allowedLocales = $allowedLocales;
+        $this->allowedLocalesProvider = $allowedLocalesProvider;
     }
 
     /**
@@ -41,7 +41,11 @@ class LocaleInformation
      */
     public function getAllowedLocalesFromConfiguration()
     {
-        return $this->allowedLocales;
+        if (null !== $this->allowedLocalesProvider) {
+            return $this->allowedLocalesProvider->getAllowedLocales();
+        } else {
+            return array();
+        }
     }
 
     /**

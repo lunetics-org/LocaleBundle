@@ -20,7 +20,7 @@
         </service>
 
         <service id="validator.lunetics_locale.locale_allowed" class="%validator.lunetics_locale.locale_allowed.class%">
-            <argument>%lunetics_locale.allowed_locales%</argument>
+            <argument type="service" id="lunetics_locale.allowed_locales_provider" />
             <argument>%lunetics_locale.strict_mode%</argument>
             <argument>%lunetics_locale.intl_extension_installed%</argument>
             <tag name="validator.constraint_validator" alias="lunetics_locale.validator.locale_allowed"/>

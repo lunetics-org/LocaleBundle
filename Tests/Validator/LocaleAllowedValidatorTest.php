@@ -11,6 +11,7 @@
 
 namespace Lunetics\LocaleBundle\Tests\Validator;
 
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Validator\LocaleAllowed;
 use Lunetics\LocaleBundle\Validator\LocaleAllowedValidator;
 
@@ -167,7 +168,7 @@ class LocaleAllowedValidatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getLocaleValidator($allowedLocales = array(), $strictMode = false, $intlExtension = false)
     {
-        $validator = new LocaleAllowedValidator($allowedLocales, $strictMode, $intlExtension);
+        $validator = new LocaleAllowedValidator(new AllowedLocalesProvider($allowedLocales), $strictMode, $intlExtension);
         $validator->initialize($this->context);
 
         return $validator;

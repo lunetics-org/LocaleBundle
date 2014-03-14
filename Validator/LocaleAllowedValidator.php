@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Validator;
 
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -22,9 +23,9 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class LocaleAllowedValidator extends ConstraintValidator
 {
     /**
-     * @var array
+     * @var AllowedLocalesProvider
      */
-    private $allowedLocales;
+    private $allowedLocalesProvider;
 
     /**
      * @var bool
@@ -39,13 +40,13 @@ class LocaleAllowedValidator extends ConstraintValidator
     /**
      * Constructor
      *
-     * @param array $allowedLocales List of allowed locales
-     * @param bool  $strictMode     Match locales strict (e.g. de_DE will not match allowedLocale de)
-     * @param bool  $intlExtension  Whether the intl extension is installed
+     * @param AllowedLocalesProvider  $allowedLocalesProvider  allowed locales provided by service
+     * @param bool                    $strictMode              Match locales strict (e.g. de_DE will not match allowedLocale de)
+     * @param bool                    $intlExtension           Whether the intl extension is installed
      */
-    public function __construct(array $allowedLocales = array(), $strictMode = false, $intlExtension = false)
+    public function __construct(AllowedLocalesProvider $allowedLocalesProvider = null, $strictMode = false, $intlExtension = false)
     {
-        $this->allowedLocales = $allowedLocales;
+        $this->allowedLocalesProvider = $allowedLocalesProvider;
         $this->strictMode = $strictMode;
         $this->intlExtension = $intlExtension;
     }
@@ -71,7 +72,7 @@ class LocaleAllowedValidator extends ConstraintValidator
         $locale = (string) $locale;
 
         if ($this->strictMode) {
-            if (!in_array($locale, $this->allowedLocales)) {
+            if (!in_array($locale, $this->getAllowedLocales())) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
         } else {
@@ -82,9 +83,18 @@ class LocaleAllowedValidator extends ConstraintValidator
                 $primary = count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
             }
 
-            if (!in_array($locale, $this->allowedLocales) && (!in_array($primary, $this->allowedLocales))) {
+            if (!in_array($locale, $this->getAllowedLocales()) && (!in_array($primary, $this->getAllowedLocales()))) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
+        }
+    }
+
+    protected function getAllowedLocales()
+    {
+        if (null !== $this->allowedLocalesProvider) {
+            return $this->allowedLocalesProvider->getAllowedLocales();
+        } else {
+            array();
         }
     }
 }

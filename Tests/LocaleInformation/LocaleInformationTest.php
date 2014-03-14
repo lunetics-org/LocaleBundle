@@ -8,6 +8,7 @@
  * file that is distributed with this source code.
  */
 namespace Lunetics\LocaleBundle\Tests\LocaleInformation;
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Tests\Validator\BaseMetaValidator;
 use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
 
@@ -23,7 +24,7 @@ class LocaleInformationTest extends BaseMetaValidator
     public function testGetAllowedLocalesFromConfiguration()
     {
         $metaValidator = $this->getMetaValidator($this->allowedLocales);
-        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock(), $this->allowedLocales);
+        $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock(), new AllowedLocalesProvider($this->allowedLocales));
         $this->assertSame($this->allowedLocales, $information->getAllowedLocalesFromConfiguration());
     }
 
@@ -120,7 +121,7 @@ class LocaleInformationTest extends BaseMetaValidator
             ->will($this->returnValue($preferredLocale))
         ;
 
-        return new LocaleInformation($this->getMetaValidator($allowedLocales), $guesserManager, $allowedLocales);
+        return new LocaleInformation($this->getMetaValidator($allowedLocales), $guesserManager, new AllowedLocalesProvider($allowedLocales));
 
     }
 
