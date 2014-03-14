@@ -44,7 +44,7 @@ class LocaleAllowedValidator extends ConstraintValidator
      * @param bool                    $strictMode              Match locales strict (e.g. de_DE will not match allowedLocale de)
      * @param bool                    $intlExtension           Whether the intl extension is installed
      */
-    public function __construct(AllowedLocalesProvider $allowedLocalesProvider, $strictMode = false, $intlExtension = false)
+    public function __construct(AllowedLocalesProvider $allowedLocalesProvider = null, $strictMode = false, $intlExtension = false)
     {
         $this->allowedLocalesProvider = $allowedLocalesProvider;
         $this->strictMode = $strictMode;
@@ -72,7 +72,7 @@ class LocaleAllowedValidator extends ConstraintValidator
         $locale = (string) $locale;
 
         if ($this->strictMode) {
-            if (!in_array($locale, $this->allowedLocalesProvider->getAllowedLocales())) {
+            if (!in_array($locale, $this->getAllowedLocales())) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
         } else {
@@ -83,9 +83,18 @@ class LocaleAllowedValidator extends ConstraintValidator
                 $primary = count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
             }
 
-            if (!in_array($locale, $this->allowedLocalesProvider->getAllowedLocales()) && (!in_array($primary, $this->allowedLocalesProvider->getAllowedLocales()))) {
+            if (!in_array($locale, $this->getAllowedLocales()) && (!in_array($primary, $this->getAllowedLocales()))) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
+        }
+    }
+
+    protected function getAllowedLocales()
+    {
+        if (null !== $this->allowedLocalesProvider) {
+            return $this->allowedLocalesProvider->getAllowedLocales();
+        } else {
+            array();
         }
     }
 }

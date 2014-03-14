@@ -27,7 +27,7 @@ class LocaleInformation
      * @param LocaleGuesserManager    $manager                 LocaleGuesserManager
      * @param AllowedLocalesProvider  $allowedLocalesProvider  Allowed locales
      */
-    public function __construct(MetaValidator $metaValidator, LocaleGuesserManager $manager, AllowedLocalesProvider $allowedLocalesProvider)
+    public function __construct(MetaValidator $metaValidator, LocaleGuesserManager $manager, AllowedLocalesProvider $allowedLocalesProvider = null)
     {
         $this->metaValidator = $metaValidator;
         $this->manager = $manager;
@@ -41,7 +41,11 @@ class LocaleInformation
      */
     public function getAllowedLocalesFromConfiguration()
     {
-        return $this->allowedLocalesProvider->getAllowedLocales();
+        if (null !== $this->allowedLocalesProvider) {
+            return $this->allowedLocalesProvider->getAllowedLocales();
+        } else {
+            return array();
+        }
     }
 
     /**

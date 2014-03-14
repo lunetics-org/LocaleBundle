@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Tests\Validator;
 
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Validator\LocaleValidator;
 use Lunetics\LocaleBundle\Validator\LocaleAllowedValidator;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
@@ -86,7 +87,8 @@ class BaseMetaValidator extends \PHPUnit_Framework_TestCase
 
     public function getLocaleAllowedValidator($intlExtension = false, $allowedLocales = array(), $strictMode = false)
     {
-        $validator = new LocaleAllowedValidator($allowedLocales, $strictMode, $intlExtension);
+        $allowedLocalesProvider = new AllowedLocalesProvider($allowedLocales);
+        $validator = new LocaleAllowedValidator($allowedLocalesProvider, $strictMode, $intlExtension);
         $validator->initialize($this->context);
 
         return $validator;

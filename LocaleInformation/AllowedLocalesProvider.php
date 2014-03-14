@@ -15,6 +15,11 @@ class AllowedLocalesProvider
     /** @var array */
     protected $allowedLocales;
 
+    public function __construct(array $allowedLocales = null)
+    {
+        $this->allowedLocales = $allowedLocales;
+    }
+
     /**
      * Return a list of the allowed locales
      *
