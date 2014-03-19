@@ -58,6 +58,11 @@ class LuneticsLocaleExtension extends Extension
         $loader->load('services.xml');
         $loader->load('switcher.xml');
         $loader->load('form.xml');
+
+        if (!$config['strict_routes']) {
+            $container->removeDefinition('lunetics_locale.incoming_locale_validator');
+        }
+
     }
     /**
      * {@inheritDoc}
