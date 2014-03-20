@@ -9,6 +9,8 @@
         <parameter key="lunetics_locale.information.class">Lunetics\LocaleBundle\LocaleInformation\LocaleInformation</parameter>
         <parameter key="lunetics_locale.locale_session.class">Lunetics\LocaleBundle\Session\LocaleSession</parameter>
         <parameter key="lunetics_locale.locale_update_listener.class">Lunetics\LocaleBundle\EventListener\LocaleUpdateListener</parameter>
+        <parameter key="lunetics_locale.incoming_locale_listener.class">Lunetics\LocaleBundle\EventListener\IncomingLocaleListener</parameter>
+        
     </parameters>
 
     <services>
@@ -58,6 +60,11 @@
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
             <tag name="kernel.event_subscriber" />
+        </service>
+        
+        <service id="lunetics_locale.incoming_locale_validator" class="%lunetics_locale.incoming_locale_listener.class%">
+            <argument>%lunetics_locale.allowed_locales%</argument>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
         </service>
     </services>
 </container>
