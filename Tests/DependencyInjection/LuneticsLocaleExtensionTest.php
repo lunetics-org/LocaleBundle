@@ -43,7 +43,6 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($strictMatch, $container->hasDefinition('lunetics_locale.best_locale_matcher'));
 
-
         $resources = $container->getResources();
 
         $this->assertContains('validator.xml', $resources[0]->getResource());
