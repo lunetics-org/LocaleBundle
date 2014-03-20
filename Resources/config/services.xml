@@ -60,7 +60,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
         
-        <service id="lunetics_locale.incoming_locale_validator" class="Lunetics\LocaleBundle\EventListener\IncomingLocaleValidator">
+        <service id="lunetics_locale.incoming_locale_validator" class="Lunetics\LocaleBundle\EventListener\IncomingLocaleListener    ">
             <argument>%lunetics_locale.allowed_locales%</argument>
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
         </service>

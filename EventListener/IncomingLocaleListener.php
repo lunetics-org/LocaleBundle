@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Validate the incoming locale aginst configured locales
  * @author Asmir Mustafic <goetas@gmail.com>
  */
-class IncomingLocaleValidator
+class IncomingLocaleListener
 {
     protected $allowedLocales;
 
