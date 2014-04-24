@@ -9,7 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Validator;
 
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\ValidatorInterface;
 use Lunetics\LocaleBundle\Validator\Locale;
 use Lunetics\LocaleBundle\Validator\LocaleAllowed;
 
@@ -26,9 +26,9 @@ class MetaValidator
     /**
      * Constructor
      *
-     * @param Validator $validator
+     * @param ValidatorInterface $validator
      */
-    public function __construct(Validator $validator)
+    public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
     }
