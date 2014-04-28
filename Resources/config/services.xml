@@ -11,6 +11,7 @@
         <parameter key="lunetics_locale.locale_update_listener.class">Lunetics\LocaleBundle\EventListener\LocaleUpdateListener</parameter>
         <parameter key="lunetics_locale.incoming_locale_listener.class">Lunetics\LocaleBundle\EventListener\IncomingLocaleListener</parameter>
         <parameter key="lunetics_locale.best_locale_matcher.class">Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher</parameter>
+        <parameter key="lunetics_locale.allowed_locales_provider.class">Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider</parameter>
     </parameters>
 
     <services>
@@ -22,7 +23,7 @@
         <service id="lunetics_locale.information" class="%lunetics_locale.information.class%">
             <argument type="service" id="lunetics_locale.validator.meta" />
             <argument type="service" id="lunetics_locale.guesser_manager" />
-            <argument>%lunetics_locale.allowed_locales%</argument>
+            <argument type="service" id="lunetics_locale.allowed_locales_provider" />
         </service>
 
         <service id="lunetics_locale.locale_cookie" class="%lunetics_locale.cookie.class%">
@@ -65,6 +66,12 @@
             <argument>%lunetics_locale.guessing_order%</argument>
             <argument type="service" id="logger" />
             <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="lunetics_locale.allowed_locales_provider" class="%lunetics_locale.allowed_locales_provider.class%">
+            <call method="setAllowedLocales">
+                <argument>%lunetics_locale.allowed_locales%</argument>
+            </call>
         </service>
     </services>
 </container>

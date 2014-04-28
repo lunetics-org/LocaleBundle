@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Tests\Twig\Extension;
 
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -71,7 +72,7 @@ class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
         $container->setParameter('lunetics_locale.switcher.show_current_locale', true);
         $container->setParameter('lunetics_locale.switcher.use_controller', true);
-        $container->setParameter('lunetics_locale.allowed_locales', array('en', 'fr'));
+        $container->set('lunetics_locale.allowed_locales_provider', new AllowedLocalesProvider(array('en', 'fr')));
         $container->set('request', $request);
         $container->set('router', $router);
 
