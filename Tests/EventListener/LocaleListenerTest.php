@@ -25,6 +25,7 @@ use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher;
 
 
 class LocaleListenerTest extends \PHPUnit_Framework_TestCase
@@ -38,6 +39,28 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener->onKernelRequest($event);
         $this->assertEquals('fr', $request->getLocale());
+    }
+    public function getTestDataForBestLocaleMatcher()
+    {
+    	return array(
+    		array('fr', array('fr'), 'fr', 'en'),
+    	    array('fr_FR', array('fr'), 'fr', 'en'),
+    	    array('fr_FR', array('fr_FR'), 'fr_FR', 'en'),
+    	    array('fr_FR', array('en_GB'), 'en', 'en'),
+    	);
+    }
+    /**
+     * @dataProvider getTestDataForBestLocaleMatcher
+     */
+    public function testAllowedLocaleWithMatcher($browserLocale, $allowedlocales, $expectedLocale, $fallback)
+    {
+        $listener = $this->getListener($fallback, $this->getGuesserManager(), null, $this->getBestLocaleMatcher($allowedlocales));
+        $request = Request::create('/');
+        $request->headers->set('Accept-language', $browserLocale);
+        $event = $this->getEvent($request);
+
+        $listener->onKernelRequest($event);
+        $this->assertEquals($expectedLocale, $request->getLocale());
     }
 
     public function testCustomLocaleIsSetWhenParamsExist()
@@ -251,16 +274,21 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
-    private function getListener($locale = 'en', $manager = null, $logger = null)
+    private function getListener($locale = 'en', $manager = null, $logger = null, $matcher = null)
     {
         if (null === $manager) {
             $manager = $this->getGuesserManager();
         }
 
-        $listener = new LocaleListener($locale, $manager, $logger);
+        $listener = new LocaleListener($locale, $manager, $matcher, $logger);
         $listener->setEventDispatcher(new \Symfony\Component\EventDispatcher\EventDispatcher());
 
         return $listener;
+    }
+
+    private function getBestLocaleMatcher(array $allowedLocales)
+    {
+    	return new DefaultBestLocaleMatcher($allowedLocales);
     }
 
     private function getGuesserManager($order = array(1 => 'router', 2 => 'browser'))

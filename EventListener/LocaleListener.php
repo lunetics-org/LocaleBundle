@@ -20,6 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\LocaleBundleEvents;
+use Lunetics\LocaleBundle\Matcher\BestLocaleMatcher;
 
 /**
  * Locale Listener
@@ -38,6 +39,11 @@ class LocaleListener implements EventSubscriberInterface
      * @var LocaleGuesserManager
      */
     private $guesserManager;
+
+    /**
+     * @var BestLocaleMatcher
+     */
+    private $bestLocaleMatcher;
 
     /**
      * @var LoggerInterface
@@ -61,10 +67,11 @@ class LocaleListener implements EventSubscriberInterface
      * @param LocaleGuesserManager $guesserManager Locale Guesser Manager
      * @param LoggerInterface      $logger         Logger
      */
-    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, LoggerInterface $logger = null)
+    public function __construct($defaultLocale = 'en', LocaleGuesserManager $guesserManager, BestLocaleMatcher $bestLocaleMatcher = null, LoggerInterface $logger = null)
     {
         $this->defaultLocale = $defaultLocale;
         $this->guesserManager = $guesserManager;
+        $this->bestLocaleMatcher = $bestLocaleMatcher;
         $this->logger = $logger;
     }
 
@@ -86,7 +93,12 @@ class LocaleListener implements EventSubscriberInterface
 
         $manager = $this->guesserManager;
         $locale = $manager->runLocaleGuessing($request);
+
+        if ($locale && $this->bestLocaleMatcher) {
+            $locale = $this->bestLocaleMatcher->match($locale);
+        }
         if ($locale) {
+
             $this->logEvent('Setting [ %s ] as locale for the (Sub-)Request', $locale);
             $request->setLocale($locale);
 

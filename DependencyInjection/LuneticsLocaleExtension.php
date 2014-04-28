@@ -58,6 +58,10 @@ class LuneticsLocaleExtension extends Extension
         $loader->load('services.xml');
         $loader->load('switcher.xml');
         $loader->load('form.xml');
+
+        if (!$config['strict_match']) {
+            $container->removeDefinition('lunetics_locale.best_locale_matcher');
+        }
     }
     /**
      * {@inheritDoc}

@@ -18,12 +18,13 @@ use Symfony\Component\Yaml\Parser;
  */
 class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLoad()
+    /**
+     * @dataProvider getFullConfig
+     */
+    public function testLoad($configs, $strictMatch)
     {
         $loader = new LuneticsLocaleExtension();
         $container = new ContainerBuilder();
-
-        $configs = $this->getFullConfig();
 
         $loader->load($configs, $container);
 
@@ -39,6 +40,8 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
             $this->assertGreaterThan(0, count($container->getParameter('lunetics_locale.intl_extension_fallback.iso639')));
             $this->assertGreaterThan(0, count($container->getParameter('lunetics_locale.intl_extension_fallback.script')));
         }
+
+        $this->assertEquals($strictMatch, $container->hasDefinition('lunetics_locale.best_locale_matcher'));
 
         $resources = $container->getResources();
 
@@ -80,8 +83,12 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('value', $container->getParameter('lunetics_locale.key'));
     }
 
-    protected function getFullConfig()
+    public function getFullConfig()
     {
+
+        $parser = new Parser();
+        $data = array();
+
         $yaml = <<<EOF
 lunetics_locale:
   allowed_locales:
@@ -95,8 +102,24 @@ lunetics_locale:
     - query
     - router
 EOF;
-        $parser = new Parser();
+        $data[]=array($parser->parse($yaml), false);
 
-        return  $parser->parse($yaml);
+        $yaml = <<<EOF
+lunetics_locale:
+  strict_match: true
+  allowed_locales:
+    - en
+    - fr
+    - de
+  guessing_order:
+    - session
+    - cookie
+    - browser
+    - query
+    - router
+EOF;
+        $data[]=array($parser->parse($yaml), true);
+
+        return  $data;
     }
 }
