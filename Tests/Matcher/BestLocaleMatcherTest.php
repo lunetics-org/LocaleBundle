@@ -11,6 +11,7 @@
 namespace Lunetics\LocaleBundle\Tests\EventListener;
 
 use Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher;
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 
 /**
  * @author Asmir Mustafic <goetas@gmail.com>
@@ -22,7 +23,7 @@ class BestLocaleMatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testMatch($locale, $allowed, $expected)
     {
-        $matcher = new DefaultBestLocaleMatcher($allowed);
+        $matcher = new DefaultBestLocaleMatcher(new AllowedLocalesProvider($allowed));
 
         $this->assertEquals($expected, $matcher->match($locale));
     }

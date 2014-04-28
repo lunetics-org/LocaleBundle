@@ -9,6 +9,8 @@
  */
 namespace Lunetics\LocaleBundle\Matcher;
 
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
+
 /**
  *
  * @author Asmir Mustafic <goetas@gmail.com>
@@ -16,18 +18,18 @@ namespace Lunetics\LocaleBundle\Matcher;
 class DefaultBestLocaleMatcher implements BestLocaleMatcher
 {
     /**
-     * @var array
+     * @var AllowedLocalesProvider
      */
-    private $allowedLocales;
+    private $allowedLocaleProvider;
 
     /**
      * Constructor
      *
      * @param array  $allowedLocales array of valid locales
      */
-    public function __construct(array $allowedLocales)
+    public function __construct(AllowedLocalesProvider $allowedLocales)
     {
-        $this->allowedLocales = $allowedLocales;
+        $this->allowedLocaleProvider = $allowedLocales;
     }
 
     /**
@@ -35,13 +37,15 @@ class DefaultBestLocaleMatcher implements BestLocaleMatcher
      */
     public function match($locale)
     {
-        uasort($this->allowedLocales, function ($a, $b) {
+        $allowedLocales = $this->allowedLocaleProvider->getAllowedLocales();
+
+        uasort($allowedLocales, function ($a, $b) {
             return strlen($b)-strlen($a);
         });
-    	foreach ($this->allowedLocales as $allowedLocale) {
-    		if (strpos($locale, $allowedLocale)===0) {
+        foreach ($allowedLocales as $allowedLocale) {
+            if (strpos($locale, $allowedLocale)===0) {
                 return $allowedLocale;
-    		}
+            }
     	}
     	return false;
     }
