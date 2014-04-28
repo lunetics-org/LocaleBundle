@@ -48,7 +48,7 @@
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
             <argument>%kernel.default_locale%</argument>
             <argument type="service" id="lunetics_locale.guesser_manager" />
-            <argument type="service" id="lunetics_locale.best_locale_matcher" />
+            <argument type="service" id="lunetics_locale.best_locale_matcher" on-invalid="null"/>
             <argument type="service" id="logger" />
             <call method="setEventDispatcher">
                 <argument type="service" id="event_dispatcher"/>
