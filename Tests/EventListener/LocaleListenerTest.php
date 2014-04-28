@@ -26,7 +26,7 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
 use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher;
-
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 
 class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -288,7 +288,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getBestLocaleMatcher(array $allowedLocales)
     {
-    	return new DefaultBestLocaleMatcher($allowedLocales);
+    	return new DefaultBestLocaleMatcher(new AllowedLocalesProvider($allowedLocales));
     }
 
     private function getGuesserManager($order = array(1 => 'router', 2 => 'browser'))

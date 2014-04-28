@@ -42,7 +42,7 @@
         </service>
         
         <service id="lunetics_locale.best_locale_matcher" class="%lunetics_locale.best_locale_matcher.class%">
-              <argument>%lunetics_locale.allowed_locales%</argument>
+            <argument type="service" id="lunetics_locale.allowed_locales_provider" />
         </service>
 
         <service id="lunetics_locale.locale_listener" class="%lunetics_locale.request_listener.class%">
