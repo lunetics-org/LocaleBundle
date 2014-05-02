@@ -53,6 +53,39 @@ You can enable `strict_mode`, where only the **exact** allowed locales will be m
 
 We encourage you to use the non-strict mode, that'll also choose the best region locale for your user.
 
+Pay attention when using the non-strict mode. `allowed_locales` will be ignored in the detection phase;
+it will be only used to help you to create a choice/list with the preferred locales.
+
+#### Strict Match and Strict Mode
+
+When the browser has `en_US` as configured locale and config.yml is:
+
+```yaml
+lunetics_locale:
+  strict_mode: true
+  allowed_locales:
+    - en
+    - en_GB
+```
+With this configuration, no locale will be matched (symfony fallback locale will be used).
+
+To avoid this, you can use the `strict_match` option with the following configuration, which will allow a partial matching of locales.
+
+
+```yaml
+lunetics_locale:
+  strict_mode: false
+  strict_match: true
+  allowed_locales:
+    - en
+    - en_GB
+```
+
+- If the browser has `en_US` ( or just `en`), the matched locale will be `en`;
+- If the browser has `en_GB`, the matched locale will be `en_GB`.
+
+When applicable, this configuration should be preferred to pure non-strict mode.
+
 ### Guessers
 
 You need to activate and define the order of the locale guessers. This is done in one step in the configuration :
