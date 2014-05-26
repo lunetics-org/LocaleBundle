@@ -99,7 +99,7 @@ lunetics_locale:
     - query
     - router
 ```
-With the example above, the guessers will be called in the order you defined as 1. session 2. cookie 2. router 3. browser.
+With the example above, the guessers will be called in the order you defined as 1. session 2. cookie 3. browser 4. query 5. router.
 
 Note that the session and cookie guessers only retrieve previously identified and saved locales by the router or browser guesser.
 
