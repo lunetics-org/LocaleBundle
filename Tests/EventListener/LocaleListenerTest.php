@@ -234,6 +234,36 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
     }
 
+    public function excludedPatternDataProvider()
+    {
+        return array(
+            array(null,    true),
+            array('.*',    false),
+            array('/api$', true),
+            array('^/api', false),
+        );
+    }
+
+    /**
+     * @dataProvider excludedPatternDataProvider
+     */
+    public function testRunLocaleGuessingIsNotFiredIfPatternMatches ($pattern, $called)
+    {
+        $request = new Request(array(), array(), array(), array(), array(), array('REQUEST_URI' => '/api/users'));
+
+        $guesserManager = $this->getMockGuesserManager();
+        $guesserManager
+            ->expects($this->exactly((int) $called))
+            ->method('runLocaleGuessing');
+
+        $listener = $this->getListener('en', $guesserManager);
+        $listener->setExcludedPattern($pattern);
+
+        $event = $this->getEvent($request);
+
+        $listener->onKernelRequest($event);
+    }
+
     public function testLogEvent()
     {
         $message = 'Setting [ 1 ] as locale for the (Sub-)Request';

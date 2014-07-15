@@ -115,7 +115,14 @@ lunetics_locale:
     - browser
 ```
 
-### Locale Cookies / Session 
+Note that you can disable the guessing for a given query pattern :
+
+``` yaml
+lunetics_locale:
+  guessing_excluded_pattern: ^/api
+```
+
+### Locale Cookies / Session
 
 The session and cookie guesser is usually used when you do not use locales in the uri's and you guess it from the user browser preferences. When doing this,
 

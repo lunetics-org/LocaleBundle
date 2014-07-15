@@ -56,6 +56,9 @@
             <call method="setDisableVaryHeader">
                 <argument>%lunetics_locale.disable_vary_header%</argument>
             </call>
+            <call method="setExcludedPattern">
+                <argument>%lunetics_locale.guessing_excluded_pattern%</argument>
+            </call>
             <tag name="kernel.event_subscriber"/>
         </service>
 
