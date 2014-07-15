@@ -72,6 +72,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener->onKernelRequest($event);
         $this->assertEquals('de', $request->getLocale());
+        $this->assertEquals('de', $request->attributes->get('_locale'));
     }
 
     public function testCustomLocaleIsSetWhenQueryExist()
@@ -83,6 +84,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener->onKernelRequest($event);
         $this->assertEquals('de', $request->getLocale());
+        $this->assertEquals('de', $request->attributes->get('_locale'));
     }
 
     /**
@@ -98,6 +100,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('es', $request->getLocale());
+        $this->assertEquals('es', $request->attributes->get('_locale'));
     }
 
     /**
@@ -113,6 +116,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
+        $this->assertEquals('fr_FR', $request->attributes->get('_locale'));
     }
 
     /**
@@ -128,6 +132,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
+        $this->assertEquals('fr_FR', $request->attributes->get('_locale'));
     }
 
     public function testThatGuesserIsNotCalledIfNotInGuessingOrder()
