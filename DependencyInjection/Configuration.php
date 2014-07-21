@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $validStatuscodes = array(300, 301, 302, 303, 307);
 
         $rootNode
+            ->fixXmlConfig('allowed_locale')
             ->children()
                 ->scalarNode('strict_mode')
                     ->defaultFalse()
@@ -46,6 +47,10 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->arrayNode('guessing_order')
+                    ->beforeNormalization()
+                        ->ifString()
+                            ->then(function ($v) { return array($v); })
+                    ->end()
                     ->isRequired()
                     ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()
