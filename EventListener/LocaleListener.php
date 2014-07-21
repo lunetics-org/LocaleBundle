@@ -61,6 +61,11 @@ class LocaleListener implements EventSubscriberInterface
     private $disableVaryHeader = false;
 
     /**
+     * @var string
+     */
+    private $excludedPattern;
+
+    /**
      * Construct the guessermanager
      *
      * @param string               $defaultLocale  Framework default locale
@@ -88,6 +93,10 @@ class LocaleListener implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if ($this->excludedPattern && preg_match(sprintf('#%s#', $this->excludedPattern), $request->getPathInfo())) {
+            return;
+        }
 
         $request->setDefaultLocale($this->defaultLocale);
 
@@ -141,6 +150,13 @@ class LocaleListener implements EventSubscriberInterface
      */
     public function setDisableVaryHeader ($disableVaryHeader) {
         $this->disableVaryHeader = $disableVaryHeader;
+    }
+
+    /**
+     * @param string $excludedPattern
+     */
+    public function setExcludedPattern($excludedPattern) {
+        $this->excludedPattern = $excludedPattern;
     }
 
     /**
