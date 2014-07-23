@@ -12,6 +12,7 @@
         <parameter key="lunetics_locale.incoming_locale_listener.class">Lunetics\LocaleBundle\EventListener\IncomingLocaleListener</parameter>
         <parameter key="lunetics_locale.best_locale_matcher.class">Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher</parameter>
         <parameter key="lunetics_locale.allowed_locales_provider.class">Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider</parameter>
+        <parameter key="lunetics_locale.topleveldomain_locale_map.class">Lunetics\LocaleBundle\LocaleInformation\TopleveldomainLocaleMap</parameter>
     </parameters>
 
     <services>
@@ -73,5 +74,10 @@
                 <argument>%lunetics_locale.allowed_locales%</argument>
             </call>
         </service>
+
+        <service id="lunetics_locale.topleveldomain_locale_map" class="%lunetics_locale.topleveldomain_locale_map.class%">
+            <argument>%lunetics_locale.topleveldomain.topleveldomain_locale_map%</argument>
+        </service>
+
     </services>
 </container>

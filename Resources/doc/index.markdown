@@ -139,6 +139,19 @@ The session guesser will automatically save a previously identified locale into 
 
 The subdomain guesser will try to determine the locale based on the subdomain hostname. `[locale].domain.com`.
 
+### Topleveldomain
+
+The topleveldomain guesser will map the tld to a locale. `domain.com` maps to `en_US`.
+
+Some basic mappings are provided. You can add custom mappings via config:
+
+``` yaml
+topleveldomain:
+  topleveldomain_locale_map:
+    - be: fr_BE
+    - ch: fr_CH
+```
+
 ### FilterLocaleSwitchEvent / LocaleUpdateListener
 The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocalChange` if you use either the `session` or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.
 

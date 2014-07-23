@@ -82,7 +82,13 @@ class LuneticsLocaleExtension extends Extension
     {
         if (is_array($config) && empty($config[0])) {
             foreach ($config as $key => $value) {
-                $this->bindParameters($container, $name . '.' . $key, $value);
+                if($key !== 'topleveldomain_locale_map'){
+                    $this->bindParameters($container, $name . '.' . $key, $value);
+                }
+                else{
+                    //need a assoc array here
+                    $container->setParameter($name . '.' . $key, $value);
+                }
             }
         } else {
             $container->setParameter($name, $config);
