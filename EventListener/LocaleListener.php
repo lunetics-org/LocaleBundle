@@ -106,8 +106,8 @@ class LocaleListener implements EventSubscriberInterface
         if ($locale && $this->bestLocaleMatcher) {
             $locale = $this->bestLocaleMatcher->match($locale);
         }
+        
         if ($locale) {
-
             $this->logEvent('Setting [ %s ] as locale for the (Sub-)Request', $locale);
             $request->setLocale($locale);
             $request->attributes->set('_locale', $locale);
@@ -149,14 +149,16 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * @param boolean $disableVaryHeader
      */
-    public function setDisableVaryHeader ($disableVaryHeader) {
+    public function setDisableVaryHeader($disableVaryHeader)
+    {
         $this->disableVaryHeader = $disableVaryHeader;
     }
 
     /**
      * @param string $excludedPattern
      */
-    public function setExcludedPattern($excludedPattern) {
+    public function setExcludedPattern($excludedPattern)
+    {
         $this->excludedPattern = $excludedPattern;
     }
 
