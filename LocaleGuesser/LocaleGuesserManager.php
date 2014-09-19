@@ -55,6 +55,8 @@ class LocaleGuesserManager
     public function __construct(array $guessingOrder, LoggerInterface $logger = null)
     {
         $this->guessingOrder = $guessingOrder;
+        $this->guessers = array();
+        $this->preferredLocales = array();
         $this->logger = $logger;
     }
 
