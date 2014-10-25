@@ -19,6 +19,8 @@ The locale can be guessed from different parameters in your applications :
 
 [Read the Documentation for master](https://github.com/lunetics/LocaleBundle/blob/master/Resources/doc/index.markdown)
 
+[Read the Documentation for 2.2](https://github.com/lunetics/LocaleBundle/blob/2.2/Resources/doc/index.markdown)
+
 [Read the Documentation for 2.1](https://github.com/lunetics/LocaleBundle/blob/2.1/Resources/doc/index.markdown)
 
 ## License

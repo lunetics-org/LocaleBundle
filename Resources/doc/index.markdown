@@ -1,29 +1,32 @@
 # Installation
 
-### Add the package to your dependencies
-
-``` yaml
-"require": {
-    "lunetics/locale-bundle": "2.2.*",
-    ....
-},
-```
-
 ### Register the bundle in your kernel
 
 ``` php
 public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new Lunetics\LocaleBundle\LuneticsLocaleBundle(),
-        );
+{
+    $bundles = array(
+        // ...
+        new Lunetics\LocaleBundle\LuneticsLocaleBundle(),
+    );
+```
+
+### Define a minimal configuration
+
+The full documentation options are explained below, but before you run composer
+you should place minimal configuration to avoid an error:
+
+```yaml
+lunetics_locale:
+  guessing_order:
+    - router
+    - browser
 ```
 
 ### Update your packages
 
 ```
-php composer.phar update lunetics/locale-bundle
+php composer.phar require lunetics/locale-bundle "2.3.*"
 ```
 
 # Configuration
