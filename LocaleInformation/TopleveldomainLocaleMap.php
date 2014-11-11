@@ -16,26 +16,16 @@ class TopleveldomainLocaleMap
 {
 
     /**
-     * some common top level domain as default set
-     * new or edits can be passed via constructor, unset a domain with null
      * @var array
      */
-    private $map = array('com' => 'en_US',
-                        'org' => 'en_US',
-                        'net' => 'en_US',
-                        'uk' => 'en_GB',
-                        'nz' => 'en_NZ',
-                        'ch' => 'de_CH',
-                        'at' => 'de_AT');
+    private $map = array();
 
     /**
-     * @param array $map topleveldomain locale map
+     * @param array $map topleveldomain locale map, [tld => locale]
      */
     function __construct(array $map = array())
     {
-        foreach ($map as $topleveldomain => $locale) {
-            $this->map[$topleveldomain] = $locale;
-        }
+        $this->map = $map;
     }
 
     public function getLocale($topleveldomain)

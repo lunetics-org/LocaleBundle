@@ -20,6 +20,8 @@ class TopleveldomainLocaleMapTest extends \PHPUnit_Framework_TestCase
     {
         $tldLocaleMap = new TopleveldomainLocaleMap(array('net' => 'de',
                                                           'org' => null,
+                                                          'com' => 'en_US',
+                                                          'uk' => 'en_GB',
                                                           'be' => 'fr_BE'));
 
         $this->assertEquals('en_GB', $tldLocaleMap->getLocale('uk'));

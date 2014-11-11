@@ -141,18 +141,24 @@ The subdomain guesser will try to determine the locale based on the subdomain ho
 
 ### Topleveldomain
 
-The topleveldomain guesser will map the tld to a locale. `domain.com` maps to `en_US` and `domain.de` maps to `de`.  
+The topleveldomain guesser will map the tld to a locale. So `domain.de` maps to `de` and `domain.fr` maps to `fr`.  
 Note that the guesser will first try to set the tld as a locale.  
 Where this does not make sense or needs further detection the locale map comes into play.  
-This applies for tlds as `com` which is no locale or with multilingual countries as `be`.  
+This applies for tlds as `com` which is no locale or with multilingual countries as `be` that would need a default locale.  
 
-Some basic mappings are provided. You can add custom mappings via config:
+You can add custom mappings via config, like:
 
 ``` yaml
 topleveldomain:
   locale_map:
+    - com: en
+    - org: en_US
+    - net: en_US
+    - uk: en_GB
+    - nz: en_NZ
+    - ch: de_CH
+    - at: de_AT
     - be: fr_BE
-    - ch: fr_CH
 ```
 
 ### FilterLocaleSwitchEvent / LocaleUpdateListener

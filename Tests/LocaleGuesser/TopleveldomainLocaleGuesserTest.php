@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\TopleveldomainLocaleGuesser;
+use Lunetics\LocaleBundle\LocaleInformation\TopleveldomainLocaleMap;
 
 /**
  * @author Ivo Bathke <ivo.bathke@gmail.com>
@@ -32,7 +33,7 @@ class TopleveldomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
                                  ->method('getLocale')
                                  ->will($this->returnValue($mappedLocale));
 
-        if (null !== $allowed) {
+        if ($allowed) {
             $metaValidator->expects($this->once())
                           ->method('isAllowed')
                           ->will($this->returnValue($allowed));
