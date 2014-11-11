@@ -137,7 +137,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('topleveldomain')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('topleveldomain_locale_map')
+                        ->arrayNode('locale_map')
                         ->useAttributeAsKey('name')
                           ->prototype('scalar')->end()
                         ->end()

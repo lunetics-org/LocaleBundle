@@ -60,7 +60,7 @@ class TopleveldomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
             array(false, false, 'domain.fr', false, false), //not allowed
             array(false, false, 'domain', null, false), //no tld
             array(false, false, 'domain.doom', false, false), //wrong/not allowed tld
-            array(true, 'de', 'domain.de', true, false), //normal locale
+            array(true, 'de', 'domain.de', true, false), //normal tld to locale mapping
         );
     }
 
