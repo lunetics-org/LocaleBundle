@@ -56,6 +56,7 @@ class TopleveldomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     public function dataDomains()
     {
         return array(
+            array(false, false, 'localhost', false, false), // double dot + sublocale
             array(true, 'en_GB', 'domain.co.uk', true, 'en_GB'), // double dot + sublocale
             array(true, 'de_CH', 'domain.ch', true, 'de_CH'), // single dot tld + sublocale
             array(false, false, 'domain.fr', false, false), //not allowed
