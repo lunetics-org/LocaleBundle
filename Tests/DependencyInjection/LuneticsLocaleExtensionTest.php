@@ -30,6 +30,9 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($container->hasParameter('lunetics_locale.allowed_locales'));
         $this->assertTrue($container->hasParameter('lunetics_locale.intl_extension_installed'));
+        $this->assertTrue($container->hasParameter('lunetics_locale.topleveldomain.locale_map'));
+
+        $this->assertArrayHasKey('be', $container->getParameter('lunetics_locale.topleveldomain.locale_map'));
 
         if (extension_loaded('intl')) {
             $this->assertEquals(array(), $container->getParameter('lunetics_locale.intl_extension_fallback.iso3166'));
@@ -101,6 +104,10 @@ lunetics_locale:
     - browser
     - query
     - router
+  topleveldomain:
+    locale_map:
+      com: en_US
+      be: nl_BE
 EOF;
         $data[]=array($parser->parse($yaml), false);
 
@@ -117,6 +124,10 @@ lunetics_locale:
     - browser
     - query
     - router
+  topleveldomain:
+    locale_map:
+      com: en_US
+      be: nl_BE
 EOF;
         $data[]=array($parser->parse($yaml), true);
 
