@@ -79,7 +79,7 @@
         </service>
 
         <service id="lunetics_locale.topleveldomain_locale_map" class="%lunetics_locale.topleveldomain_locale_map.class%">
-            <argument>%lunetics_locale.topleveldomain.topleveldomain_locale_map%</argument>
+            <argument>%lunetics_locale.topleveldomain.locale_map%</argument>
         </service>
 
     </services>
