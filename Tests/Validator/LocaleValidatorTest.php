@@ -75,7 +75,10 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $this->getLocaleValidator($intlExtension)->validate('de', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('en', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr', $constraint);
-        $this->getLocaleValidator($intlExtension)->validate('fil', $constraint);
+
+        // Filipino removed from known ISO-639-2 locales in Symfony 2.3+
+        // @see https://github.com/symfony/symfony/issues/12583
+        //$this->getLocaleValidator($intlExtension)->validate('fil', $constraint);
     }
 
     /**
@@ -105,7 +108,10 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = new Locale();
         $this->context->expects($this->never())
                 ->method('addViolation');
-        $this->getLocaleValidator($intlExtension)->validate('fil_PH', $constraint);
+
+        // Filipino removed from known ISO-639-2 locales in Symfony 2.3+
+        // @see https://github.com/symfony/symfony/issues/12583
+        //$this->getLocaleValidator($intlExtension)->validate('fil_PH', $constraint);
     }
 
     /**
