@@ -65,7 +65,12 @@ class LocaleSwitcherExtension extends \Twig_Extension
         $showCurrentLocale = $this->container->getParameter('lunetics_locale.switcher.show_current_locale');
         $useController = $this->container->getParameter('lunetics_locale.switcher.use_controller');
         $allowedLocales = $this->container->get('lunetics_locale.allowed_locales_provider')->getAllowedLocales();
-        $request = $this->container->get('request');
+        // Use the request stack if it exists (Symfony 2.4+); otherwise use the request "service"
+        // @see http://symfony.com/blog/new-in-symfony-2-4-the-request-stack
+        $request = $this->container->has('request_stack')
+            ? $this->container->get('request_stack')->getMasterRequest()
+            : $this->container->get('request')
+        ;
         $router = $this->container->get('router');
 
         $infosBuilder = new TargetInformationBuilder($request, $router, $allowedLocales, $showCurrentLocale, $useController);

@@ -24,12 +24,12 @@
         "psr/log": "~1.0"
     },
     "require-dev": {
-       	"twig/twig": "1.*",
+        "twig/twig": "1.*",
         "ext-intl": "*",
         "symfony/form": "~2.2"
     },
     "suggest": {
-        "ext-intl": "Needed for displaying the countryname in the locale language"
+        "ext-intl": "Needed for displaying the country name in the locale language"
     },
     "autoload": {
         "psr-0": { "Lunetics\\LocaleBundle": "" }
