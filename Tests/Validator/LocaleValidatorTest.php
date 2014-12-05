@@ -73,7 +73,9 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
         $this->context->expects($this->never())
                 ->method('addViolation');
         $this->getLocaleValidator($intlExtension)->validate('de', $constraint);
+        $this->getLocaleValidator($intlExtension)->validate('deu', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('en', $constraint);
+        $this->getLocaleValidator($intlExtension)->validate('eng', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr', $constraint);
 
         // Filipino removed from known ISO-639-2 locales in Symfony 2.3+
@@ -93,6 +95,7 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
                 ->method('addViolation');
         $this->getLocaleValidator($intlExtension)->validate('de_DE', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('en_US', $constraint);
+        $this->getLocaleValidator($intlExtension)->validate('en_PH', $constraint);  // Filipino English
         $this->getLocaleValidator($intlExtension)->validate('fr_FR', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr_CH', $constraint);
         $this->getLocaleValidator($intlExtension)->validate('fr_US', $constraint);

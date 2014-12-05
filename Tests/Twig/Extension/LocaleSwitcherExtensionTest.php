@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Tests\Twig\Extension;
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @covers \Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension
@@ -79,6 +80,7 @@ class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
         $container->set('lunetics_locale.switcher_helper', $switcherHelper);
 
         $extension = new LocaleSwitcherExtension($container);
+
         $this->assertEquals($template, $extension->renderSwitcher());
     }
 
