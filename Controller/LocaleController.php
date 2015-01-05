@@ -69,8 +69,10 @@ class LocaleController
             throw new \InvalidArgumentException(sprintf('Not allowed to switch to locale %s', $_locale));
         }
 
-        $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $_locale);
-        $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
+        if ($this->dispatcher !== null) {
+            $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $_locale);
+            $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
+        }
 
         // Redirect the User
         if ($useReferrer && $request->headers->has('referer')) {
