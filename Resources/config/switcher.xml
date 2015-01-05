@@ -28,6 +28,7 @@
             <argument>%lunetics_locale.switcher.use_referrer%</argument>
             <argument>%lunetics_locale.switcher.redirect_to_route%</argument>
             <argument>%lunetics_locale.switcher.redirect_statuscode%</argument>
+            <argument type="service" id="event_dispatcher" />
         </service>
 
     </services>

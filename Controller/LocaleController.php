@@ -9,6 +9,9 @@
  */
 namespace Lunetics\LocaleBundle\Controller;
 
+use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +30,7 @@ class LocaleController
     private $metaValidator;
     private $useReferrer;
     private $redirectToRoute;
+    private $dispatcher;
 
     /**
      * @param RouterInterface $router          Router Service
@@ -35,13 +39,14 @@ class LocaleController
      * @param null            $redirectToRoute From Config
      * @param string          $statusCode      From Config
      */
-    public function __construct(RouterInterface $router = null, MetaValidator $metaValidator, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')
+    public function __construct(RouterInterface $router = null, MetaValidator $metaValidator, $useReferrer = true, $redirectToRoute = null, $statusCode = '302', EventDispatcherInterface $dispatcher)
     {
         $this->router = $router;
         $this->metaValidator = $metaValidator;
         $this->useReferrer = $useReferrer;
         $this->redirectToRoute = $redirectToRoute;
         $this->statusCode = $statusCode;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -63,6 +68,9 @@ class LocaleController
         if (!$metaValidator->isAllowed($_locale)) {
             throw new \InvalidArgumentException(sprintf('Not allowed to switch to locale %s', $_locale));
         }
+
+        $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $_locale);
+        $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
 
         // Redirect the User
         if ($useReferrer && $request->headers->has('referer')) {
