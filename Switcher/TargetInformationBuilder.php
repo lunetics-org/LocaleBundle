@@ -92,7 +92,9 @@ class TargetInformationBuilder
             $strpos = 0 === strpos($request->getLocale(), $locale);
             if ($this->showCurrentLocale && $strpos || !$strpos) {
                 $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
+                $targetLocaleTargetRegion = Locale::getDisplayRegion($locale, $locale);
                 $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
+                $targetLocaleCurrentRegion = Locale::getDisplayRegion($locale, $request->getLocale());
                 $parameters['_locale'] = $locale;
                 try {
                     if (null !== $targetRoute && "" !== $targetRoute) {
@@ -119,6 +121,8 @@ class TargetInformationBuilder
                 $infos['locales'][$locale] = array(
                     'locale_current_language' => $targetLocaleCurrentLang,
                     'locale_target_language' => $targetLocaleTargetLang,
+                    'region_current_language' => $targetLocaleCurrentRegion,
+                    'region_target_language' => $targetLocaleTargetRegion,
                     'link' => $switchRoute,
                     'locale' => $locale,
                 );
