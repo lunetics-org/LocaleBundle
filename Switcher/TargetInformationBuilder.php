@@ -50,16 +50,18 @@ class TargetInformationBuilder
      * Builds a bunch of informations in order to build a switcher template
      * for custom needs
      *
-     * Will return something like this (let's say current locale is fr :
+     * Will return something like this (let's say current locale is fr_FR :
      *
      * current_route: hello_route
-     * current_locale: fr
+     * current_locale: fr_FR
      * locales:
-     *   en:
-     *     link: http://app_dev.php/en/... or http://app_dev.php?_locale=en
-     *     locale: en
+     *   en_US:
+     *     link: http://app_dev.php/en_US/... or http://app_dev.php?_locale=en_US
+     *     locale: en_US
      *     locale_target_language: English
      *     locale_current_language: Anglais
+     *     region_target_language: United States
+     *     region_current_language: États-Unis
      *
      * @param string|null $targetRoute The target route
      * @param array       $parameters  Parameters
