@@ -56,6 +56,16 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://fallback_route.com/', $response->getTargetUrl());
     }
 
+    public function testControllerRedirectsToFallbackRouteWithParams()
+    {
+        $request = $this->getRequestWithBrowserPreferences('/?foo=bar');
+        $request->setLocale('de');
+
+        $localeController = $this->getLocaleController(true);
+        $response = $localeController->switchAction($request);
+        $this->assertEquals('http://fallback_route.com/?foo=bar', $response->getTargetUrl());
+    }
+
     public function testControllerNoMatchRedirect()
     {
         $request = $this->getRequestWithBrowserPreferences();
