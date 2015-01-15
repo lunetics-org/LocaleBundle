@@ -68,7 +68,14 @@ class LocaleController
         if ($useReferrer && $request->headers->has('referer')) {
             $response = new RedirectResponse($request->headers->get('referer'), $statusCode);
         } elseif ($this->router && $redirectToRoute) {
-            $response = new RedirectResponse($this->router->generate($redirectToRoute, array('_locale' => $_locale)), $statusCode);
+            $target = $this->router->generate($redirectToRoute, array('_locale' => $_locale));
+            if ($request->getQueryString()) {
+                if (!strpos($target, '?')) {
+                    $target .= '?';
+                }
+                $target .= $request->getQueryString();
+            }
+            $response = new RedirectResponse($target, $statusCode);
         } else {
             // TODO: this seems broken, as it will not handle if the site runs in a subdir
             // TODO: also it doesn't handle the locale at all and can therefore lead to an infinite redirect
