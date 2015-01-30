@@ -99,8 +99,10 @@ class TargetInformationBuilder
                         $switchRoute = $router->generate($targetRoute, $parameters);
                     } elseif ($this->useController) {
                         $switchRoute = $router->generate('lunetics_locale_switcher', array('_locale' => $locale));
-                    } else {
+                    } elseif ($route) {
                         $switchRoute = $router->generate($route, $parameters);
+                    } else {
+                        continue;
                     }
                 } catch (RouteNotFoundException $e) {
                     // skip routes for which we cannot generate a url for the given locale
