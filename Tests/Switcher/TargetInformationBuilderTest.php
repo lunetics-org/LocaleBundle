@@ -181,6 +181,21 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testGenerateNotCalledIfNoRoute()
+    {
+        $request = $this->getRequestWithBrowserPreferences();
+        $request->attributes->set('_route', null);
+        $router = $this->getRouter();
+
+        $targetInformationBuilder = new TargetInformationBuilder($request, $router, array('de', 'en', 'fr'), true, false);
+        $router
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $targetInformationBuilder->getTargetInformations();
+    }
+
     private function getRequestWithBrowserPreferences($route = "/")
     {
         $request = Request::create($route);
