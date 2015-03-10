@@ -1,6 +1,6 @@
 # Installation
 
-### Add the package to your dependencies
+## Add the package to your dependencies
 
 ``` yaml
 "require": {
@@ -9,7 +9,7 @@
 },
 ```
 
-### Register the bundle in your kernel
+## Register the bundle in your kernel
 
 ``` php
 public function registerBundles()
@@ -20,7 +20,7 @@ public function registerBundles()
         );
 ```
 
-### Update your packages
+## Update your packages
 
 ```
 php composer.phar update lunetics/locale-bundle
@@ -28,7 +28,7 @@ php composer.phar update lunetics/locale-bundle
 
 # Configuration
 
-### Allowed locales for your application
+## Allowed locales for your application
 
 You need to define at least one valid locale that is valid for your application
 
@@ -40,7 +40,7 @@ lunetics_locale:
     - de
 ```
 
-#### Strict Mode
+### Strict Mode
 
 ``` yaml
 lunetics_locale:
@@ -56,7 +56,7 @@ We encourage you to use the non-strict mode, that'll also choose the best region
 Pay attention when using the non-strict mode. `allowed_locales` will be ignored in the detection phase;
 it will be only used to help you to create a choice/list with the preferred locales.
 
-#### Strict Match and Strict Mode
+### Strict Match and Strict Mode
 
 When the browser has `en_US` as configured locale and config.yml is:
 
@@ -86,7 +86,7 @@ lunetics_locale:
 
 When applicable, this configuration should be preferred to pure non-strict mode.
 
-### Guessers
+## Guessers
 
 You need to activate and define the order of the locale guessers. This is done in one step in the configuration :
 
@@ -121,6 +121,9 @@ Note that you can disable the guessing for a given query pattern :
 lunetics_locale:
   guessing_excluded_pattern: ^/api
 ```
+
+You can also create your own guesser:
+[Read the full documentation for creating a custom Locale Guesser](guesser.md)
 
 ### Locale Cookies / Session
 
@@ -171,7 +174,6 @@ topleveldomain:
 ### FilterLocaleSwitchEvent / LocaleUpdateListener
 The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocalChange` if you use either the `session` or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.
 
-
 For example, if you don't use route / query parameters for locales, you could build an own listener for your user login, which dispatches a `LocaleBundleEvents::onLocalChange` event to set the locale for your user. You just have to use the `FilterLocaleSwitchEvent` and set the locale.
 
 ``` php
@@ -180,19 +182,20 @@ $request = $this->getRequest();
 $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
 $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
 ```
-### Custom Form Types
 
-Read more about using the custom choice Form Type here:
+## Vary on Accept-Language
 
-[Read the full documentation on usage of the custom choice Form Type](forms.md)
+By default, this bundle adds `Accept-Language` to the list of `Vary` headers.
+You can can disable this behaviour with `disable_vary_header`:
 
-### Custom Guessers
+``` yaml
+lunetics_locale:
+  disable_vary_header: true
+```
 
-Read more about creating your own guesser here:
+# Usage
 
-[Read the full documentation for creating a custom Locale Guesser](guesser.md)
-
-### Switch to another locale
+## Display Links to Switch to another locale
 
 You can render a default locale switcher, simply by calling the twig function in your template :
 
@@ -201,3 +204,10 @@ You can render a default locale switcher, simply by calling the twig function in
 ```
 
 [Read the full documentation for the switcher](switcher.md)
+
+## Custom Form Types
+
+Read more about using the custom choice Form Type here:
+
+[Read the full documentation on usage of the custom choice Form Type](forms.md)
+
