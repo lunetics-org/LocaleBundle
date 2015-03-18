@@ -168,6 +168,18 @@ topleveldomain:
     - be: fr_BE
 ```
 
+### Domain
+
+The domain guesser will map a domain to a locale.
+
+``` yaml
+domain:
+  locale_map:
+    - dutchversion.be: nl_BE
+    - frenchversion.be: fr_BE
+    - dutchversion.nl: nl_NL
+```
+
 ### FilterLocaleSwitchEvent / LocaleUpdateListener
 The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocalChange` if you use either the `session` or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.
 
