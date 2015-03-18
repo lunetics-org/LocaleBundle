@@ -163,6 +163,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('locale_map')
+                        ->normalizeKeys(false)
                         ->useAttributeAsKey('name')
                           ->prototype('scalar')->end()
                         ->end()

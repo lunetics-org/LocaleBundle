@@ -37,6 +37,7 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->hasParameter('lunetics_locale.domain.locale_map'));
         $this->assertArrayHasKey('sub.dutchversion.be', $container->getParameter('lunetics_locale.domain.locale_map'));
         $this->assertArrayHasKey('dutchversion.be', $container->getParameter('lunetics_locale.domain.locale_map'));
+        $this->assertArrayHasKey('dutch-version.be', $container->getParameter('lunetics_locale.domain.locale_map'));
 
         if (extension_loaded('intl')) {
             $this->assertEquals(array(), $container->getParameter('lunetics_locale.intl_extension_fallback.iso3166'));
@@ -117,6 +118,7 @@ lunetics_locale:
       sub.dutchversion.be: en_BE
       frechversion.be: fr_BE
       dutchversion.be: nl_BE
+      dutch-version.be: nl_BE
 EOF;
         $data[]=array($parser->parse($yaml), false);
 
@@ -142,6 +144,7 @@ lunetics_locale:
       sub.dutchversion.be: en_BE
       frechversion.be: fr_BE
       dutchversion.be: nl_BE
+      dutch-version.be: nl_BE
 EOF;
         $data[]=array($parser->parse($yaml), true);
 
