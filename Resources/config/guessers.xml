@@ -45,5 +45,11 @@
             <tag name="lunetics_locale.guesser" alias="topleveldomain"/>
         </service>
 
+        <service id="lunetics_locale.domain_guesser" class="%lunetics_locale.domain_guesser.class%">
+            <argument type="service" id="lunetics_locale.validator.meta" />
+            <argument type="service" id="lunetics_locale.domain_locale_map" />
+            <tag name="lunetics_locale.guesser" alias="domain"/>
+        </service>
+
     </services>
 </container>
