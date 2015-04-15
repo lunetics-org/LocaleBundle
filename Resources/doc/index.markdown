@@ -167,6 +167,7 @@ topleveldomain:
     - be: fr_BE
 ```
 
+<<<<<<< Updated upstream
 ### Domain
 
 The domain guesser will map a domain to a locale.
@@ -178,6 +179,11 @@ domain:
     - frenchversion.be: fr_BE
     - dutchversion.nl: nl_NL
 ```
+=======
+### Base Path
+
+The base_path guesser will try to determine the locale based on the base_path hostname. `domain.com/[locale]/foo`.
+>>>>>>> Stashed changes
 
 ### FilterLocaleSwitchEvent / LocaleUpdateListener
 The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocaleChange` if you use either the `session` or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.

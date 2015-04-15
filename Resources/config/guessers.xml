@@ -45,10 +45,17 @@
             <tag name="lunetics_locale.guesser" alias="topleveldomain"/>
         </service>
 
+<<<<<<< Updated upstream
         <service id="lunetics_locale.domain_guesser" class="%lunetics_locale.domain_guesser.class%">
             <argument type="service" id="lunetics_locale.validator.meta" />
             <argument type="service" id="lunetics_locale.domain_locale_map" />
             <tag name="lunetics_locale.guesser" alias="domain"/>
+=======
+        <service id="lunetics_locale.base_path_guesser" class="%lunetics_locale.base_path_guesser.class%">
+            <argument type="service" id="lunetics_locale.validator.meta" />
+            <argument>%lunetics_locale.base_path.region_separator%</argument>
+            <tag name="lunetics_locale.guesser" alias="base_path"/>
+>>>>>>> Stashed changes
         </service>
 
     </services>
