@@ -127,9 +127,8 @@ You can also create your own guesser:
 
 ### Locale Cookies / Session
 
-The session and cookie guesser is usually used when you do not use locales in the uri's and you guess it from the user browser preferences. When doing this,
-
- it is good to set *session* and/or *cookie* as the first guesser to not try to detect the locale at each request.
+The session and cookie guessers are typically used when you do not rely on URI-based locales and instead guess the locale from user browser preferences. When doing this,
+it is recommended to set *session* and/or *cookie* as the first guesser to avoid having the bundle attempt to detect the locale for each request.
 
 #### Cookie
 If you use the cookie guesser, it will be automatically read from the cookie and write changes into the cookie anytime the locale has changed (Even from another guesser)
@@ -171,10 +170,23 @@ topleveldomain:
     - be: fr_BE
 ```
 
-### FilterLocaleSwitchEvent / LocaleUpdateListener
-The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocalChange` if you use either the `session` or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.
+### Domain
 
-For example, if you don't use route / query parameters for locales, you could build an own listener for your user login, which dispatches a `LocaleBundleEvents::onLocalChange` event to set the locale for your user. You just have to use the `FilterLocaleSwitchEvent` and set the locale.
+The domain guesser will map a domain to a locale.
+
+``` yaml
+domain:
+  locale_map:
+    - dutchversion.be: nl_BE
+    - frenchversion.be: fr_BE
+    - dutchversion.nl: nl_NL
+```
+
+### FilterLocaleSwitchEvent / LocaleUpdateListener
+The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocaleChange` if you use either the `session` or `cookie` guesser. The LocaleUpdateListeners checks if the locale has changed and updates the session or cookie.
+
+For example, if you don't use route / query parameters for locales, you could build an own listener for your user login, which dispatches a `LocaleBundleEvents::onLocaleChange` event to set the locale for your user. You just have to use the `FilterLocaleSwitchEvent` and set the locale.
+
 
 ``` php
 $locale = $user->getLocale();
