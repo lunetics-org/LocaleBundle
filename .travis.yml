@@ -9,7 +9,6 @@ php:
 env:
   - SYMFONY_VERSION=2.2.11
   - SYMFONY_VERSION=2.3.*
-  - SYMFONY_VERSION=2.4.*
   - SYMFONY_VERSION=2.5.*
   - SYMFONY_VERSION=2.6.*
   - SYMFONY_VERSION='2.7.* symfony/phpunit-bridge:2.7.*'
@@ -21,10 +20,6 @@ before_script:
   - composer install --dev --prefer-source
 
 script: phpunit --coverage-text
-
-matrix:
-  allow_failures:
-    - env: SYMFONY_VERSION=2.4.*
 
 notifications:
   email:
