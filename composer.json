@@ -28,6 +28,9 @@
         "ext-intl": "*",
         "symfony/form": "~2.2"
     },
+    "conflict": {
+        "symfony/intl": "2.4.*"
+    },
     "suggest": {
         "ext-intl": "Needed for displaying the country name in the locale language"
     },
