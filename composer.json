@@ -40,7 +40,7 @@
     "target-dir": "Lunetics/LocaleBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }
