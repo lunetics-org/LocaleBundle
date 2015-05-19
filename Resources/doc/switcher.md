@@ -112,7 +112,7 @@ It is also possible to override the default template used in the switcher by pas
 {{ locale_switcher(null, null, 'AcmeDemoBundle:Foo:bar.html.twig') }}
 ```
 
-The template receive as variable a collection of locales available to switch on, these locales contains some
+The template receives as variable a collection of locales available to switch on. These locales contains some
 informations you can use in the template :
 
 ```html
