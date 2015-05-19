@@ -130,5 +130,5 @@ informations you can use in the template :
 * `locale_target_language` will display the locale in the language it is targetted to, for e.g. if your current locale is
 `en` and the target language is `fr` then it will display `Français`
 * `link` is the url/uri to the controller that will perform the switch
-* `locale` is the current locale, useful for making checks if you want to highlight the current language
+* `locale` the locale corresponding to the language
 
