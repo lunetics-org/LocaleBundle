@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
+use Lunetics\LocaleBundle\Event\LocaleGuessedEvent;
 
 /**
  * Locale Guesser Manager
