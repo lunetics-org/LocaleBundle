@@ -338,7 +338,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnCallback($callBack));
 
         $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
-        $dispatcherMock->expects($this->once())
+        $dispatcherMock->expects($this->any())
                        ->method('dispatch')
                        ->with($this->equalTo(LocaleBundleEvents::onLocaleGuessed), $this->isInstanceOf('Lunetics\LocaleBundle\Event\LocaleGuessedEvent'));
 
