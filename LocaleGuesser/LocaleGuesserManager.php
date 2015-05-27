@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\LocaleGuesser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Lunetics\LocaleBundle\Event\LocaleGuessedEvent;
@@ -46,6 +47,11 @@ class LocaleGuesserManager
      * @var LoggerInterface
      */
     private $logger;
+    
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
     /**
      * Constructor
@@ -98,6 +104,16 @@ class LocaleGuesserManager
     public function removeGuesser($alias)
     {
        unset($this->guessers[$alias]);
+    }
+
+    /**
+     * DI Setter for the EventDispatcher
+     *
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInteface $dispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**
