@@ -40,7 +40,6 @@ class LocaleGuessedEventTest extends \PHPUnit_Framework_TestCase
           array(123 , 'de'),
           array(''  , 'de'),
           array(null, 'de'),
-          array('Router', 'de'),
           array('Router', ''  ),
           array('Router', null)
         );
