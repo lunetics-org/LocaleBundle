@@ -337,7 +337,14 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
                 ->method('isAllowed')
                 ->will($this->returnCallback($callBack));
 
+        $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $dispatcherMock->expects($this->once())
+                       ->method('dispatch')
+                       ->with($this->equalTo(LocaleBundleEvents::onLocaleGuessed), $this->isInstanceOf('Lunetics\LocaleBundle\Event\LocaleGuessedEvent'));
+
         $manager = new LocaleGuesserManager($order);
+        $manager->setEventDispatcher($dispatcherMock);
+        
         $routerGuesser = new RouterLocaleGuesser($metaValidator);
         $browserGuesser = new BrowserLocaleGuesser($metaValidator);
         $cookieGuesser = new CookieLocaleGuesser($metaValidator, 'lunetics_locale');
