@@ -123,6 +123,9 @@ class LocaleGuesserManager
                 $locale = $guesserService->getIdentifiedLocale();
                 $this->logEvent('Locale has been identified by guessing service: ( %s )', ucfirst($guesser));
 
+                $localeGuessedEvent = new LocaleGuessedEvent($guesser, $locale);
+                $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleGuessed, $localeGuessedEvent);
+
                 return $locale;
             }
             $this->logEvent('Locale has not been identified by the %s guessing service', ucfirst($guesser));
