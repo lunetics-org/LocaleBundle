@@ -47,7 +47,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
         $dispatcherMock->expects($this->once())
                        ->method('dispatch')
-                       ->with($this->equalTo(LocaleBundleEvents::onLocaleGuessed), $this->instanceOf('Lunetics\LocaleBundle\Event\LocaleGuessedEvent'));
+                       ->with($this->equalTo(LocaleBundleEvents::onLocaleGuessed), $this->isInstanceOf('Lunetics\LocaleBundle\Event\LocaleGuessedEvent'));
         
         $logger = $this->getMockLogger();
         $logger
