@@ -25,4 +25,5 @@ final class LocaleBundleEvents
      *
      */
     const onLocaleChange = 'lunetics_locale.change';
+    const onLocaleGuessed = 'lunetics_locale.guessed';
 }
