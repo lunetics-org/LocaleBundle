@@ -19,8 +19,8 @@ class LocaleGuessedEventTest extends \PHPUnit_Framework_TestCase
         $guesser = 'Router';
         $locale = 'de';
         $event = new LocaleGuessedEvent($guesser, $locale);
-        $this->assertEquals('Router', $filter->getGuesser());
-        $this->assertEquals('de', $filter->getLocale());
+        $this->assertEquals('Router', $event->getGuesser());
+        $this->assertEquals('de', $event->getLocale());
     }
     /**
      * @dataProvider invalidType
