@@ -2,11 +2,8 @@
 
 ## Add the package to your dependencies
 
-``` yaml
-"require": {
-    "lunetics/locale-bundle": "2.2.*",
-    ....
-},
+```bash
+php composer.phar require lunetics/locale-bundle
 ```
 
 ## Register the bundle in your kernel
