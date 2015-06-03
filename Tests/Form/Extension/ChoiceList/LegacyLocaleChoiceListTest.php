@@ -18,7 +18,7 @@ use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
+class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testDefaultChoiceList()

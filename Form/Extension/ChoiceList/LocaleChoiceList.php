@@ -14,6 +14,7 @@ namespace Lunetics\LocaleBundle\Form\Extension\ChoiceList;
 use Symfony\Component\Locale\Locale;
 use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
 use Symfony\Component\Form\Extension\Core\ChoiceList\SimpleChoiceList;
+use Symfony\Component\Form\Extension\Core\View\ChoiceView;
 
 /**
  * Locale Choicelist Class
@@ -73,14 +74,15 @@ class LocaleChoiceList extends SimpleChoiceList
 
     /**
      * Returns the remaining locales sorted by language name
-     * TODO: Use Collator->sort for utf-8 locale-strings?
      *
      * @return array
      */
     public function getRemainingViews()
     {
         $remainingViews = parent::getRemainingViews();
-        sort($remainingViews);
+        usort($remainingViews, function (ChoiceView $choiceView1, ChoiceView $choiceView2) {
+            return \Collator::create(null)->compare($choiceView1->label, $choiceView2->label);
+        });
 
         return $remainingViews;
     }

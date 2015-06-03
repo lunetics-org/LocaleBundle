@@ -48,9 +48,9 @@ class RouterLocaleGuesser extends AbstractLocaleGuesser
         if ($locale = $request->attributes->get('_locale')) {
             if ($localeValidator->isAllowed($locale)) {
                 $this->identifiedLocale = $locale;
-            }
 
-            return true;
+                return true;
+            }
         }
 
         return false;

@@ -111,3 +111,24 @@ It is also possible to override the default template used in the switcher by pas
  ``` html
 {{ locale_switcher(null, null, 'AcmeDemoBundle:Foo:bar.html.twig') }}
 ```
+
+The template receives as variable a collection of locales available to switch on. These locales contains some
+informations you can use in the template :
+
+```html
+<ul>
+{% for locale in locales %}
+   <li>{{ locale.locale_current_language }}</li>
+   <li>{{ locale.locale_target_language }}</li>
+   <li>{{ locale.link }}</li>
+   <li>{{ locale.locale }}</li>
+{% endfor %}
+</ul>
+```
+
+* `locale_current_language` will display the locale name in the current language
+* `locale_target_language` will display the locale in the language it is targetted to, for e.g. if your current locale is
+`en` and the target language is `fr` then it will display `Français`
+* `link` is the url to perform the switch to this language
+* `locale` the locale corresponding to the language
+

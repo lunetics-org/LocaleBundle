@@ -23,27 +23,42 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     public function testLocaleIsIdentified()
     {
-        $request = $this->getRequestWithLocaleParameter();
+        $request       = $this->getRequestWithLocaleParameter();
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser = new RouterLocaleGuesser($metaValidator, false);
+        $guesser       = new RouterLocaleGuesser($metaValidator, false);
 
         $metaValidator->expects($this->once())
-                ->method('isAllowed')
-                ->with('en')
-                ->will($this->returnValue(true));
+                      ->method('isAllowed')
+                      ->with('en')
+                      ->will($this->returnValue(true));
 
         $this->assertTrue($guesser->guessLocale($request));
         $this->assertEquals('en', $guesser->getIdentifiedLocale());
     }
 
+    public function testLocaleIsNotAllowed()
+    {
+        $request       = $this->getRequestWithLocaleParameter();
+        $metaValidator = $this->getMetaValidatorMock();
+        $guesser       = new RouterLocaleGuesser($metaValidator, false);
+
+        $metaValidator->expects($this->once())
+                      ->method('isAllowed')
+                      ->with('en')
+                      ->will($this->returnValue(false));
+
+        $this->assertFalse($guesser->guessLocale($request));
+        $this->assertFalse($guesser->getIdentifiedLocale());
+    }
+
     public function testLocaleIsNotIdentified()
     {
-        $request = $this->getRequestWithLocaleQuery('fr');
+        $request       = $this->getRequestWithLocaleQuery('fr');
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser = new RouterLocaleGuesser($metaValidator, false);
+        $guesser       = new RouterLocaleGuesser($metaValidator, false);
 
         $metaValidator->expects($this->never())
-                ->method('isAllowed');
+                      ->method('isAllowed');
 
         $guesser->guessLocale($request);
         $this->assertEquals(false, $guesser->getIdentifiedLocale());
