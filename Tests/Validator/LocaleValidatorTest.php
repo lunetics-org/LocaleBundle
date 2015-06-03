@@ -22,45 +22,8 @@ use Symfony\Component\Yaml\Parser as YamlParser;
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
+class LocaleValidatorTest extends BaseMetaValidator
 {
-    protected $context;
-    protected static $iso639;
-    protected static $iso3166;
-    protected static $script;
-
-    /**
-     * Setup
-     */
-    public function setUp()
-    {
-        $this->context = $this->getContext();
-    }
-
-    public static function setUpBeforeClass()
-    {
-        $yamlParser = new YamlParser();
-        $file = new FileLocator(__DIR__ . '/../../Resources/config');
-        self::$iso3166 = $yamlParser->parse(file_get_contents($file->locate('iso3166-1-alpha-2.yml')));
-        self::$iso639 = array_merge(
-            $yamlParser->parse(file_get_contents($file->locate('iso639-1.yml'))),
-            $yamlParser->parse(file_get_contents($file->locate('iso639-2.yml')))
-        );
-        self::$script = $yamlParser->parse(file_get_contents($file->locate('locale_script.yml')));
-    }
-
-    /**
-     * Dataprovider for testing each test with and without intl extension
-     *
-     * @return array
-     */
-    public function intlExtensionInstalled()
-    {
-        return array(
-            'Extension On' => array(true),
-            'Extension Off' => array(false)
-        );
-    }
 
     /**
      * @param bool $intlExtension
@@ -167,31 +130,6 @@ class LocaleValidatorTest extends \PHPUnit_Framework_TestCase
 
         $validator->validate(null, $this->getMockConstraint());
         $validator->validate('', $this->getMockConstraint());
-    }
-
-    /**
-     * Returns an Executioncontext
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getContext()
-    {
-        return $this->getMockBuilder('Symfony\Component\Validator\ExecutionContext')->disableOriginalConstructor()->getMock();
-    }
-
-    /**
-     * Returns the LocaleValidator
-     *
-     * @param bool $intlExtension
-     *
-     * @return LocaleValidator
-     */
-    private function getLocaleValidator($intlExtension = false)
-    {
-        $validator = new LocaleValidator($intlExtension, self::$iso3166, self::$iso639);
-        $validator->initialize($this->context);
-
-        return $validator;
     }
 
     protected function getMockConstraint()

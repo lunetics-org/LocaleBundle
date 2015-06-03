@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": ">=2.2.2",
+        "symfony/framework-bundle": ">=2.3.0",
         "symfony/yaml": "~2.2",
         "symfony/locale": "~2.2",
         "symfony/validator": "~2.2",
@@ -28,6 +28,9 @@
         "ext-intl": "*",
         "symfony/form": "~2.2"
     },
+    "conflict": {
+        "symfony/intl": "2.4.*"
+    },
     "suggest": {
         "ext-intl": "Needed for displaying the country name in the locale language"
     },
@@ -37,7 +40,7 @@
     "target-dir": "Lunetics/LocaleBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }

@@ -1,5 +1,5 @@
 lunetics_locale_switcher:
-    pattern: /changeLocale/{_locale}
+    path: /changeLocale/{_locale}
     defaults:
         _controller: lunetics_locale.switcher_controller:switchAction
         _locale: %locale%

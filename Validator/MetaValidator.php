@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Validator;
 
+use Symfony\Component\Validator\Validator\ValidatorInterface as ValidatorInterface2dot5;
 use Symfony\Component\Validator\ValidatorInterface;
 use Lunetics\LocaleBundle\Validator\Locale;
 use Lunetics\LocaleBundle\Validator\LocaleAllowed;
@@ -42,8 +43,13 @@ class MetaValidator
      */
     public function isAllowed($locale)
     {
-        $errorListLocale  = $this->validator->validateValue($locale, new Locale);
-        $errorListLocaleAllowed = $this->validator->validateValue($locale, new LocaleAllowed);
+        if ($this->validator instanceof ValidatorInterface2dot5) {
+            $errorListLocale = $this->validator->validate($locale, new Locale);
+            $errorListLocaleAllowed = $this->validator->validate($locale, new LocaleAllowed);
+        } else {
+            $errorListLocale = $this->validator->validateValue($locale, new Locale);
+            $errorListLocaleAllowed = $this->validator->validateValue($locale, new LocaleAllowed);
+        }
 
         return (count($errorListLocale) == 0 && count($errorListLocaleAllowed) == 0);
     }

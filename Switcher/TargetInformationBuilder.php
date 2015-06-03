@@ -10,11 +10,11 @@
 namespace Lunetics\LocaleBundle\Switcher;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Locale\Locale;
 
 /**
  * Builder to generate information about the switcher links
@@ -91,16 +91,18 @@ class TargetInformationBuilder
         foreach ($targetLocales as $locale) {
             $strpos = 0 === strpos($request->getLocale(), $locale);
             if ($this->showCurrentLocale && $strpos || !$strpos) {
-                $targetLocaleTargetLang = Locale::getDisplayLanguage($locale, $locale);
-                $targetLocaleCurrentLang = Locale::getDisplayLanguage($locale, $request->getLocale());
+                $targetLocaleTargetLang = Intl::getLanguageBundle()->getLanguageName($locale, $locale);
+                $targetLocaleCurrentLang = Intl::getLanguageBundle()->getLanguageName($locale, $request->getLocale());
                 $parameters['_locale'] = $locale;
                 try {
                     if (null !== $targetRoute && "" !== $targetRoute) {
                         $switchRoute = $router->generate($targetRoute, $parameters);
                     } elseif ($this->useController) {
                         $switchRoute = $router->generate('lunetics_locale_switcher', array('_locale' => $locale));
-                    } else {
+                    } elseif ($route) {
                         $switchRoute = $router->generate($route, $parameters);
+                    } else {
+                        continue;
                     }
                 } catch (RouteNotFoundException $e) {
                     // skip routes for which we cannot generate a url for the given locale

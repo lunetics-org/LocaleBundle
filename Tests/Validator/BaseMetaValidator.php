@@ -74,7 +74,13 @@ class BaseMetaValidator extends \PHPUnit_Framework_TestCase
 
     public function getContext()
     {
-        return $this->getMockBuilder('Symfony\Component\Validator\ExecutionContext')->disableOriginalConstructor()->getMock();
+        // Run tests against non-deprecated ExecutionContext, if possible
+        if (class_exists('\Symfony\Component\Validator\Context\ExecutionContext')) {
+            return $this->getMockBuilder('\Symfony\Component\Validator\Context\ExecutionContext')->disableOriginalConstructor()->getMock();
+        } else {
+            // use deprecated ExecutionContext otherwise
+            return $this->getMockBuilder('\Symfony\Component\Validator\ExecutionContext')->disableOriginalConstructor()->getMock();
+        }
     }
 
     public function getLocaleValidator($intlExtension = false)

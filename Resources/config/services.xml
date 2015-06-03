@@ -13,6 +13,7 @@
         <parameter key="lunetics_locale.best_locale_matcher.class">Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher</parameter>
         <parameter key="lunetics_locale.allowed_locales_provider.class">Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider</parameter>
         <parameter key="lunetics_locale.topleveldomain_locale_map.class">Lunetics\LocaleBundle\LocaleInformation\TopleveldomainLocaleMap</parameter>
+        <parameter key="lunetics_locale.domain_locale_map.class">Lunetics\LocaleBundle\LocaleInformation\DomainLocaleMap</parameter>
     </parameters>
 
     <services>
@@ -80,6 +81,10 @@
 
         <service id="lunetics_locale.topleveldomain_locale_map" class="%lunetics_locale.topleveldomain_locale_map.class%">
             <argument>%lunetics_locale.topleveldomain.locale_map%</argument>
+        </service>
+
+        <service id="lunetics_locale.domain_locale_map" class="%lunetics_locale.domain_locale_map.class%">
+            <argument>%lunetics_locale.domain.locale_map%</argument>
         </service>
 
     </services>
