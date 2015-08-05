@@ -91,8 +91,8 @@ class TargetInformationBuilder
         foreach ($targetLocales as $locale) {
             $strpos = 0 === strpos($request->getLocale(), $locale);
             if ($this->showCurrentLocale && $strpos || !$strpos) {
-                $targetLocaleTargetLang = Intl::getLanguageBundle()->getLanguageName($locale, $locale);
-                $targetLocaleCurrentLang = Intl::getLanguageBundle()->getLanguageName($locale, $request->getLocale());
+                $targetLocaleTargetLang = Intl::getLanguageBundle()->getLanguageName($locale, null, $locale);
+                $targetLocaleCurrentLang = Intl::getLanguageBundle()->getLanguageName($locale, null, $request->getLocale());
                 $parameters['_locale'] = $locale;
                 try {
                     if (null !== $targetRoute && "" !== $targetRoute) {
