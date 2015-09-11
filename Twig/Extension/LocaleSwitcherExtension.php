@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the LuneticsLocaleBundle package.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
+
 namespace Lunetics\LocaleBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,7 +26,7 @@ class LocaleSwitcherExtension extends \Twig_Extension
     protected $container;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ContainerInterface $container
      */
@@ -34,18 +36,16 @@ class LocaleSwitcherExtension extends \Twig_Extension
     }
 
     /**
-     *
      * @return array The added functions
      */
     public function getFunctions()
     {
         return array(
-            'locale_switcher' => new \Twig_Function_Method($this, 'renderSwitcher', array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('locale_switcher', array($this, 'renderSwitcher'), array('is_safe' => array('html'))),
         );
     }
 
     /**
-     *
      * @return string The name of the extension
      */
     public function getName()
@@ -54,8 +54,8 @@ class LocaleSwitcherExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $route     A route name for which the switch has to be made
-     * @param array $parameters
+     * @param string $route      A route name for which the switch has to be made
+     * @param array  $parameters
      * @param string $template
      *
      * @return mixed

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the LuneticsLocaleBundle package.
  *
@@ -7,12 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
+
 namespace Lunetics\LocaleBundle\Tests\Twig\Extension;
 
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @covers \Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension
@@ -28,10 +29,10 @@ class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
 
         $functions = $extension->getFunctions();
 
-        /** @var \Twig_Function_Method $twigExtension */
-        $twigExtension = $functions['locale_switcher'];
+        /** @var \Twig_SimpleFunction $twigExtension */
+        $twigExtension = current($functions);
 
-        $this->assertInstanceOf('Twig_Function_Method', $twigExtension);
+        $this->assertInstanceOf('Twig_SimpleFunction', $twigExtension);
         $callable = $twigExtension->getCallable();
         $this->assertEquals('renderSwitcher', $callable[1]);
         $this->assertEquals(array('html'), $twigExtension->getSafe(new \Twig_Node()));
