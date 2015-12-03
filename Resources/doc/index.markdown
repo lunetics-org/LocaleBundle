@@ -172,14 +172,14 @@ You can add custom mappings via config, like:
 ``` yaml
 topleveldomain:
   locale_map:
-    - com: en
-    - org: en_US
-    - net: en_US
-    - uk: en_GB
-    - nz: en_NZ
-    - ch: de_CH
-    - at: de_AT
-    - be: fr_BE
+    com: en
+    org: en_US
+    net: en_US
+    uk: en_GB
+    nz: en_NZ
+    ch: de_CH
+    at: de_AT
+    be: fr_BE
 ```
 
 ### Domain
@@ -189,9 +189,9 @@ The domain guesser will map a domain to a locale.
 ``` yaml
 domain:
   locale_map:
-    - dutchversion.be: nl_BE
-    - frenchversion.be: fr_BE
-    - dutchversion.nl: nl_NL
+    dutchversion.be: nl_BE
+    frenchversion.be: fr_BE
+    dutchversion.nl: nl_NL
 ```
 
 ### FilterLocaleSwitchEvent / LocaleUpdateListener
