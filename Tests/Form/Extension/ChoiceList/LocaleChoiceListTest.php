@@ -9,16 +9,14 @@
  */
 namespace Lunetics\LocaleBundle\Tests\Form\Extension\ChoiceList;
 
-use Lunetics\LocaleBundle\Tests\Validator\BaseMetaValidator;
 use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
-
 
 /**
  * Test for the LocaleInformation
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
+class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testDefaultChoiceList()

@@ -12,14 +12,14 @@
 namespace Lunetics\LocaleBundle\Form\Extension\ChoiceList;
 
 use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
-use Symfony\Component\Form\Extension\Core\ChoiceList\SimpleChoiceList;
-use Symfony\Component\Form\Extension\Core\View\ChoiceView;
+use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
+use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Intl\Intl;
 
 /**
  * Locale Choicelist Class
  */
-class LocaleChoiceList extends SimpleChoiceList
+class LocaleChoiceList extends ArrayChoiceList
 {
     private $localeChoices;
     private $preferredChoices;
@@ -86,5 +86,4 @@ class LocaleChoiceList extends SimpleChoiceList
 
         return $remainingViews;
     }
-
 }
