@@ -20,7 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class LocaleType extends AbstractType
 {
-
     /**
      * @var LocaleChoiceList
      */

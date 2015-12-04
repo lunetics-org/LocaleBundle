@@ -24,12 +24,9 @@
         "psr/log": "~1.0"
     },
     "require-dev": {
-        "twig/twig": "1.*",
+        "twig/twig": "1.*|2.*",
         "ext-intl": "*",
         "symfony/form": "^2.7|^3.0"
-    },
-    "conflict": {
-        "symfony/intl": "2.4.*"
     },
     "suggest": {
         "ext-intl": "Needed for displaying the country name in the locale language"

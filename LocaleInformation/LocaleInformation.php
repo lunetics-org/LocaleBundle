@@ -18,8 +18,19 @@ use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
  */
 class LocaleInformation
 {
+    /**
+     * @var MetaValidator
+     */
     private $metaValidator;
+
+    /**
+     * @var LocaleGuesserManager
+     */
     private $manager;
+
+    /**
+     * @var AllowedLocalesProvider
+     */
     private $allowedLocalesProvider;
 
     /**
@@ -79,7 +90,6 @@ class LocaleInformation
 
         // Make sure we return an array even if no preferred locale can be found
         return $preferredLocales ?: array();
-
     }
 
     /**

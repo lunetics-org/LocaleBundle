@@ -34,12 +34,9 @@ class LocaleChoiceList extends ArrayChoiceList
     public function __construct(LocaleInformation $information, $languagesOnly = true, $strictMode = false)
     {
         $this->localeChoices = array();
-
-        if ($strictMode) {
-            $allowedLocales = $information->getAllowedLocalesFromConfiguration();
-        } else {
-            $allowedLocales = $information->getAllAllowedLanguages();
-        }
+        $allowedLocales = $strictMode
+            ? $information->getAllowedLocalesFromConfiguration()
+            : $information->getAllAllowedLanguages();
 
         foreach ($allowedLocales as $locale) {
             if ($languagesOnly && strlen($locale) == 2 || !$languagesOnly) {
@@ -49,7 +46,7 @@ class LocaleChoiceList extends ArrayChoiceList
 
         $this->preferredChoices = $information->getPreferredLocales();
 
-        parent::__construct($this->localeChoices, $this->preferredChoices);
+        parent::__construct($this->localeChoices);
     }
 
     /**
