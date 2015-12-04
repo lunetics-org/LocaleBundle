@@ -11,10 +11,10 @@
 
 namespace Lunetics\LocaleBundle\Form\Extension\ChoiceList;
 
-use Symfony\Component\Locale\Locale;
 use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
 use Symfony\Component\Form\Extension\Core\ChoiceList\SimpleChoiceList;
 use Symfony\Component\Form\Extension\Core\View\ChoiceView;
+use Symfony\Component\Intl\Intl;
 
 /**
  * Locale Choicelist Class
@@ -43,7 +43,7 @@ class LocaleChoiceList extends SimpleChoiceList
 
         foreach ($allowedLocales as $locale) {
             if ($languagesOnly && strlen($locale) == 2 || !$languagesOnly) {
-                $this->localeChoices[$locale] = Locale::getDisplayName($locale, $locale);
+                $this->localeChoices[$locale] = Intl::getLanguageBundle()->getLanguageName($locale, $locale);
             }
         }
 
