@@ -21,3 +21,5 @@ notifications:
   email:
     - willemsen.christophe@gmail.com
     - mb@lunetics.com
+
+sudo: false
