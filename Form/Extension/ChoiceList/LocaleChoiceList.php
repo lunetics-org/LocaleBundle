@@ -13,7 +13,6 @@ namespace Lunetics\LocaleBundle\Form\Extension\ChoiceList;
 
 use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
 use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
-use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Intl\Intl;
 
 /**
@@ -50,37 +49,12 @@ class LocaleChoiceList extends ArrayChoiceList
     }
 
     /**
-     * Returns the preferred views, sorted by the ->preferredChoices list
+     * Returns the preferred choices
      *
      * @return array|void
      */
-    public function getPreferredViews()
+    public function getPreferredChoices()
     {
-        $preferredViews = parent::getPreferredViews();
-        $result = array();
-        foreach ($this->preferredChoices as $pchoice) {
-            foreach ($preferredViews as $view) {
-                if ($pchoice == $view->data) {
-                    $result[] = $view;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the remaining locales sorted by language name
-     *
-     * @return array
-     */
-    public function getRemainingViews()
-    {
-        $remainingViews = parent::getRemainingViews();
-        usort($remainingViews, function (ChoiceView $choiceView1, ChoiceView $choiceView2) {
-            return \Collator::create(null)->compare($choiceView1->label, $choiceView2->label);
-        });
-
-        return $remainingViews;
+        return $this->preferredChoices;
     }
 }
