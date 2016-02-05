@@ -41,7 +41,8 @@ class LocaleType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'choice_list' => $this->choiceList,
+            'choices' => $this->choiceList->getOriginalKeys(),
+            'preferred_choices' => $this->choiceList->getPreferredChoices(),
         ));
     }
 
@@ -50,13 +51,13 @@ class LocaleType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return 'Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'lunetics_locale';
     }
