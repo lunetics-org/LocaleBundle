@@ -11,7 +11,7 @@ matrix:
     - php: hhvm
 
 env:
-  - SYMFONY_VERSION='2.7.*'
+  - SYMFONY_VERSION='2.8.*'
   - SYMFONY_VERSION='3.0.*'
 
 before_script:
