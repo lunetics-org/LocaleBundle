@@ -24,7 +24,7 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
         $resolver
             ->expects($this->once())
             ->method('setDefaults')
-            ->with(array('choice_list' => $choiceList));
+            ->with(array('choices' => null, 'preferred_choices' => null));
 
         $type = new LocaleType($choiceList);
         $type->configureOptions($resolver);
@@ -34,7 +34,7 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
     {
         $type = new LocaleType($this->getMockLocaleChoiceList());
 
-        $this->assertEquals('choice', $type->getParent());
+        $this->assertEquals('Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType', $type->getParent());
     }
 
     public function testGetName()
