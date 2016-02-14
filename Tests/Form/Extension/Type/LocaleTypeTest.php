@@ -16,7 +16,7 @@ use Lunetics\LocaleBundle\Form\Extension\Type\LocaleType;
  */
 class LocaleTypeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSetDefaultOptions()
+    public function testConfigureOptions()
     {
         $choiceList = $this->getMockLocaleChoiceList();
 
@@ -27,7 +27,7 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
             ->with(array('choice_list' => $choiceList));
 
         $type = new LocaleType($choiceList);
-        $type->setDefaultOptions($resolver);
+        $type->configureOptions($resolver);
     }
 
     public function testGetParent()
@@ -41,7 +41,7 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
     {
         $type = new LocaleType($this->getMockLocaleChoiceList());
 
-        $this->assertEquals('lunetics_locale', $type->getName());
+        $this->assertEquals('lunetics_locale', $type->getBlockPrefix());
     }
 
     protected function getMockLocaleChoiceList()
