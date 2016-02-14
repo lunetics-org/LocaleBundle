@@ -95,15 +95,11 @@ class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue(array('de', 'nl', 'en')));
 
         $list = new LocaleChoiceList($information);
-        $preferredResult = $list->getPreferredViews();
-        $remainingResults = $list->getRemainingViews();
+        $preferredResult = $list->getPreferredChoices();
 
-        $this->assertEquals('de', $preferredResult[0]->value);
-        $this->assertEquals('nl', $preferredResult[1]->value);
-        $this->assertEquals('en', $preferredResult[2]->value);
-
-        $this->assertEquals('fr', $remainingResults[0]->value);
-        $this->assertEquals('tr', $remainingResults[1]->value);
+        $this->assertEquals('de', $preferredResult[0]);
+        $this->assertEquals('nl', $preferredResult[1]);
+        $this->assertEquals('en', $preferredResult[2]);
     }
 
     public function getLocaleInformation()

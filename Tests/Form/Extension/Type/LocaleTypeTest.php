@@ -16,7 +16,7 @@ use Lunetics\LocaleBundle\Form\Extension\Type\LocaleType;
  */
 class LocaleTypeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSetDefaultOptions()
+    public function testConfigureOptions()
     {
         $choiceList = $this->getMockLocaleChoiceList();
 
@@ -24,24 +24,24 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
         $resolver
             ->expects($this->once())
             ->method('setDefaults')
-            ->with(array('choice_list' => $choiceList));
+            ->with(array('choices' => null, 'preferred_choices' => null));
 
         $type = new LocaleType($choiceList);
-        $type->setDefaultOptions($resolver);
+        $type->configureOptions($resolver);
     }
 
     public function testGetParent()
     {
         $type = new LocaleType($this->getMockLocaleChoiceList());
 
-        $this->assertEquals('choice', $type->getParent());
+        $this->assertEquals('Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType', $type->getParent());
     }
 
     public function testGetName()
     {
         $type = new LocaleType($this->getMockLocaleChoiceList());
 
-        $this->assertEquals('lunetics_locale', $type->getName());
+        $this->assertEquals('lunetics_locale', $type->getBlockPrefix());
     }
 
     protected function getMockLocaleChoiceList()
