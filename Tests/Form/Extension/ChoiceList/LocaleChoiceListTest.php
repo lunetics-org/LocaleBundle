@@ -32,7 +32,7 @@ class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information);
         $result = array('nl', 'de');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testStrictMode()
@@ -48,7 +48,7 @@ class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information, true, true);
         $result = array('en', 'de', 'nl');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testNotLanguagesOnly()
@@ -64,7 +64,7 @@ class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information, false);
         $result = array('nl', 'nl_BE', 'de', 'de_AT', 'de_CH');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testNotLanguagesOnlyStrictMode()
@@ -80,7 +80,7 @@ class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information, false, true);
         $result = array('en', 'de', 'nl', 'de_AT');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testPreferredLocalesSorted()
