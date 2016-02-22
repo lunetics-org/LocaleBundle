@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": ">=3.0.0",
+        "symfony/framework-bundle": "~3.0",
         "symfony/yaml": "~3.0",
         "symfony/locale": "~3.0",
         "symfony/validator": "~3.0",
