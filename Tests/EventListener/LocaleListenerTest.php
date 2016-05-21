@@ -215,6 +215,11 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $filterResponseEvent = $this->getMockFilterResponseEvent();
         $filterResponseEvent
             ->expects($this->once())
+            ->method('isMasterRequest')
+            ->will($this->returnValue(true))
+        ;
+        $filterResponseEvent
+            ->expects($this->once())
             ->method('getResponse')
             ->will($this->returnValue($response))
         ;
