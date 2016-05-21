@@ -131,7 +131,7 @@ class LocaleListener implements EventSubscriberInterface
     public function onLocaleDetectedSetVaryHeader(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
-        if (!$this->disableVaryHeader and $event->isMasterRequest()) {
+        if (!$this->disableVaryHeader && $event->isMasterRequest()) {
             $response->setVary('Accept-Language', false);
         }
         return $response;
