@@ -10,26 +10,28 @@ matrix:
   allow_failures:
     - php: hhvm
 
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
 env:
   - SYMFONY_VERSION='2.8.*'
   - SYMFONY_VERSION='3.0.*'
   - SYMFONY_VERSION='3.1.*'
 
-before_script:
+before_install:
+  - phpenv config-rm xdebug.ini || true
   - php -i | grep "ICU version"
   - composer self-update
   - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
-  - composer install --dev --prefer-source
 
-script: phpunit --coverage-text
+install: composer update --prefer-dist
+
+script: phpunit
 
 notifications:
   email:
     - willemsen.christophe@gmail.com
     - mb@lunetics.com
-
-sudo: false
-
-cache:
-  directories:
-    - $HOME/.composer/cache
