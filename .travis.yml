@@ -1,17 +1,18 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
   - 5.5
   - 5.6
   - 7
+  - hhvm
+
+matrix:
+  allow_failures:
+    - php: hhvm
 
 env:
-  - SYMFONY_VERSION=2.3.*
-  - SYMFONY_VERSION=2.5.*
-  - SYMFONY_VERSION=2.6.*
-  - SYMFONY_VERSION='2.7.* symfony/phpunit-bridge:2.7.*'
+  - SYMFONY_VERSION='2.8.*'
+  - SYMFONY_VERSION='3.0.*'
 
 before_script:
   - php -i | grep "ICU version"
@@ -25,3 +26,9 @@ notifications:
   email:
     - willemsen.christophe@gmail.com
     - mb@lunetics.com
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache

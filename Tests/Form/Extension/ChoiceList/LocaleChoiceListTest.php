@@ -9,16 +9,14 @@
  */
 namespace Lunetics\LocaleBundle\Tests\Form\Extension\ChoiceList;
 
-use Lunetics\LocaleBundle\Tests\Validator\BaseMetaValidator;
 use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
-
 
 /**
  * Test for the LocaleInformation
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
+class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testDefaultChoiceList()
@@ -34,7 +32,7 @@ class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information);
         $result = array('nl', 'de');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testStrictMode()
@@ -50,7 +48,7 @@ class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information, true, true);
         $result = array('en', 'de', 'nl');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testNotLanguagesOnly()
@@ -66,7 +64,7 @@ class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information, false);
         $result = array('nl', 'nl_BE', 'de', 'de_AT', 'de_CH');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testNotLanguagesOnlyStrictMode()
@@ -82,7 +80,7 @@ class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
         $list = new LocaleChoiceList($information, false, true);
         $result = array('en', 'de', 'nl', 'de_AT');
-        $this->assertEquals($result, $list->getChoices());
+        $this->assertEquals($result, array_values($list->getOriginalKeys()));
     }
 
     public function testPreferredLocalesSorted()
@@ -97,15 +95,11 @@ class LegacyLocaleChoiceListTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue(array('de', 'nl', 'en')));
 
         $list = new LocaleChoiceList($information);
-        $preferredResult = $list->getPreferredViews();
-        $remainingResults = $list->getRemainingViews();
+        $preferredResult = $list->getPreferredChoices();
 
-        $this->assertEquals('de', $preferredResult[0]->value);
-        $this->assertEquals('nl', $preferredResult[1]->value);
-        $this->assertEquals('en', $preferredResult[2]->value);
-
-        $this->assertEquals('fr', $remainingResults[0]->value);
-        $this->assertEquals('tr', $remainingResults[1]->value);
+        $this->assertEquals('de', $preferredResult[0]);
+        $this->assertEquals('nl', $preferredResult[1]);
+        $this->assertEquals('en', $preferredResult[2]);
     }
 
     public function getLocaleInformation()

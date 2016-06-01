@@ -17,7 +17,7 @@
 
         <service id="form.type.lunetics_locale" class="%form.type.lunetics_locale.class%">
             <argument type="service" id="lunetics_locale.form.locale.choicelist" />
-          <tag name="form.type" alias="lunetics_locale" />
+            <tag name="form.type" alias="lunetics_locale" />
         </service>
 
     </services>

@@ -46,7 +46,7 @@ class DefaultBestLocaleMatcher implements BestLocaleMatcher
             if (strpos($locale, $allowedLocale)===0) {
                 return $allowedLocale;
             }
-    	}
-    	return false;
+        }
+        return false;
     }
 }

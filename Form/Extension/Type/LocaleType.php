@@ -11,14 +11,15 @@
 
 namespace Lunetics\LocaleBundle\Form\Extension\Type;
 
-
 use Symfony\Component\Form\AbstractType;
 use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Custom choice type for locales.
+ */
 class LocaleType extends AbstractType
 {
-
     /**
      * @var LocaleChoiceList
      */
@@ -31,15 +32,17 @@ class LocaleType extends AbstractType
     {
         $this->choiceList = $choiceList;
     }
+
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'choice_list' => $this->choiceList,
+            'choices' => $this->choiceList->getOriginalKeys(),
+            'preferred_choices' => $this->choiceList->getPreferredChoices(),
         ));
     }
 
@@ -48,13 +51,13 @@ class LocaleType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return 'Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'lunetics_locale';
     }
