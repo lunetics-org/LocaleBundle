@@ -55,6 +55,15 @@ class LocaleType extends AbstractType
     }
 
     /**
+     * @deprecated implement getBlockPrefix in place of getName, implement both for symfony 2.8 based projects
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function getBlockPrefix()
