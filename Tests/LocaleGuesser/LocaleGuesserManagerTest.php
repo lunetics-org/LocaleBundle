@@ -16,13 +16,20 @@ use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
 
 class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testLocaleGuessingInvalidGuesser()
     {
         $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+
+        $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $dispatcherMock->expects($this->never())
+                       ->method('dispatch');
+
         $guesserManager = new LocaleGuesserManager(array(0 => 'foo'));
+        $guesserManager->setEventDispatcher($dispatcherMock);
         $guesserManager->addGuesser($this->getGuesserMock(), 'bar');
         $guesserManager->runLocaleGuessing($this->getRequestWithoutLocaleQuery());
     }
@@ -37,6 +44,11 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
                 ->with('fr')
                 ->will($this->returnValue(true));
 
+        $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $dispatcherMock->expects($this->once())
+                       ->method('dispatch')
+                       ->with($this->equalTo(LocaleBundleEvents::onLocaleGuessed), $this->isInstanceOf('Lunetics\LocaleBundle\Event\LocaleGuessedEvent'));
+        
         $logger = $this->getMockLogger();
         $logger
             ->expects($this->at(0))
@@ -51,6 +63,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
 
         $order = array(0 => 'query', 1 => 'router');
         $manager = new LocaleGuesserManager($order, $logger);
+        $manager->setEventDispatcher($dispatcherMock);
         $manager->addGuesser(new RouterLocaleGuesser($metaValidator), 'router');
         $manager->addGuesser(new QueryLocaleGuesser($metaValidator), 'query');
 
@@ -71,8 +84,13 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
         $metaValidator->expects($this->never())
                 ->method('isAllowed');
 
+        $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $dispatcherMock->expects($this->never())
+                       ->method('dispatch');
+
         $order = array(0 => 'query', 1 => 'router');
         $manager = new LocaleGuesserManager($order);
+        $manager->setEventDispatcher($dispatcherMock);
         $manager->addGuesser(new RouterLocaleGuesser($metaValidator), 'router');
         $manager->addGuesser(new QueryLocaleGuesser($metaValidator), 'query');
         $guesserMock = $this->getGuesserMock();
