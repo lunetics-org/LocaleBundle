@@ -9,6 +9,8 @@
  */
 namespace Lunetics\LocaleBundle\Tests\DependencyInjection;
 
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lunetics\LocaleBundle\DependencyInjection\LuneticsLocaleExtension;
 use Symfony\Component\Yaml\Parser;
@@ -50,14 +52,6 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals($strictMatch, $container->hasDefinition('lunetics_locale.best_locale_matcher'));
-
-        $resources = $container->getResources();
-
-        $this->assertContains('validator.xml', $resources[0]->getResource());
-        $this->assertContains('guessers.xml', $resources[1]->getResource());
-        $this->assertContains('services.xml', $resources[2]->getResource());
-        $this->assertContains('switcher.xml', $resources[3]->getResource());
-        $this->assertContains('form.xml', $resources[4]->getResource());
     }
 
     /**
