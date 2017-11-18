@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.5
   - 5.6
   - 7.0
   - 7.1
@@ -17,7 +16,7 @@ env: SYMFONY_VERSION='3.3.*' SYMFONY_PHPUNIT_VERSION=5.5
 
 matrix:
   include:
-    - php: 5.5
+    - php: 5.6
       env:
         - COMPOSER_FLAGS="--prefer-lowest"
         - SYMFONY_VERSION='2.8.*'
@@ -31,13 +30,22 @@ matrix:
     - php: 7.1
       env:
         - SYMFONY_VERSION='3.2.*'
+    - php: 7.1
+      env:
+        - SYMFONY_VERSION='3.3.*'
+    - php: 7.1
+      env:
+        - SYMFONY_VERSION='3.4.*@BETA'
+    - php: 7.1
+      env:
+        - SYMFONY_VERSION='4.0.*@BETA'
     - php: hhvm
       dist: trusty
 
 before_install:
   - phpenv config-rm xdebug.ini || true
   - composer self-update
-  - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
+  - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
 
 install: composer update --prefer-dist
 
