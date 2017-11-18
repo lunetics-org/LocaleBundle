@@ -1,6 +1,6 @@
 # LuneticsLocaleBundle
 
-This bundle allows you to guess the Locale from different parameters in your Symfony2 applications.
+This bundle allows you to guess the Locale from different parameters in your Symfony applications.
 
 [![Build Status](https://travis-ci.org/lunetics/LocaleBundle.svg?branch=master)](https://travis-ci.org/lunetics/LocaleBundle)
 
