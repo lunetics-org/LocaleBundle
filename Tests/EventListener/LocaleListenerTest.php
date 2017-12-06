@@ -306,7 +306,11 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getEvent(Request $request)
     {
-        return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
+        return new GetResponseEvent(
+            $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface'),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 
     private function getListener($locale = 'en', $manager = null, $logger = null, $matcher = null)
@@ -411,14 +415,9 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
-    private function getMockRequest()
-    {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
-    }
-
     private function getMockResponse()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Response');
+        return $this->createMock('Symfony\Component\HttpFoundation\Response');
     }
 
     private function getMockFilterResponseEvent()
@@ -432,6 +431,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getMockLogger()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock('Psr\Log\LoggerInterface');
     }
 }

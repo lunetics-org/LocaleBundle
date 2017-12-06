@@ -21,7 +21,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testLocaleGuessingInvalidGuesser()
     {
-        $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+        $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         $guesserManager = new LocaleGuesserManager(array(0 => 'foo'));
         $guesserManager->addGuesser($this->getGuesserMock(), 'bar');
         $guesserManager->runLocaleGuessing($this->getRequestWithoutLocaleQuery());
@@ -137,7 +137,9 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
      */
     private function getGuesserMock()
     {
-        $mock = $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface')->disableOriginalConstructor()->getMock();
+        $mock = $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         return $mock;
     }
@@ -147,14 +149,16 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
      */
     private function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
+        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         return $mock;
     }
 
     private function getMockLogger()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock('Psr\Log\LoggerInterface');
     }
 
 }

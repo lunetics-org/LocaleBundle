@@ -12,22 +12,61 @@
 namespace Lunetics\LocaleBundle\Tests\Twig\Extension;
 
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
+use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
 use Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @covers \Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension
  *
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
+class LocaleSwitcherExtensionTest extends PHPUnit_Framework_TestCase
 {
+    /** @var RequestStack|MockObject */
+    private $mockRequestStack;
+
+    /** @var RouterInterface|MockObject */
+    private $mockRouter;
+
+    /** @var AllowedLocalesProvider|MockObject */
+    private $mockLocalesProvider;
+
+    /** @var LocaleSwitchHelper|MockObject */
+    private $mockSwitcherHelper;
+
+    /** @var bool */
+    private $showCurrentLocaleParam;
+
+    /** @var bool */
+    private $useControllerParam;
+
+    /** @var LocaleSwitcherExtension */
+    private $extension;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp()
+    {
+        $this->mockRequestStack = $this->createMock(RequestStack::class);
+        $this->mockRouter = $this->createMock(RouterInterface::class);
+        $this->mockLocalesProvider = $this->createMock(AllowedLocalesProvider::class);
+        $this->mockSwitcherHelper = $this->createMock(LocaleSwitchHelper::class);
+        $this->showCurrentLocaleParam = true;
+        $this->useControllerParam = true;
+
+        $this->constructExtension();
+    }
+
     public function testGetFunctions()
     {
-        $container = new ContainerBuilder();
-        $extension = new LocaleSwitcherExtension($container);
-
-        $functions = $extension->getFunctions();
+        $functions = $this->extension->getFunctions();
 
         /** @var \Twig_SimpleFunction $twigExtension */
         $twigExtension = current($functions);
@@ -40,17 +79,12 @@ class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetName()
     {
-        $container = new ContainerBuilder();
-        $extension = new LocaleSwitcherExtension($container);
-
-        $this->assertEquals('locale_switcher', $extension->getName());
+        $this->assertEquals('locale_switcher', $this->extension->getName());
     }
 
     public function testRenderSwitcher()
     {
         $template = uniqid('template:');
-
-        $router = $this->getMockRouter();
 
         $request = $this->getMockRequest();
         $request->attributes = $this->getMockParameterBag();
@@ -62,54 +96,43 @@ class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array()))
         ;
 
+        $this->mockRequestStack->expects($this->once())
+            ->method('getMasterRequest')
+            ->will($this->returnValue($request));
+
         $request->query = $query;
 
-        $switcherHelper = $this->getMockSwitcherHelper();
-        $switcherHelper
+        $this->mockSwitcherHelper
             ->expects($this->once())
             ->method('renderSwitch')
             ->will($this->returnValue($template))
         ;
 
-        $container = new ContainerBuilder();
-        $container->setParameter('lunetics_locale.switcher.show_current_locale', true);
-        $container->setParameter('lunetics_locale.switcher.use_controller', true);
-        $container->set('lunetics_locale.allowed_locales_provider', new AllowedLocalesProvider(array('en', 'fr')));
-        $container->set('request', $request);
-        $container->set('router', $router);
+        $this->mockLocalesProvider->expects($this->once())
+            ->method('getAllowedLocales')->will($this->returnValue(array('en', 'fr')));
 
-        $container->set('lunetics_locale.switcher_helper', $switcherHelper);
-
-        $extension = new LocaleSwitcherExtension($container);
-
-        $this->assertEquals($template, $extension->renderSwitcher());
+        $this->assertEquals($template, $this->extension->renderSwitcher());
     }
 
     protected function getMockRequest()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
-    }
-
-    protected function getMockRouter()
-    {
-        return $this
-            ->getMockBuilder('Symfony\Component\Routing\Router')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return $this->createMock(Request::class);
     }
 
     protected function getMockParameterBag()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        return $this->createMock(ParameterBag::class);
     }
 
-    protected function getMockSwitcherHelper()
+    private function constructExtension()
     {
-        return $this
-            ->getMockBuilder('Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $this->extension = new LocaleSwitcherExtension(
+            $this->mockRequestStack,
+            $this->mockRouter,
+            $this->mockLocalesProvider,
+            $this->mockSwitcherHelper,
+            $this->showCurrentLocaleParam,
+            $this->useControllerParam
+        );
     }
 }

@@ -83,6 +83,6 @@ class DomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     private function getMockRequest()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
+        return $this->createMock('Symfony\Component\HttpFoundation\Request');
     }
-} 
+}

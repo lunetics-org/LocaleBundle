@@ -179,7 +179,12 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     private function getEvent(Request $request)
     {
-        return new FilterResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST, new Response);
+        return new FilterResponseEvent(
+            $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface'),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response
+        );
     }
 
 
@@ -199,6 +204,6 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     private function getMockLogger()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock('Psr\Log\LoggerInterface');
     }
 }

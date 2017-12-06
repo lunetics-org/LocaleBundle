@@ -55,6 +55,6 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockOptionsResolverInterface()
     {
-        return $this->getMock('Symfony\Component\OptionsResolver\OptionsResolver');
+        return $this->createMock('Symfony\Component\OptionsResolver\OptionsResolver');
     }
 }

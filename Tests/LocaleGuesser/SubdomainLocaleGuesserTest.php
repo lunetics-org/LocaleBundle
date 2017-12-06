@@ -59,7 +59,7 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
             array(false, 'de-DE.domain', false, '_'),
         );
     }
-    
+
     private function getMockMetaValidator()
     {
         return $this
@@ -71,6 +71,6 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     private function getMockRequest()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
+        return $this->createMock('Symfony\Component\HttpFoundation\Request');
     }
 }

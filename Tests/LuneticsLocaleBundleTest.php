@@ -40,6 +40,6 @@ class LuneticsLocaleBundleTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockContainer()
     {
-        return $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        return $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
     }
 }

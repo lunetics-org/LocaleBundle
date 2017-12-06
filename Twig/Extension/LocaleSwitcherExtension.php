@@ -11,8 +11,12 @@
 
 namespace Lunetics\LocaleBundle\Twig\Extension;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
+use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+use Twig_SimpleFunction;
 
 /**
  * @author Christophe Willemsen <willemsen.christophe@gmail.com>
@@ -21,27 +25,70 @@ use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
 class LocaleSwitcherExtension extends \Twig_Extension
 {
     /**
-     * @var ContainerInterface
+     * @var RequestStack
      */
-    protected $container;
+    private $requestStack;
 
     /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container
+     * @var RouterInterface
      */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    private $router;
+
+    /**
+     * @var AllowedLocalesProvider
+     */
+    private $allowedLocalesProvider;
+
+    /**
+     * @var LocaleSwitchHelper
+     */
+    private $switcherHelper;
+
+    /**
+     * @var bool
+     */
+    private $useControllerParam;
+
+    /**
+     * @var bool
+     */
+    private $showCurrentLocaleParam;
+
+    /**
+     * @param RequestStack           $requestStack
+     * @param RouterInterface        $router
+     * @param AllowedLocalesProvider $allowedLocalesProvider
+     * @param LocaleSwitchHelper     $switcherHelper
+     * @param bool                   $useControllerParam
+     * @param bool                   $showCurrentLocaleParam
+     */
+    public function __construct(
+        RequestStack $requestStack,
+        RouterInterface $router,
+        AllowedLocalesProvider $allowedLocalesProvider,
+        LocaleSwitchHelper $switcherHelper,
+        $useControllerParam,
+        $showCurrentLocaleParam
+    ) {
+        $this->requestStack = $requestStack;
+        $this->router = $router;
+        $this->allowedLocalesProvider = $allowedLocalesProvider;
+        $this->useControllerParam = $useControllerParam;
+        $this->showCurrentLocaleParam = $showCurrentLocaleParam;
+        $this->switcherHelper = $switcherHelper;
     }
 
     /**
-     * @return array The added functions
+     * {@inheritDoc}
      */
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('locale_switcher', array($this, 'renderSwitcher'), array('is_safe' => array('html'))),
+            new Twig_SimpleFunction(
+                'locale_switcher',
+                array($this, 'renderSwitcher'),
+                array('is_safe' => array('html'))
+            ),
         );
     }
 
@@ -58,25 +105,24 @@ class LocaleSwitcherExtension extends \Twig_Extension
      * @param array  $parameters
      * @param string $template
      *
-     * @return mixed
+     * @return string
      */
     public function renderSwitcher($route = null, $parameters = array(), $template = null)
     {
-        $showCurrentLocale = $this->container->getParameter('lunetics_locale.switcher.show_current_locale');
-        $useController = $this->container->getParameter('lunetics_locale.switcher.use_controller');
-        $allowedLocales = $this->container->get('lunetics_locale.allowed_locales_provider')->getAllowedLocales();
-        // Use the request stack if it exists (Symfony 2.4+); otherwise use the request "service"
-        // @see http://symfony.com/blog/new-in-symfony-2-4-the-request-stack
-        $request = $this->container->has('request_stack')
-            ? $this->container->get('request_stack')->getMasterRequest()
-            : $this->container->get('request')
-        ;
-        $router = $this->container->get('router');
+        $showCurrentLocale = $this->showCurrentLocaleParam;
+        $useController = $this->useControllerParam;
+        $allowedLocales = $this->allowedLocalesProvider->getAllowedLocales();
 
-        $infosBuilder = new TargetInformationBuilder($request, $router, $allowedLocales, $showCurrentLocale, $useController);
+        $informationBuilder = new TargetInformationBuilder(
+            $this->requestStack->getMasterRequest(),
+            $this->router,
+            $allowedLocales,
+            $showCurrentLocale,
+            $useController
+        );
 
-        $infos = $infosBuilder->getTargetInformations($route, $parameters);
+        $viewParams = $informationBuilder->getTargetInformations($route, $parameters);
 
-        return $this->container->get('lunetics_locale.switcher_helper')->renderSwitch($infos, $template);
+        return $this->switcherHelper->renderSwitch($viewParams, $template);
     }
 }

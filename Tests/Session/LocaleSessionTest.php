@@ -74,6 +74,6 @@ class LocaleSessionTest extends \PHPUnit_Framework_TestCase
 
     public function getMockSession()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Session\Session');
+        return $this->createMock('Symfony\Component\HttpFoundation\Session\Session');
     }
 }
