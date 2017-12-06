@@ -11,6 +11,7 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
 use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class CookieLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
@@ -73,8 +74,6 @@ class CookieLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     public function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(MetaValidator::class);
     }
 }

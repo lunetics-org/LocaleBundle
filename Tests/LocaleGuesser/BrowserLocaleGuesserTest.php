@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
@@ -116,7 +117,7 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     {
         $metaValidator = $this->getMetaValidatorMock();
         $request = $this->getRequestWithBrowserPreferencesMultipleLangLocales();
-        $guesser = $this->getGuesser($metaValidator, $allowedLocales);
+        $guesser = $this->getGuesser($metaValidator);
 
         // Emulate a simple validator for strict mode
         $metaValidator->expects($this->atLeastOnce())
@@ -138,9 +139,9 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $guesser->getIdentifiedLocale());
     }
 
-    private function getGuesser($metaValidator, $allowedLocales = array('en', 'fr', 'de'))
+    private function getGuesser($metaValidator)
     {
-        $guesser = new BrowserLocaleGuesser($metaValidator, $allowedLocales);
+        $guesser = new BrowserLocaleGuesser($metaValidator);
 
         return $guesser;
     }
@@ -163,8 +164,6 @@ class BrowserLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     private function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(MetaValidator::class);
     }
 }

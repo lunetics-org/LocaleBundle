@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 use Lunetics\LocaleBundle\Controller\LocaleController;
+use Symfony\Component\Routing\RouterInterface;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -95,7 +97,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     private function getRouterMock()
     {
-        $routerMock = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->disableOriginalConstructor()->getMock();
+        $routerMock = $this->createMock(RouterInterface::class);
         $routerMock->expects($this->any())
                 ->method('generate')
                 ->with($this->equalTo('fallback_route'), $this->anything())
@@ -106,7 +108,7 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
 
     private function getMetaValidatorMock($expectTrue = true)
     {
-        $metaValidator = $this->getMockBuilder('Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
+        $metaValidator = $this->createMock(MetaValidator::class);
         if ($expectTrue) {
             $metaValidator->expects($this->atLeastOnce())
                     ->method('isAllowed')

@@ -14,6 +14,7 @@ use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
@@ -102,9 +103,7 @@ class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     public function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(MetaValidator::class);
     }
 
     /**

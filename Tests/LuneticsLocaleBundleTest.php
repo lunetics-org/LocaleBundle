@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Tests;
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\GuesserCompilerPass;
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\RouterResourcePass;
 use Lunetics\LocaleBundle\LuneticsLocaleBundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -40,6 +41,6 @@ class LuneticsLocaleBundleTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockContainer()
     {
-        return $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        return $this->createMock(ContainerBuilder::class);
     }
 }

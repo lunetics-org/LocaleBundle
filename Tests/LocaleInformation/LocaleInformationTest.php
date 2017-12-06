@@ -11,6 +11,7 @@ namespace Lunetics\LocaleBundle\Tests\LocaleInformation;
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Tests\Validator\BaseMetaValidator;
 use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
+use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 
 /**
  * Test for the LocaleInformation
@@ -121,8 +122,11 @@ class LocaleInformationTest extends BaseMetaValidator
             ->will($this->returnValue($preferredLocale))
         ;
 
-        return new LocaleInformation($this->getMetaValidator($allowedLocales), $guesserManager, new AllowedLocalesProvider($allowedLocales));
-
+        return new LocaleInformation(
+            $this->getMetaValidator($allowedLocales),
+            $guesserManager,
+            new AllowedLocalesProvider($allowedLocales)
+        );
     }
 
     public function testGetPreferredLocales()
@@ -143,6 +147,6 @@ class LocaleInformationTest extends BaseMetaValidator
 
     protected function getGuesserManagerMock()
     {
-        return $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager')->disableOriginalConstructor()->getMock();
+        return $this->createMock(LocaleGuesserManager::class);
     }
 }

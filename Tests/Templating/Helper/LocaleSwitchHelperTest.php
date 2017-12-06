@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\Tests\Templating\Helper;
 
 use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -44,6 +45,6 @@ class LocaleSwitchHelperTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockEngineInterface()
     {
-        return $this->createMock('Symfony\Component\Templating\EngineInterface');
+        return $this->createMock(EngineInterface::class);
     }
 }

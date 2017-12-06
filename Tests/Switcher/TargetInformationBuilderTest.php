@@ -206,6 +206,6 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
 
     private function getRouter()
     {
-        return $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->disableOriginalConstructor()->getMock();
+        return $this->createMock(RouterInterface::class);
     }
 }

@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Twig_SimpleFunction;
 
 /**
  * @covers \Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension
@@ -68,7 +69,7 @@ class LocaleSwitcherExtensionTest extends PHPUnit_Framework_TestCase
     {
         $functions = $this->extension->getFunctions();
 
-        /** @var \Twig_SimpleFunction $twigExtension */
+        /** @var Twig_SimpleFunction $twigExtension */
         $twigExtension = current($functions);
 
         $this->assertInstanceOf('Twig_SimpleFunction', $twigExtension);
@@ -86,7 +87,7 @@ class LocaleSwitcherExtensionTest extends PHPUnit_Framework_TestCase
     {
         $template = uniqid('template:');
 
-        $request = $this->getMockRequest();
+        $request = $this->createMock(Request::class);
         $request->attributes = $this->getMockParameterBag();
 
         $query = $this->getMockParameterBag();
@@ -114,16 +115,6 @@ class LocaleSwitcherExtensionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($template, $this->extension->renderSwitcher());
     }
 
-    protected function getMockRequest()
-    {
-        return $this->createMock(Request::class);
-    }
-
-    protected function getMockParameterBag()
-    {
-        return $this->createMock(ParameterBag::class);
-    }
-
     private function constructExtension()
     {
         $this->extension = new LocaleSwitcherExtension(
@@ -134,5 +125,13 @@ class LocaleSwitcherExtensionTest extends PHPUnit_Framework_TestCase
             $this->showCurrentLocaleParam,
             $this->useControllerParam
         );
+    }
+
+    /**
+     * @return MockObject|ParameterBag
+     */
+    private function getMockParameterBag()
+    {
+        return $this->createMock(ParameterBag::class);
     }
 }

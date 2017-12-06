@@ -10,6 +10,8 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\SubdomainLocaleGuesser;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -62,15 +64,11 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     private function getMockMetaValidator()
     {
-        return $this
-            ->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return $this->createMock(MetaValidator::class);
     }
 
     private function getMockRequest()
     {
-        return $this->createMock('Symfony\Component\HttpFoundation\Request');
+        return $this->createMock(Request::class);
     }
 }

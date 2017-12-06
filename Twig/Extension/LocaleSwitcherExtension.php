@@ -109,16 +109,12 @@ class LocaleSwitcherExtension extends \Twig_Extension
      */
     public function renderSwitcher($route = null, $parameters = array(), $template = null)
     {
-        $showCurrentLocale = $this->showCurrentLocaleParam;
-        $useController = $this->useControllerParam;
-        $allowedLocales = $this->allowedLocalesProvider->getAllowedLocales();
-
         $informationBuilder = new TargetInformationBuilder(
             $this->requestStack->getMasterRequest(),
             $this->router,
-            $allowedLocales,
-            $showCurrentLocale,
-            $useController
+            $this->allowedLocalesProvider->getAllowedLocales(),
+            $this->showCurrentLocaleParam,
+            $this->useControllerParam
         );
 
         $viewParams = $informationBuilder->getTargetInformations($route, $parameters);
