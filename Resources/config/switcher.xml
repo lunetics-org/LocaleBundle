@@ -18,7 +18,8 @@
         </service>
 
         <service id="lunetics_locale.twig.switcher" class="%lunetics_locale.twig.switcher.class%">
-            <argument type="service" id="service_container"/>
+            <argument type="service" id="lunetics_locale.switcher.target_information_builder"/>
+            <argument type="service" id="lunetics_locale.switcher_helper"/>
             <tag name="twig.extension"/>
         </service>
 
@@ -30,5 +31,12 @@
             <argument>%lunetics_locale.switcher.redirect_statuscode%</argument>
         </service>
 
+        <service id="lunetics_locale.switcher.target_information_builder" class="Lunetics\LocaleBundle\Switcher\TargetInformationBuilder">
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="router.default"/>
+            <argument type="service" id="lunetics_locale.allowed_locales_provider"/>
+            <argument>'%lunetics_locale.switcher.show_current_locale%'</argument>
+            <argument>'%lunetics_locale.switcher.use_controlle%'</argument>
+        </service>
     </services>
 </container>
