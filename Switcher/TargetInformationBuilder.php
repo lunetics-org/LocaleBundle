@@ -26,11 +26,26 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class TargetInformationBuilder
 {
-    private $request;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    /**
+     * @var RouterInterface
+     */
     private $router;
+    /**
+     * @var bool
+     */
     private $showCurrentLocale;
+    /**
+     * @var bool
+     */
     private $useController;
-    private $allowedLocales;
+    /**
+     * @var AllowedLocalesProvider
+     */
+    private $allowedLocalesProvider;
 
     /**
      * @param RequestStack $requestStack Request
@@ -46,9 +61,9 @@ class TargetInformationBuilder
         $showCurrentLocale = false,
         $useController = false
     ) {
-        $this->request = $requestStack->getCurrentRequest();
+        $this->requestStack = $requestStack;
         $this->router = $router;
-        $this->allowedLocales = $allowedLocalesProvider->getAllowedLocales();
+        $this->allowedLocalesProvider = $allowedLocalesProvider;
         $this->showCurrentLocale = $showCurrentLocale;
         $this->useController = $useController;
     }
@@ -75,7 +90,7 @@ class TargetInformationBuilder
      */
     public function getTargetInformations($targetRoute = null, $parameters = [])
     {
-        $request = $this->request;
+        $request = $this->requestStack->getCurrentRequest();
         $router = $this->router;
         $route = $request->attributes->get('_route');
 
@@ -94,8 +109,7 @@ class TargetInformationBuilder
 
         $parameters = array_merge((array) $request->attributes->get('_route_params'), $request->query->all(), (array) $parameters);
 
-        $targetLocales = $this->allowedLocales;
-        foreach ($targetLocales as $locale) {
+        foreach ($this->allowedLocalesProvider->getAllowedLocales() as $locale) {
             $strpos = 0 === strpos($request->getLocale(), $locale);
             if ($this->showCurrentLocale && $strpos || !$strpos) {
                 $targetLocaleTargetLang = Intl::getLanguageBundle()->getLanguageName($locale, null, $locale);

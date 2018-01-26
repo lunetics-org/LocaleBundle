@@ -5,6 +5,7 @@ namespace Lunetics\LocaleBundle\Tests\Validator;
 use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +28,7 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvideRouteInInformationBuilder($route, $locale, $allowedLocales)
     {
-        $request = $this->getRequestWithBrowserPreferences($route);
+        $request = $this->getRequestWithBrowserPreferences($route, $locale);
         $request->setLocale($locale);
         $request->attributes->set('_route', $route);
         $router = $this->getRouter();
@@ -122,8 +123,7 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInformationBuilder($route, $locale, $allowedLocales)
     {
-        $request = $this->getRequestWithBrowserPreferences($route);
-        $request->setLocale($locale);
+        $request = $this->getRequestWithBrowserPreferences($route, $locale);
         $request->attributes->set('_route', $route);
         $router = $this->getRouter();
 
@@ -196,12 +196,15 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
         $targetInformationBuilder->getTargetInformations();
     }
 
-    private function getRequestWithBrowserPreferences($route = "/")
+    private function getRequestWithBrowserPreferences($route = "/", $locale)
     {
         $request = Request::create($route);
+        $requestStack = new RequestStack();
+        $request->setLocale($locale);
         $request->headers->set('Accept-language', 'fr-FR,fr;q=0.1,en-US;q=0.6,en;q=0.4');
+        $requestStack->push($request);
 
-        return $request;
+        return $requestStack;
     }
 
     private function getRouter()
