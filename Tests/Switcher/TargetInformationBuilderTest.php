@@ -26,7 +26,7 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvideRouteInInformationBuilder($route, $locale, $allowedLocales)
     {
-        $request = $this->getRequestWithBrowserPreferences($route, $locale, ['_route', $route]);
+        $request = $this->getRequestWithBrowserPreferences($route, $locale, ['_route' => $route]);
         $router = $this->getRouter();
         $count = count($allowedLocales) - 1;
         if ($count >= 1) {
@@ -189,7 +189,7 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
      */
     private function getRequestWithBrowserPreferences($route = "/", $locale = '', $attributes = [])
     {
-        $request = Request::create($route);
+        $request = Request::create($route, Request::METHOD_GET, $attributes);
         $requestStack = new RequestStack();
         $request->setLocale($locale);
         foreach ($attributes as $key => $value) {
