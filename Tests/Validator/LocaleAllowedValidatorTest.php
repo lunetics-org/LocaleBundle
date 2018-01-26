@@ -14,6 +14,7 @@ namespace Lunetics\LocaleBundle\Tests\Validator;
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Validator\LocaleAllowed;
 use Lunetics\LocaleBundle\Validator\LocaleAllowedValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Test for the LocaleAllowedValidator
@@ -126,6 +127,6 @@ class LocaleAllowedValidatorTest extends BaseMetaValidator
     
     protected function getMockConstraint()
     {
-        return $this->getMock('Symfony\Component\Validator\Constraint');
+        return $this->createMock(Constraint::class);
     }
 }

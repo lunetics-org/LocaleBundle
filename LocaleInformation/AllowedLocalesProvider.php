@@ -7,8 +7,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
-namespace Lunetics\LocaleBundle\LocaleInformation;
 
+namespace Lunetics\LocaleBundle\LocaleInformation;
 
 class AllowedLocalesProvider
 {

@@ -7,9 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
+
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\SubdomainLocaleGuesser;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -31,16 +34,14 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
             $metaValidator
                 ->expects($this->once())
                 ->method('isAllowed')
-                ->will($this->returnValue($allowed))
-            ;
+                ->will($this->returnValue($allowed));
         }
 
         $request = $this->getMockRequest();
         $request
             ->expects($this->once())
             ->method('getHost')
-            ->will($this->returnValue($host))
-        ;
+            ->will($this->returnValue($host));
 
         $guesser = new SubdomainLocaleGuesser($metaValidator, $seperator);
 
@@ -49,28 +50,24 @@ class SubdomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     public function dataDomains()
     {
-        return array(
-            array(true,  'en.domain',    true,  null),
-            array(false, 'fr.domain',    false, null),
-            array(false, 'domain',       null,  null),
-            array(false, 'www.domain',   false, null),
-            array(true,  'en-ca.domain', true,  '-'),
-            array(true,  'fr_ca.domain', true,  '_'),
-            array(false, 'de-DE.domain', false, '_'),
-        );
+        return [
+            [true, 'en.domain', true, null],
+            [false, 'fr.domain', false, null],
+            [false, 'domain', null, null],
+            [false, 'www.domain', false, null],
+            [true, 'en-ca.domain', true, '-'],
+            [true, 'fr_ca.domain', true, '_'],
+            [false, 'de-DE.domain', false, '_'],
+        ];
     }
-    
+
     private function getMockMetaValidator()
     {
-        return $this
-            ->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return $this->createMock(MetaValidator::class);
     }
 
     private function getMockRequest()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
+        return $this->createMock(Request::class);
     }
 }

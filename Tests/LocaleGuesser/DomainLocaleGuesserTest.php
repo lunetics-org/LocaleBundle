@@ -10,6 +10,9 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\DomainLocaleGuesser;
+use Lunetics\LocaleBundle\LocaleInformation\DomainLocaleMap;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Jachim Coudenys <jachimcoudenys@gmail.com>
@@ -65,24 +68,21 @@ class DomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return mixed
+     */
     private function getMockDomainLocaleMap()
     {
-        return $this
-            ->getMockBuilder('\Lunetics\LocaleBundle\LocaleInformation\DomainLocaleMap')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(DomainLocaleMap::class);
     }
 
     private function getMockMetaValidator()
     {
-        return $this
-            ->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(MetaValidator::class);
     }
 
     private function getMockRequest()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
+        return $this->createMock(Request::class);
     }
-} 
+}

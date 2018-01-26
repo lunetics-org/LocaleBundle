@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
@@ -137,7 +138,7 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
      */
     private function getGuesserMock()
     {
-        $mock = $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface')->disableOriginalConstructor()->getMock();
+        $mock = $this->createMock(LocaleGuesserInterface::class);
 
         return $mock;
     }
@@ -147,14 +148,14 @@ class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
      */
     private function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
+        $mock = $this->createMock(MetaValidator::class);
 
         return $mock;
     }
 
     private function getMockLogger()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock(LoggerInterface::class);
     }
 
 }

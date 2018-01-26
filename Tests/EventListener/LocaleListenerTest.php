@@ -10,9 +10,14 @@
 
 namespace Lunetics\LocaleBundle\Tests\EventListener;
 
+use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -147,7 +152,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatcherIsFired()
     {
-        $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $dispatcherMock = $this->createMock(EventDispatcher::class);
         $dispatcherMock->expects($this->once())
                         ->method('dispatch')
                         ->with($this->equalTo(LocaleBundleEvents::onLocaleChange), $this->isInstanceOf('Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent'));
@@ -162,7 +167,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testDispatcherIsNotFired()
     {
-        $dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $dispatcherMock = $this->createMock(EventDispatcher::class);
         $dispatcherMock->expects($this->never())
                 ->method('dispatch');
 
@@ -306,7 +311,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getEvent(Request $request)
     {
-        return new GetResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST);
+        return new GetResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
     private function getListener($locale = 'en', $manager = null, $logger = null, $matcher = null)
@@ -316,7 +321,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         }
 
         $listener = new LocaleListener($locale, $manager, $matcher, $logger);
-        $listener->setEventDispatcher(new \Symfony\Component\EventDispatcher\EventDispatcher());
+        $listener->setEventDispatcher(new EventDispatcher());
 
         return $listener;
     }
@@ -352,11 +357,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getMockGuesserManager()
     {
-        return $this
-            ->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return $this->createMock(LocaleGuesserManager::class);
     }
 
     /**
@@ -364,9 +365,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockGuesser()
     {
-        $mock = $this->getMockBuilder('Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(LocaleGuesserInterface::class);
     }
 
     /**
@@ -374,9 +373,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(MetaValidator::class);
     }
 
     private function getRequestWithRouterParam($routerLocale = 'es')
@@ -413,25 +410,21 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
 
     private function getMockRequest()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Request');
+        return $this->createMock(Request::class);
     }
 
     private function getMockResponse()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Response');
+        return $this->createMock(Response::class);
     }
 
     private function getMockFilterResponseEvent()
     {
-        return $this
-            ->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterResponseEvent')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return $this->createMock(FilterResponseEvent::class);
     }
 
     private function getMockLogger()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock(LoggerInterface::class);
     }
 }
