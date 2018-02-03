@@ -36,7 +36,7 @@
             <argument type="service" id="router.default"/>
             <argument type="service" id="lunetics_locale.allowed_locales_provider"/>
             <argument>%lunetics_locale.switcher.show_current_locale%</argument>
-            <argument>%lunetics_locale.switcher.use_controlle%</argument>
+            <argument>%lunetics_locale.switcher.use_controller%</argument>
         </service>
     </services>
 </container>
