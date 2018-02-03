@@ -40,7 +40,6 @@ class LocaleSwitchHelper extends Helper
     }
 
     /**
-     *
      * @param array $viewParams
      */
     public function renderSwitch(array $viewParams = array(), $template = null)

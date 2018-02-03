@@ -76,10 +76,10 @@ class BaseMetaValidator extends \PHPUnit_Framework_TestCase
     {
         // Run tests against non-deprecated ExecutionContext, if possible
         if (class_exists('\Symfony\Component\Validator\Context\ExecutionContext')) {
-            return $this->getMockBuilder('\Symfony\Component\Validator\Context\ExecutionContext')->disableOriginalConstructor()->getMock();
+            return $this->createMock('\Symfony\Component\Validator\Context\ExecutionContext');
         } else {
             // use deprecated ExecutionContext otherwise
-            return $this->getMockBuilder('\Symfony\Component\Validator\ExecutionContext')->disableOriginalConstructor()->getMock();
+            return $this->createMock('\Symfony\Component\Validator\ExecutionContext');
         }
     }
 

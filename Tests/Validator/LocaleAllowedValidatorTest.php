@@ -123,9 +123,9 @@ class LocaleAllowedValidatorTest extends BaseMetaValidator
         $validator->validate(null, $this->getMockConstraint());
         $validator->validate('', $this->getMockConstraint());
     }
-    
+
     protected function getMockConstraint()
     {
-        return $this->getMock('Symfony\Component\Validator\Constraint');
+        return $this->createMock('Symfony\Component\Validator\Constraint');
     }
 }

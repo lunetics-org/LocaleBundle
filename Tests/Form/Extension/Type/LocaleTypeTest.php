@@ -10,6 +10,8 @@
 namespace Lunetics\LocaleBundle\Tests\Form\Extension\Type;
 
 use Lunetics\LocaleBundle\Form\Extension\Type\LocaleType;
+use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -46,15 +48,11 @@ class LocaleTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function getMockLocaleChoiceList()
     {
-        return $this
-            ->getMockBuilder('Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return $this->createMock(LocaleChoiceList::class);
     }
 
     protected function getMockOptionsResolverInterface()
     {
-        return $this->getMock('Symfony\Component\OptionsResolver\OptionsResolver');
+        return $this->createMock(OptionsResolver::class);
     }
 }

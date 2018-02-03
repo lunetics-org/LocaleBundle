@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +26,7 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     {
         $request       = $this->getRequestWithLocaleParameter();
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser       = new RouterLocaleGuesser($metaValidator, false);
+        $guesser       = new RouterLocaleGuesser($metaValidator);
 
         $metaValidator->expects($this->once())
                       ->method('isAllowed')
@@ -40,7 +41,7 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     {
         $request       = $this->getRequestWithLocaleParameter();
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser       = new RouterLocaleGuesser($metaValidator, false);
+        $guesser       = new RouterLocaleGuesser($metaValidator);
 
         $metaValidator->expects($this->once())
                       ->method('isAllowed')
@@ -55,7 +56,7 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
     {
         $request       = $this->getRequestWithLocaleQuery('fr');
         $metaValidator = $this->getMetaValidatorMock();
-        $guesser       = new RouterLocaleGuesser($metaValidator, false);
+        $guesser       = new RouterLocaleGuesser($metaValidator);
 
         $metaValidator->expects($this->never())
                       ->method('isAllowed');
@@ -82,8 +83,6 @@ class RouterLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     public function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(MetaValidator::class);
     }
 }

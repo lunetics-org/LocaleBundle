@@ -24,6 +24,7 @@ use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\EventListener\LocaleUpdateListener;
 use Lunetics\LocaleBundle\Session\LocaleSession;
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
+use Psr\Log\LoggerInterface;
 
 class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 {
@@ -179,7 +180,12 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     private function getEvent(Request $request)
     {
-        return new FilterResponseEvent($this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface'), $request, HttpKernelInterface::MASTER_REQUEST, new Response);
+        return new FilterResponseEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response
+        );
     }
 
 
@@ -199,6 +205,6 @@ class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
 
     private function getMockLogger()
     {
-        return $this->getMock('Psr\Log\LoggerInterface');
+        return $this->createMock(LoggerInterface::class);
     }
 }

@@ -12,6 +12,7 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 class QueryLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,14 +52,6 @@ class QueryLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($guesser->getIdentifiedLocale());
     }
 
-    private function getRequestWithLocaleParameter($locale = 'en')
-    {
-        $request = Request::create('/hello-world', 'GET');
-        $request->attributes->set('_locale', $locale);
-
-        return $request;
-    }
-
     private function getRequestWithLocaleQuery($locale = 'en')
     {
         $request = Request::create('/hello-world', 'GET');
@@ -69,8 +62,6 @@ class QueryLocaleGuesserTest extends \PHPUnit_Framework_TestCase
 
     public function getMetaValidatorMock()
     {
-        $mock = $this->getMockBuilder('\Lunetics\LocaleBundle\Validator\MetaValidator')->disableOriginalConstructor()->getMock();
-
-        return $mock;
+        return $this->createMock(MetaValidator::class);
     }
 }

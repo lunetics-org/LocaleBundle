@@ -16,6 +16,7 @@ use Lunetics\LocaleBundle\Validator\LocaleValidator;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Yaml\Parser as YamlParser;
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Test for the LocaleValidator
@@ -134,6 +135,6 @@ class LocaleValidatorTest extends BaseMetaValidator
 
     protected function getMockConstraint()
     {
-        return $this->getMock('Symfony\Component\Validator\Constraint');
+        return $this->createMock(Constraint::class);
     }
 }

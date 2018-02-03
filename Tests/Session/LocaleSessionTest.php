@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleInformation;
 
 use Lunetics\LocaleBundle\Session\LocaleSession;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -74,6 +75,6 @@ class LocaleSessionTest extends \PHPUnit_Framework_TestCase
 
     public function getMockSession()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Session\Session');
+        return $this->createMock(Session::class);
     }
 }

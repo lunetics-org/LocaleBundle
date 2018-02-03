@@ -10,6 +10,7 @@
 namespace Lunetics\LocaleBundle\Tests\Form\Extension\ChoiceList;
 
 use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
+use Lunetics\LocaleBundle\LocaleInformation\LocaleInformation;
 
 /**
  * Test for the LocaleInformation
@@ -104,6 +105,6 @@ class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
 
     public function getLocaleInformation()
     {
-        return $this->getMockBuilder('Lunetics\LocaleBundle\LocaleInformation\LocaleInformation')->disableOriginalConstructor()->getMock();
+        return $this->createMock(LocaleInformation::class);
     }
 }
