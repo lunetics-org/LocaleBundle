@@ -7,9 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
+
 namespace Lunetics\LocaleBundle\Switcher;
 
-use Symfony\Component\HttpFoundation\Request;
+use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -24,24 +26,44 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class TargetInformationBuilder
 {
-    private $request;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    /**
+     * @var RouterInterface
+     */
     private $router;
+    /**
+     * @var bool
+     */
     private $showCurrentLocale;
+    /**
+     * @var bool
+     */
     private $useController;
-    private $allowedLocales;
+    /**
+     * @var AllowedLocalesProvider
+     */
+    private $allowedLocalesProvider;
 
     /**
-     * @param Request         $request           Request
-     * @param RouterInterface $router            Router
-     * @param array           $allowedLocales    Config Var
-     * @param bool            $showCurrentLocale Config Var
-     * @param bool            $useController     Config Var
+     * @param RequestStack $requestStack Request
+     * @param RouterInterface $router Router
+     * @param AllowedLocalesProvider $allowedLocalesProvider
+     * @param bool $showCurrentLocale Config Var
+     * @param bool $useController Config Var
      */
-    public function __construct(Request $request, RouterInterface $router, $allowedLocales = array(), $showCurrentLocale = false, $useController = false)
-    {
-        $this->request = $request;
+    public function __construct(
+        RequestStack $requestStack,
+        RouterInterface $router,
+        AllowedLocalesProvider $allowedLocalesProvider,
+        $showCurrentLocale = false,
+        $useController = false
+    ) {
+        $this->requestStack = $requestStack;
         $this->router = $router;
-        $this->allowedLocales = $allowedLocales;
+        $this->allowedLocalesProvider = $allowedLocalesProvider;
         $this->showCurrentLocale = $showCurrentLocale;
         $this->useController = $useController;
     }
@@ -62,13 +84,13 @@ class TargetInformationBuilder
      *     locale_current_language: Anglais
      *
      * @param string|null $targetRoute The target route
-     * @param array       $parameters  Parameters
+     * @param array $parameters Parameters
      *
      * @return array           Informations for the switcher template
      */
-    public function getTargetInformations($targetRoute = null, $parameters = array())
+    public function getTargetInformations($targetRoute = null, $parameters = [])
     {
-        $request = $this->request;
+        $request = $this->requestStack->getCurrentRequest();
         $router = $this->router;
         $route = $request->attributes->get('_route');
 
@@ -83,12 +105,11 @@ class TargetInformationBuilder
 
         $infos['current_locale'] = $request->getLocale();
         $infos['current_route'] = $route;
-        $infos['locales'] = array();
+        $infos['locales'] = [];
 
         $parameters = array_merge((array) $request->attributes->get('_route_params'), $request->query->all(), (array) $parameters);
 
-        $targetLocales = $this->allowedLocales;
-        foreach ($targetLocales as $locale) {
+        foreach ($this->allowedLocalesProvider->getAllowedLocales() as $locale) {
             $strpos = 0 === strpos($request->getLocale(), $locale);
             if ($this->showCurrentLocale && $strpos || !$strpos) {
                 $targetLocaleTargetLang = Intl::getLanguageBundle()->getLanguageName($locale, null, $locale);
@@ -98,7 +119,7 @@ class TargetInformationBuilder
                     if (null !== $targetRoute && "" !== $targetRoute) {
                         $switchRoute = $router->generate($targetRoute, $parameters);
                     } elseif ($this->useController) {
-                        $switchRoute = $router->generate('lunetics_locale_switcher', array('_locale' => $locale));
+                        $switchRoute = $router->generate('lunetics_locale_switcher', ['_locale' => $locale]);
                     } elseif ($route) {
                         $switchRoute = $router->generate($route, $parameters);
                     } else {
@@ -118,12 +139,12 @@ class TargetInformationBuilder
                     throw $e;
                 }
 
-                $infos['locales'][$locale] = array(
+                $infos['locales'][$locale] = [
                     'locale_current_language' => $targetLocaleCurrentLang,
                     'locale_target_language' => $targetLocaleTargetLang,
                     'link' => $switchRoute,
                     'locale' => $locale,
-                );
+                ];
             }
         }
 
