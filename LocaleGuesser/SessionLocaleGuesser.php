@@ -57,6 +57,9 @@ class SessionLocaleGuesser extends AbstractLocaleGuesser
      */
     public function guessLocale(Request $request)
     {
+        if (!$this->session->isStarted()) {
+            return false;
+        }
         if ($this->session->has($this->sessionVariable)) {
             $locale = $this->session->get($this->sessionVariable);
             if (!$this->metaValidator->isAllowed($locale)) {

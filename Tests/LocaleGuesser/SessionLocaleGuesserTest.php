@@ -71,6 +71,32 @@ class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeContains($locale, 'session', $guesser);
     }
 
+
+    public function testLocaleIsNotRetrievedFromSessionIfNotStarted()
+    {
+        $request = $this->getRequestNoSessionLocale();
+        $metaValidator = $this->getMetaValidatorMock();
+        $expectation = $metaValidator->expects($this->never())
+                ->method('isAllowed');
+        $this->setMultipleMatching($expectation, array('ru'), array(false));
+
+        $guesser = $this->getGuesser($request->getSession(), $metaValidator);
+        $guesser->guessLocale($request);
+        $this->assertFalse($guesser->getIdentifiedLocale());
+    }
+
+    public function testSessionIsNotAutomaticalyStarted()
+    {
+        $request = $this->getRequestNoSessionLocale();
+        $metaValidator = $this->getMetaValidatorMock();
+        $session = $request->getSession();
+
+        $guesser = $this->getGuesser($request->getSession(), $metaValidator);
+        $guesser->guessLocale($request);
+        $this->assertFalse($session->isStarted());
+    }
+
+
     private function getGuesser($session = null, $metaValidator = null)
     {
         if (null === $session) {
@@ -82,6 +108,17 @@ class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
         }
 
         return new SessionLocaleGuesser($session, $metaValidator);
+    }
+
+
+    private function getRequestNoSessionLocale()
+    {
+        $session = new Session(new MockArraySessionStorage());
+        $request = Request::create('/');
+        $request->setSession($session);
+        $request->headers->set('Accept-language', 'fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4');
+
+        return $request;
     }
 
     private function getRequestWithSessionLocale($locale = 'ru')
