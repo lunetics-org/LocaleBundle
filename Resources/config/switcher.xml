@@ -23,7 +23,7 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="lunetics_locale.switcher_controller" class="%lunetics_locale.switcher_controller.class%">
+        <service id="lunetics_locale.switcher_controller" class="%lunetics_locale.switcher_controller.class%" public="true">
             <argument type="service" id="router"/>
             <argument type="service" id="lunetics_locale.validator.meta" />
             <argument>%lunetics_locale.switcher.use_referrer%</argument>
