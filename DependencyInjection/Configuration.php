@@ -24,8 +24,13 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('lunetics_locale');
+        $treeBuilder = new TreeBuilder('lunetics_locale');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $rootNode = $treeBuilder->root('lunetics_locale');
+        }
 
         $validStatuscodes = array(300, 301, 302, 303, 307);
 
