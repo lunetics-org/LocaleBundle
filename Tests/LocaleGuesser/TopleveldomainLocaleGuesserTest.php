@@ -12,17 +12,19 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\TopleveldomainLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleInformation\TopleveldomainLocaleMap;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Ivo Bathke <ivo.bathke@gmail.com>
  */
-class TopleveldomainLocaleGuesserTest extends \PHPUnit_Framework_TestCase
+class TopleveldomainLocaleGuesserTest extends TestCase
 {
     /**
      * @dataProvider dataDomains
      *
      * @param bool $expected
+     * @param string $expectedLocale
      * @param string $host
      * @param bool $allowed
      * @param string $mappedLocale

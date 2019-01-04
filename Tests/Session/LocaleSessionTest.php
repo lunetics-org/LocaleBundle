@@ -10,12 +10,13 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleInformation;
 
 use Lunetics\LocaleBundle\Session\LocaleSession;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class LocaleSessionTest extends \PHPUnit_Framework_TestCase
+class LocaleSessionTest extends TestCase
 {
     public function testHasLocaleChanged()
     {

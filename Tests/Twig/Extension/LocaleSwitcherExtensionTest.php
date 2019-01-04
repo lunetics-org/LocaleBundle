@@ -11,10 +11,10 @@
 
 namespace Lunetics\LocaleBundle\Tests\Twig\Extension;
 
-use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
 use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
 use Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class LocaleSwitcherExtensionTest extends \PHPUnit_Framework_TestCase
+class LocaleSwitcherExtensionTest extends TestCase
 {
     private $targetInformationBuildMock;
     private $localeSwitcherHelperMock;

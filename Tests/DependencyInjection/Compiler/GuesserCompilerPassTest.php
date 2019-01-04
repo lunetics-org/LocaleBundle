@@ -10,12 +10,13 @@
 namespace Lunetics\LocaleBundle\Tests\DependencyInjection\Compiler;
 
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\GuesserCompilerPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class GuesserCompilerPassTest extends \PHPUnit_Framework_TestCase
+class GuesserCompilerPassTest extends TestCase
 {
     public function testProcess()
     {

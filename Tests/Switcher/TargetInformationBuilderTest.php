@@ -4,10 +4,11 @@ namespace Lunetics\LocaleBundle\Tests\Validator;
 
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Lunetics\LocaleBundle\Switcher\TargetInformationBuilder;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
+class TargetInformationBuilderTest extends TestCase
 {
     public function locales()
     {
@@ -130,7 +131,6 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider locales
-     *
      */
     public function testInformationBuilderWithParams($route, $locale, $allowedLocales)
     {
@@ -182,7 +182,6 @@ class TargetInformationBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $route
      * @param string $locale
-     *
      * @param array $attributes
      *
      * @return RequestStack

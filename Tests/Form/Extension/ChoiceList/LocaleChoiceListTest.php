@@ -10,13 +10,14 @@
 namespace Lunetics\LocaleBundle\Tests\Form\Extension\ChoiceList;
 
 use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test for the LocaleInformation
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class LocaleChoiceListTest extends \PHPUnit_Framework_TestCase
+class LocaleChoiceListTest extends TestCase
 {
 
     public function testDefaultChoiceList()

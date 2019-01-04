@@ -9,26 +9,28 @@
  */
 namespace Lunetics\LocaleBundle\Tests\DependencyInjection\Compiler;
 
-use Lunetics\LocaleBundle\DependencyInjection\Compiler\GuesserCompilerPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lunetics\LocaleBundle\DependencyInjection\Compiler\RemoveSessionPass;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Asmir Mustafic <goetas@gmail.com>
  */
-class RemoveSessionPassTest extends \PHPUnit_Framework_TestCase
+class RemoveSessionPassTest extends TestCase
 {
     /**
-     *
      * @return \Symfony\Component\DependencyInjection\ContainerBuilder
      */
-    private function getContainer(){
+    private function getContainer()
+    {
         $container = new ContainerBuilder();
 
         $container->register('lunetics_locale.session_guesser');
         $container->register('lunetics_locale.locale_session');
+
         return $container;
     }
+
     public function testSessionPresent()
     {
         $container = $this->getContainer();
@@ -39,8 +41,8 @@ class RemoveSessionPassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($container->hasDefinition('lunetics_locale.session_guesser'));
         $this->assertTrue($container->hasDefinition('lunetics_locale.locale_session'));
-
     }
+
     public function testSessioAbsent()
     {
         $container = $this->getContainer();
@@ -49,7 +51,6 @@ class RemoveSessionPassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($container->hasDefinition('lunetics_locale.session_guesser'));
         $this->assertFalse($container->hasDefinition('lunetics_locale.locale_session'));
-
     }
 
     protected function process(ContainerBuilder $container)

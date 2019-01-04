@@ -10,23 +10,24 @@
 
 namespace Lunetics\LocaleBundle\Tests\EventListener;
 
-use Lunetics\LocaleBundle\LocaleBundleEvents;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 
+use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\EventListener\LocaleUpdateListener;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Lunetics\LocaleBundle\Session\LocaleSession;
-use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 
-class LocaleUpdateTest extends \PHPUnit_Framework_TestCase
+class LocaleUpdateTest extends TestCase
 {
     /**
      * @var EventDispatcher

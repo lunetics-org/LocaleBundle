@@ -9,16 +9,15 @@
  */
 namespace Lunetics\LocaleBundle\Tests\DependencyInjection;
 
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Resource\ResourceInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Lunetics\LocaleBundle\DependencyInjection\LuneticsLocaleExtension;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Parser;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
+class LuneticsLocaleExtensionTest extends TestCase
 {
     /**
      * @dataProvider getFullConfig
@@ -87,7 +86,6 @@ class LuneticsLocaleExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function getFullConfig()
     {
-
         $parser = new Parser();
         $data = array();
 
@@ -114,7 +112,7 @@ lunetics_locale:
       dutchversion.be: nl_BE
       dutch-version.be: nl_BE
 EOF;
-        $data[]=array($parser->parse($yaml), false);
+        $data[] = array($parser->parse($yaml), false);
 
         $yaml = <<<EOF
 lunetics_locale:
@@ -140,7 +138,7 @@ lunetics_locale:
       dutchversion.be: nl_BE
       dutch-version.be: nl_BE
 EOF;
-        $data[]=array($parser->parse($yaml), true);
+        $data[] = array($parser->parse($yaml), true);
 
         return  $data;
     }

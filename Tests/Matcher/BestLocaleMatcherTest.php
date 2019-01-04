@@ -12,14 +12,19 @@ namespace Lunetics\LocaleBundle\Tests\EventListener;
 
 use Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher;
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Asmir Mustafic <goetas@gmail.com>
  */
-class BestLocaleMatcherTest extends \PHPUnit_Framework_TestCase
+class BestLocaleMatcherTest extends TestCase
 {
-     /**
+    /**
      * @dataProvider getTestDataForBestLocaleMatcher
+     *
+     * @param string $locale
+     * @param array $allowed
+     * @param string|bool $expected
      */
     public function testMatch($locale, $allowed, $expected)
     {

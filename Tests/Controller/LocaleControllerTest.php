@@ -9,29 +9,34 @@
  */
 namespace Lunetics\LocaleBundle\Tests\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 use Lunetics\LocaleBundle\Controller\LocaleController;
 
-class LocaleControllerTest extends \PHPUnit_Framework_TestCase
+class LocaleControllerTest extends TestCase
 {
     public function testControllerThrowsException()
     {
         $metaValidatorMock = $this->getMetaValidatorMock(false);
         $metaValidatorMock->expects($this->atLeastOnce())
-                ->method('isAllowed')
-                ->with($this->anything())
-                ->will($this->returnCallback(function ($v) {
-            return $v === 'de';
-        }));
+            ->method('isAllowed')
+            ->with($this->anything())
+            ->will(
+                $this->returnCallback(
+                    function ($v) {
+                        return $v === 'de';
+                    }
+                )
+            );
 
         $request = $this->getRequestWithBrowserPreferences();
         $request->setLocale('en');
         $localeController = new LocaleController($this->getRouterMock(), $metaValidatorMock);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $localeController->switchAction($request);
     }
 
@@ -97,9 +102,9 @@ class LocaleControllerTest extends \PHPUnit_Framework_TestCase
     {
         $routerMock = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->disableOriginalConstructor()->getMock();
         $routerMock->expects($this->any())
-                ->method('generate')
-                ->with($this->equalTo('fallback_route'), $this->anything())
-                ->will($this->returnValue('http://fallback_route.com/'));
+            ->method('generate')
+            ->with($this->equalTo('fallback_route'), $this->anything())
+            ->will($this->returnValue('http://fallback_route.com/'));
 
         return $routerMock;
     }

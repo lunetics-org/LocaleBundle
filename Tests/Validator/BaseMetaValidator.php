@@ -14,8 +14,9 @@ use Lunetics\LocaleBundle\Validator\LocaleValidator;
 use Lunetics\LocaleBundle\Validator\LocaleAllowedValidator;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 
-use Symfony\Component\Validator\Validation;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Parser as YamlParser;
 
 /**
@@ -23,7 +24,7 @@ use Symfony\Component\Yaml\Parser as YamlParser;
  *
  * @author Matthias Breddin <mb@lunetics.com>
  */
-class BaseMetaValidator extends \PHPUnit_Framework_TestCase
+class BaseMetaValidator extends TestCase
 {
     protected $context;
     protected static $iso639;
@@ -131,7 +132,6 @@ class ConstraintValidatorFactory implements \Symfony\Component\Validator\Constra
         if ($className == 'lunetics_locale.validator.locale_allowed') {
             $this->validators[$className] = $this->localeAllowedValidator;
         }
-
 
         return $this->validators[$className];
     }

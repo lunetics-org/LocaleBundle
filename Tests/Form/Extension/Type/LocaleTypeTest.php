@@ -11,12 +11,13 @@ namespace Lunetics\LocaleBundle\Tests\Form\Extension\Type;
 
 use Lunetics\LocaleBundle\Form\Extension\ChoiceList\LocaleChoiceList;
 use Lunetics\LocaleBundle\Form\Extension\Type\LocaleType;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class LocaleTypeTest extends \PHPUnit_Framework_TestCase
+class LocaleTypeTest extends TestCase
 {
     public function testConfigureOptions()
     {

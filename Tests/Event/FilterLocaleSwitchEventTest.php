@@ -11,9 +11,10 @@
 namespace Lunetics\LocaleBundle\Tests\Event;
 
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class FilterLocaleSwitchEventTest extends \PHPUnit_Framework_TestCase
+class FilterLocaleSwitchEventTest extends TestCase
 {
     public function testFilterLocaleSwitchEvent()
     {
@@ -29,7 +30,7 @@ class FilterLocaleSwitchEventTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowsInvalidTypeException($locale)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         new FilterLocaleSwitchEvent(Request::create('/'), $locale);
     }
 
