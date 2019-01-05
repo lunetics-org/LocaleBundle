@@ -10,11 +10,12 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleInformation;
 
 use Lunetics\LocaleBundle\LocaleInformation\DomainLocaleMap;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Ivo Bathke <ivo.bathke@gmail.com>
  */
-class DomainLocaleMapTest extends \PHPUnit_Framework_TestCase
+class DomainLocaleMapTest extends TestCase
 {
     public function testGetLocale()
     {
@@ -33,4 +34,4 @@ class DomainLocaleMapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $domainLocaleMap->getLocale('unknown.be'));
         $this->assertEquals('fr_BE', $domainLocaleMap->getLocale('frenchversion.be'));
     }
-} 
+}

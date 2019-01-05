@@ -11,11 +11,12 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\SessionLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class SessionLocaleGuesserTest extends \PHPUnit_Framework_TestCase
+class SessionLocaleGuesserTest extends TestCase
 {
     public function testGuesserExtendsInterface()
     {

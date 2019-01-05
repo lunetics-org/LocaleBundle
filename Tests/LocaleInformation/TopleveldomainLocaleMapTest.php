@@ -10,11 +10,12 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleInformation;
 
 use Lunetics\LocaleBundle\LocaleInformation\TopleveldomainLocaleMap;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Ivo Bathke <ivo.bathke@gmail.com>
  */
-class TopleveldomainLocaleMapTest extends \PHPUnit_Framework_TestCase
+class TopleveldomainLocaleMapTest extends TestCase
 {
     public function testGetLocale()
     {
@@ -31,4 +32,4 @@ class TopleveldomainLocaleMapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $tldLocaleMap->getLocale('org'));
         $this->assertEquals('fr_BE', $tldLocaleMap->getLocale('be'));
     }
-} 
+}

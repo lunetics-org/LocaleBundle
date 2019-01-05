@@ -10,12 +10,13 @@
 namespace Lunetics\LocaleBundle\Tests\Templating\Helper;
 
 use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
  */
-class LocaleSwitchHelperTest extends \PHPUnit_Framework_TestCase
+class LocaleSwitchHelperTest extends TestCase
 {
     public function testRenderSwitch()
     {

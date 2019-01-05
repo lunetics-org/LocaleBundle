@@ -10,9 +10,10 @@
 namespace Lunetics\LocaleBundle\Tests\DependencyInjection;
 
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 
-class LocaleCookieTest extends \PHPUnit_Framework_TestCase
+class LocaleCookieTest extends TestCase
 {
     public function testCookieParamsAreSet()
     {

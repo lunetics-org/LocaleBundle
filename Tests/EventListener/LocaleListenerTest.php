@@ -10,7 +10,7 @@
 
 namespace Lunetics\LocaleBundle\Tests\EventListener;
 
-use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,22 +18,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 use Lunetics\LocaleBundle\EventListener\LocaleListener;
+use Lunetics\LocaleBundle\LocaleBundleEvents;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\RouterLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\BrowserLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
-use Lunetics\LocaleBundle\Validator\MetaValidator;
-use Lunetics\LocaleBundle\LocaleBundleEvents;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher;
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
+use Lunetics\LocaleBundle\Matcher\DefaultBestLocaleMatcher;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
 
-class LocaleListenerTest extends \PHPUnit_Framework_TestCase
+class LocaleListenerTest extends TestCase
 {
     public function testDefaultLocaleWithoutParams()
     {
@@ -45,6 +45,7 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
         $this->assertEquals('fr', $request->getLocale());
     }
+
     public function getTestDataForBestLocaleMatcher()
     {
     	return array(
@@ -227,7 +228,8 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
     }
 
-    public function testOnLocaleDetectedDisabledVaryHeader () {
+    public function testOnLocaleDetectedDisabledVaryHeader()
+    {
         $listener = $this->getListener();
         $listener->setDisableVaryHeader(true);
 
@@ -361,14 +363,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return LocaleGuesserInterface
-     */
-    private function getMockGuesser()
-    {
-        return $this->createMock(LocaleGuesserInterface::class);
-    }
-
-    /**
      * @return MetaValidator
      */
     private function getMetaValidatorMock()
@@ -406,11 +400,6 @@ class LocaleListenerTest extends \PHPUnit_Framework_TestCase
         $request->headers->set('Accept-language', '');
 
         return $request;
-    }
-
-    private function getMockRequest()
-    {
-        return $this->createMock(Request::class);
     }
 
     private function getMockResponse()

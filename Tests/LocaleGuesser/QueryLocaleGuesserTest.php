@@ -11,9 +11,10 @@ namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\QueryLocaleGuesser;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class QueryLocaleGuesserTest extends \PHPUnit_Framework_TestCase
+class QueryLocaleGuesserTest extends TestCase
 {
     public function testGuesserExtendsInterface()
     {

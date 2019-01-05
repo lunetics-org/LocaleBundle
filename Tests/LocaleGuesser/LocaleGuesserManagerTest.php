@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,13 +19,13 @@ use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserInterface;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 
-class LocaleGuesserManagerTest extends \PHPUnit_Framework_TestCase
+class LocaleGuesserManagerTest extends TestCase
 {
     public function testLocaleGuessingInvalidGuesser()
     {
-        $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         $guesserManager = new LocaleGuesserManager(array(0 => 'foo'));
         $guesserManager->addGuesser($this->getGuesserMock(), 'bar');
+        $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         $guesserManager->runLocaleGuessing($this->getRequestWithoutLocaleQuery());
     }
 

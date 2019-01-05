@@ -12,7 +12,7 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
-env: SYMFONY_VERSION='3.3.*' SYMFONY_PHPUNIT_VERSION=5.5
+env: SYMFONY_VERSION='3.3.*'
 
 matrix:
   include:
@@ -21,7 +21,6 @@ matrix:
         - COMPOSER_FLAGS="--prefer-lowest"
         - SYMFONY_VERSION='2.8.*'
     - php: 7.1
-      env:
       env:
         - SYMFONY_VERSION='2.8.*'
     - php: 7.1
@@ -38,9 +37,10 @@ matrix:
         - SYMFONY_VERSION='3.4.*@BETA'
     - php: 7.1
       env:
-        - SYMFONY_VERSION='4.0.*@BETA'
-    - php: hhvm
-      dist: trusty
+        - SYMFONY_VERSION='4.0.*'
+    - php: 7.2
+      env:
+        - SYMFONY_VERSION='4.1.*'
 
 before_install:
   - phpenv config-rm xdebug.ini || true

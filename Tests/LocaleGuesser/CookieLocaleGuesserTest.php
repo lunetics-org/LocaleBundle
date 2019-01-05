@@ -10,9 +10,10 @@
 namespace Lunetics\LocaleBundle\Tests\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleGuesser\CookieLocaleGuesser;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class CookieLocaleGuesserTest extends \PHPUnit_Framework_TestCase
+class CookieLocaleGuesserTest extends TestCase
 {
 
     public function testLocaleIsRetrievedFromCookieIfSet()
