@@ -58,7 +58,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->isRequired()
                     ->requiresAtLeastOneElement()
-                ->prototype('scalar')->end()
+                    ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('router_guesser')
                     ->addDefaultsIfNotSet()
