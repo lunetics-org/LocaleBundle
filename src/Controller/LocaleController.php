@@ -15,12 +15,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Lunetics\LocaleBundle\Validator\MetaValidator;
 
-/**
- * Controller for the Switch Locale
- *
- * @author Matthias Breddin <mb@lunetics.com>
- * @author Christophe Willemsen <willemsen.christophe@gmail.com>
- */
 class LocaleController
 {
     private $router;
