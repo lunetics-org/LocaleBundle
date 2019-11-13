@@ -7,11 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that is distributed with this source code.
  */
+
 namespace Lunetics\LocaleBundle\LocaleGuesser;
 
 use Lunetics\LocaleBundle\LocaleInformation\TopleveldomainLocaleMap;
-use Symfony\Component\HttpFoundation\Request;
 use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Locale Guesser for detecting the locale from the toplevel domain
@@ -31,12 +32,12 @@ class TopleveldomainLocaleGuesser extends AbstractLocaleGuesser
     private $topleveldomainLocaleMap;
 
     /**
-     * @param MetaValidator $metaValidator
+     * @param MetaValidator           $metaValidator
      * @param TopleveldomainLocaleMap $topleveldomainLocaleMap
      */
     public function __construct(MetaValidator $metaValidator, TopleveldomainLocaleMap $topleveldomainLocaleMap)
     {
-        $this->metaValidator = $metaValidator;
+        $this->metaValidator           = $metaValidator;
         $this->topleveldomainLocaleMap = $topleveldomainLocaleMap;
     }
 
@@ -51,18 +52,21 @@ class TopleveldomainLocaleGuesser extends AbstractLocaleGuesser
     {
         $topLevelDomain = substr(strrchr($request->getHost(), '.'), 1);
 
-        //use topleveldomain as locale
-        $locale = $topLevelDomain;
-        //see if we have some additional mappings
-        if ($topLevelDomain && $this->topleveldomainLocaleMap->getLocale($topLevelDomain)) {
-            $locale = $this->topleveldomainLocaleMap->getLocale($topLevelDomain);
+        if (! $topLevelDomain) {
+            return false;
         }
-        //now validate
-        if (false !== $locale && $this->metaValidator->isAllowed($locale)) {
-            $this->identifiedLocale = $locale;
-            return true;
+        $resolvedLocale = $this->topleveldomainLocaleMap->getLocale($topLevelDomain);
+
+        if (! $resolvedLocale) {
+            return false;
         }
 
-        return false;
+        if (! $this->metaValidator->isAllowed($resolvedLocale)) {
+            return false;
+        }
+
+        $this->identifiedLocale = $resolvedLocale;
+
+        return true;
     }
 } 

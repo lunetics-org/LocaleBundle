@@ -9,9 +9,9 @@
  */
 namespace Lunetics\LocaleBundle\LocaleInformation;
 
-use Symfony\Component\Intl\Intl;
-use Lunetics\LocaleBundle\Validator\MetaValidator;
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
+use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Symfony\Component\Intl\Locales;
 
 /**
  * Information about Locales
@@ -66,7 +66,7 @@ class LocaleInformation
      */
     public function getAllAllowedLocales()
     {
-        return $this->filterAllowed(Intl::getLocaleBundle()->getLocales());
+        return $this->filterAllowed(Locales::getLocales());
     }
 
     /**
@@ -76,7 +76,7 @@ class LocaleInformation
      */
     public function getAllAllowedLanguages()
     {
-        return $this->filterAllowed(array_keys(Intl::getLanguageBundle()->getLanguageNames()));
+        return $this->filterAllowed(array_keys(Locales::getNames()));
     }
 
     /**

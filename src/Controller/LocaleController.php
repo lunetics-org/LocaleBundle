@@ -9,11 +9,10 @@
  */
 namespace Lunetics\LocaleBundle\Controller;
 
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Lunetics\LocaleBundle\Validator\MetaValidator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 class LocaleController
 {
@@ -26,7 +25,7 @@ class LocaleController
      * @param RouterInterface $router          Router Service
      * @param MetaValidator   $metaValidator   MetaValidator for locales
      * @param bool            $useReferrer     From Config
-     * @param null            $redirectToRoute From Config
+     * @param string          $redirectToRoute From Config
      * @param string          $statusCode      From Config
      */
     public function __construct(RouterInterface $router = null, MetaValidator $metaValidator, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')

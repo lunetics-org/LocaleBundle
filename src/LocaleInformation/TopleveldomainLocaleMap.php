@@ -14,7 +14,6 @@ namespace Lunetics\LocaleBundle\LocaleInformation;
  */
 class TopleveldomainLocaleMap
 {
-
     /**
      * @var array
      */

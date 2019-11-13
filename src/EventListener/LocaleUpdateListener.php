@@ -9,17 +9,15 @@
  */
 namespace Lunetics\LocaleBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\Request;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 use Lunetics\LocaleBundle\Cookie\LocaleCookie;
 use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
 use Lunetics\LocaleBundle\Session\LocaleSession;
-use Lunetics\LocaleBundle\LocaleBundleEvents;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Locale Update Listener
@@ -163,7 +161,7 @@ class LocaleUpdateListener implements EventSubscriberInterface
     {
         return array(
             // must be registered after the Router to have access to the _locale and before the Symfony LocaleListener
-            LocaleBundleEvents::onLocaleChange => array('onLocaleChange')
+            FilterLocaleSwitchEvent::class => ['onLocaleChange']
         );
     }
 }

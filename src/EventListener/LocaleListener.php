@@ -9,18 +9,16 @@
  */
 namespace Lunetics\LocaleBundle\EventListener;
 
+use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
+use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
+use Lunetics\LocaleBundle\Matcher\BestLocaleMatcher;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
-use Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent;
-use Lunetics\LocaleBundle\LocaleBundleEvents;
-use Lunetics\LocaleBundle\Matcher\BestLocaleMatcher;
 
 /**
  * Locale Listener
@@ -116,7 +114,7 @@ class LocaleListener implements EventSubscriberInterface
                 && ($manager->getGuesser('session') || $manager->getGuesser('cookie'))
             ) {
                 $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
-                $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
+                $this->dispatcher->dispatch($localeSwitchEvent);
             }
         }
     }

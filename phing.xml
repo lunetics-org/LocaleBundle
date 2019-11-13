@@ -134,14 +134,14 @@
 
         <echo msg="Running unit tests ..."/>
         <phpunit codecoverage="true"
-                 bootstrap="Tests/bootstrap.php"
+                 bootstrap="tests/bootstrap.php"
                  printsummary="true"
                  haltonfailure="true"
                  haltonerror="true">
             <formatter todir="${dir.reports}"
                        type="xml"/>
             <batchtest>
-                <fileset dir="Tests">
+                <fileset dir="tests">
                     <include name="**/*Test.php"/>
                 </fileset>
             </batchtest>

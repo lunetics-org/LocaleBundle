@@ -7,39 +7,56 @@
     "authors": [
         {
             "name": "Lunetics",
-            "homepage": "http://www.lunetics.com"
+            "homepage": "https://www.lunetics.com"
         },
         {
             "name": "Christophe Willesmen",
             "homepage": "http://christophewillemsen.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Lunetics\\LocaleBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lunetics\\LocaleBundle\\Tests\\": "tests"
+        }
+    },
     "minimum-stability": "dev",
     "require": {
-        "php": "^5.6 || ^7.0",
-        "symfony/framework-bundle": "^2.8 || ^3.0 || ^4.0",
-        "symfony/intl": "^2.8 || ^3.0 || ^4.0",
-        "symfony/templating": "^2.8 || ^3.0 || ^4.0",
-        "symfony/validator": "^2.8 || ^3.0 || ^4.0",
-        "symfony/yaml": "^2.8 || ^3.0 || ^4.0",
-        "psr/log": "~1.0"
+        "php": "^7.1.3",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/intl": "^4.0",
+        "symfony/templating": "^4.0",
+        "symfony/validator": "^4.0",
+        "symfony/yaml": "^4.0",
+        "psr/log": "^1.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.3 || ^4.0",
+        "symfony/phpunit-bridge": "^4.0",
         "ext-intl": "*",
-        "twig/twig": "1.* || 2.*",
-        "symfony/form": "^2.8 || ^3.0 || ^4.0"
+        "twig/twig": "^2.10",
+        "symfony/form": "^4.0",
+        "phpstan/phpstan": "^0.11",
+        "phpstan/phpstan-strict-rules": "^0.11",
+        "roave/security-advisories": "dev-master",
+        "phpunit/phpunit": "^7.4"
     },
     "suggest": {
         "ext-intl": "Needed for displaying the country name in the locale language"
-    },
-    "autoload": {
-        "psr-0": { "Lunetics\\LocaleBundle": "" }
     },
     "target-dir": "Lunetics/LocaleBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "2.6-dev"
         }
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
     }
 }
