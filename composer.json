@@ -16,19 +16,20 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4",
-        "symfony/framework-bundle": "^5.0",
-        "symfony/intl": "^5.0",
-        "symfony/templating": "^5.0",
-        "symfony/validator": "^5.0",
-        "symfony/yaml": "^5.0",
+        "php": "^7.2",
+        "symfony/framework-bundle": "^4.3 || ^5.0",
+        "symfony/intl": "^4.3 || ^5.0",
+        "symfony/templating": "^4.3 || ^5.0",
+        "symfony/validator": "^4.3 || ^5.0",
+        "symfony/yaml": "^4.3 || ^5.0",
         "psr/log": "~1.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.0",
+        "symfony/phpunit-bridge": "^4.3 || ^5.0",
+        "phpunit/phpunit": "<8.0",
         "ext-intl": "*",
         "twig/twig": "1.* || 2.*",
-        "symfony/form": "^5.0",
+        "symfony/form": "^4.3 || ^5.0",
         "dg/bypass-finals": "^1.1"
     },
     "suggest": {

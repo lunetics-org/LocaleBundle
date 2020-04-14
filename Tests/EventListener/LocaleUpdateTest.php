@@ -38,7 +38,7 @@ class LocaleUpdateTest extends TestCase
      */
     private $session;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->dispatcher = new EventDispatcher();
         $this->session = new LocaleSession(new Session(new MockArraySessionStorage()));
