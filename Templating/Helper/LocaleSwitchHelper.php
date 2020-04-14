@@ -9,6 +9,7 @@
  */
 namespace Lunetics\LocaleBundle\Templating\Helper;
 
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Templating\Helper\Helper;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -32,7 +33,7 @@ class LocaleSwitchHelper extends Helper
      * @param EngineInterface $templating
      * @param string          $template   The Twig Template that renders the switch
      */
-    public function __construct(EngineInterface $templating, $template)
+    public function __construct(\Twig\Environment $templating, $template)
     {
         $this->templating = $templating;
         $this->view = array_key_exists($template, $this->templates)

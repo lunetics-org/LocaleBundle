@@ -12,3 +12,5 @@ if (!is_file($autoloadFile = __DIR__.'/../vendor/autoload.php') && !is_file($aut
     throw new \LogicException('Could not find autoload.php in vendor/. Did you run "composer install --dev"?');
 }
 require $autoloadFile;
+
+DG\BypassFinals::enable();
