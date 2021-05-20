@@ -39,10 +39,10 @@ class LocaleSwitcherExtensionTest extends TestCase
 
         $functions = $extension->getFunctions();
 
-        /** @var \Twig_SimpleFunction $twigExtension */
+        /** @var \Twig\TwigFunction $twigExtension */
         $twigExtension = current($functions);
 
-        $this->assertInstanceOf('Twig_SimpleFunction', $twigExtension);
+        $this->assertInstanceOf('\Twig\TwigFunction', $twigExtension);
         $callable = $twigExtension->getCallable();
         $this->assertEquals('renderSwitcher', $callable[1]);
         $this->assertEquals(array('html'), $twigExtension->getSafe(new \Twig_Node()));

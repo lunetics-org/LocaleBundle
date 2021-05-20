@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -156,7 +156,7 @@ class LocaleListenerTest extends TestCase
         $dispatcherMock = $this->createMock(EventDispatcher::class);
         $dispatcherMock->expects($this->once())
                         ->method('dispatch')
-                        ->with($this->equalTo(LocaleBundleEvents::onLocaleChange), $this->isInstanceOf('Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent'));
+                        ->with($this->isInstanceOf('Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent'), $this->equalTo(LocaleBundleEvents::onLocaleChange));
 
         $listener = $this->getListener('fr', $this->getGuesserManager());
         $listener->setEventDispatcher($dispatcherMock);
@@ -218,14 +218,14 @@ class LocaleListenerTest extends TestCase
             ->will($this->returnValue($response));
         ;
 
-        $filterResponseEvent = $this->getMockFilterResponseEvent();
-        $filterResponseEvent
+        $ResponseEvent = $this->getMockResponseEvent();
+        $ResponseEvent
             ->expects($this->once())
             ->method('getResponse')
             ->will($this->returnValue($response))
         ;
 
-        $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
+        $listener->onLocaleDetectedSetVaryHeader($ResponseEvent);
     }
 
     public function testOnLocaleDetectedDisabledVaryHeader()
@@ -237,13 +237,13 @@ class LocaleListenerTest extends TestCase
         $response
             ->expects($this->never())
             ->method('setVary');
-        $filterResponseEvent = $this->getMockFilterResponseEvent();
-        $filterResponseEvent
+        $ResponseEvent = $this->getMockResponseEvent();
+        $ResponseEvent
             ->expects($this->any())
             ->method('getResponse')
             ->will($this->returnValue($response));
 
-        $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
+        $listener->onLocaleDetectedSetVaryHeader($ResponseEvent);
     }
 
     public function excludedPatternDataProvider()
@@ -313,7 +313,7 @@ class LocaleListenerTest extends TestCase
 
     private function getEvent(Request $request)
     {
-        return new GetResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
+        return new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
     private function getListener($locale = 'en', $manager = null, $logger = null, $matcher = null)
@@ -407,9 +407,9 @@ class LocaleListenerTest extends TestCase
         return $this->createMock(Response::class);
     }
 
-    private function getMockFilterResponseEvent()
+    private function getMockResponseEvent()
     {
-        return $this->createMock(FilterResponseEvent::class);
+        return $this->createMock(ResponseEvent::class);
     }
 
     private function getMockLogger()

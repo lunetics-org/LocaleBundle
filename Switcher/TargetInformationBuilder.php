@@ -13,6 +13,8 @@ namespace Lunetics\LocaleBundle\Switcher;
 use Lunetics\LocaleBundle\LocaleInformation\AllowedLocalesProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Locales;
+use Symfony\Component\Intl\Scripts;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
@@ -112,8 +114,9 @@ class TargetInformationBuilder
         foreach ($this->allowedLocalesProvider->getAllowedLocales() as $locale) {
             $strpos = 0 === strpos($request->getLocale(), $locale);
             if ($this->showCurrentLocale && $strpos || !$strpos) {
-                $targetLocaleTargetLang = Intl::getLanguageBundle()->getLanguageName($locale, null, $locale);
-                $targetLocaleCurrentLang = Intl::getLanguageBundle()->getLanguageName($locale, null, $request->getLocale());
+
+                $targetLocaleTargetLang = Locales::getName($locale, $locale);
+                $targetLocaleCurrentLang = Locales::getName($locale, $request->getLocale());
                 $parameters['_locale'] = $locale;
                 try {
                     if (null !== $targetRoute && "" !== $targetRoute) {
