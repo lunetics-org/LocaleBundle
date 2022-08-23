@@ -22,14 +22,14 @@
         "symfony/templating": "^2.8 || ^3.0 || ^4.0",
         "symfony/validator": "^2.8 || ^3.0 || ^4.0",
         "symfony/yaml": "^2.8 || ^3.0 || ^4.0",
-        "psr/log": ">=1",
-        "phpcompatibility/php-compatibility": "^9.3"
+        "psr/log": ">=1"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.3 || ^4.0",
         "ext-intl": "*",
         "twig/twig": "1.* || 2.*",
-        "symfony/form": "^2.8 || ^3.0 || ^4.0"
+        "symfony/form": "^2.8 || ^3.0 || ^4.0",
+        "phpcompatibility/php-compatibility": "^9.3"
     },
     "suggest": {
         "ext-intl": "Needed for displaying the country name in the locale language"
