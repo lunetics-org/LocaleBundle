@@ -116,11 +116,9 @@ class LocaleValidatorTest extends BaseMetaValidator
 
     }
 
-    /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
-     */
     public function testValidateThrowsUnexpectedTypeException()
     {
+        self::expectException('\Symfony\Component\Validator\Exception\UnexpectedTypeException');
         $validator = new LocaleValidator();
         $validator->validate(array(), $this->getMockConstraint());
     }

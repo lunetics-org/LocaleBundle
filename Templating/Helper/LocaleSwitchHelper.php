@@ -10,7 +10,7 @@
 namespace Lunetics\LocaleBundle\Templating\Helper;
 
 use Symfony\Component\Templating\Helper\Helper;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * @author Christophe Willemsen <willemsen.christophe@gmail.com/>
@@ -29,10 +29,10 @@ class LocaleSwitchHelper extends Helper
     /**
      * Constructor
      *
-     * @param EngineInterface $templating
+     * @param Environment $templating
      * @param string          $template   The Twig Template that renders the switch
      */
-    public function __construct(EngineInterface $templating, $template)
+    public function __construct(Environment $templating, $template)
     {
         $this->templating = $templating;
         $this->view = array_key_exists($template, $this->templates)

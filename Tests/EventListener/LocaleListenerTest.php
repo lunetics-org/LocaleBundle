@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -48,12 +48,12 @@ class LocaleListenerTest extends TestCase
 
     public function getTestDataForBestLocaleMatcher()
     {
-    	return array(
-    		array('fr', array('fr'), 'fr', 'en'),
-    	    array('fr_FR', array('fr'), 'fr', 'en'),
-    	    array('fr_FR', array('fr_FR'), 'fr_FR', 'en'),
-    	    array('fr_FR', array('en_GB'), 'en', 'en'),
-    	);
+        return array(
+            array('fr', array('fr'), 'fr', 'en'),
+            array('fr_FR', array('fr'), 'fr', 'en'),
+            array('fr_FR', array('fr_FR'), 'fr_FR', 'en'),
+            array('fr_FR', array('en_GB'), 'en', 'en'),
+        );
     }
     /**
      * @dataProvider getTestDataForBestLocaleMatcher
@@ -155,8 +155,8 @@ class LocaleListenerTest extends TestCase
     {
         $dispatcherMock = $this->createMock(EventDispatcher::class);
         $dispatcherMock->expects($this->once())
-                        ->method('dispatch')
-                        ->with($this->equalTo(LocaleBundleEvents::onLocaleChange), $this->isInstanceOf('Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent'));
+            ->method('dispatch')
+            ->with($this->isInstanceOf('Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent'), $this->equalTo(LocaleBundleEvents::onLocaleChange));
 
         $listener = $this->getListener('fr', $this->getGuesserManager());
         $listener->setEventDispatcher($dispatcherMock);
@@ -170,7 +170,7 @@ class LocaleListenerTest extends TestCase
     {
         $dispatcherMock = $this->createMock(EventDispatcher::class);
         $dispatcherMock->expects($this->never())
-                ->method('dispatch');
+            ->method('dispatch');
 
         $manager = $this->getGuesserManager();
         $manager->removeGuesser('session');
@@ -218,14 +218,14 @@ class LocaleListenerTest extends TestCase
             ->will($this->returnValue($response));
         ;
 
-        $filterResponseEvent = $this->getMockFilterResponseEvent();
-        $filterResponseEvent
+        $ResponseEvent = $this->getMockResponseEvent();
+        $ResponseEvent
             ->expects($this->once())
             ->method('getResponse')
             ->will($this->returnValue($response))
         ;
 
-        $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
+        $listener->onLocaleDetectedSetVaryHeader($ResponseEvent);
     }
 
     public function testOnLocaleDetectedDisabledVaryHeader()
@@ -237,13 +237,13 @@ class LocaleListenerTest extends TestCase
         $response
             ->expects($this->never())
             ->method('setVary');
-        $filterResponseEvent = $this->getMockFilterResponseEvent();
-        $filterResponseEvent
+        $ResponseEvent = $this->getMockResponseEvent();
+        $ResponseEvent
             ->expects($this->any())
             ->method('getResponse')
             ->will($this->returnValue($response));
 
-        $listener->onLocaleDetectedSetVaryHeader($filterResponseEvent);
+        $listener->onLocaleDetectedSetVaryHeader($ResponseEvent);
     }
 
     public function excludedPatternDataProvider()
@@ -330,7 +330,7 @@ class LocaleListenerTest extends TestCase
 
     private function getBestLocaleMatcher(array $allowedLocales)
     {
-    	return new DefaultBestLocaleMatcher(new AllowedLocalesProvider($allowedLocales));
+        return new DefaultBestLocaleMatcher(new AllowedLocalesProvider($allowedLocales));
     }
 
     private function getGuesserManager($order = array(1 => 'router', 2 => 'browser'))
@@ -341,8 +341,8 @@ class LocaleListenerTest extends TestCase
             return in_array($v, $allowedLocales);
         };
         $metaValidator->expects($this->any())
-                ->method('isAllowed')
-                ->will($this->returnCallback($callBack));
+            ->method('isAllowed')
+            ->will($this->returnCallback($callBack));
 
         $manager = new LocaleGuesserManager($order);
         $routerGuesser = new RouterLocaleGuesser($metaValidator);
@@ -407,7 +407,7 @@ class LocaleListenerTest extends TestCase
         return $this->createMock(Response::class);
     }
 
-    private function getMockFilterResponseEvent()
+    private function getMockResponseEvent()
     {
         return $this->createMock(ResponseEvent::class);
     }
