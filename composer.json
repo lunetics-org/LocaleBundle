@@ -16,19 +16,21 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": "^8.0",
-        "symfony/framework-bundle": "^2.8 || ^3.0 || ^4.0 || ^5.0",
-        "symfony/intl": "^2.8 || ^3.0 || ^4.0 || ^5.0",
-        "symfony/templating": "^2.8 || ^3.0 || ^4.0 || ^5.0",
-        "symfony/validator": "^2.8 || ^3.0 || ^4.0 || ^5.0",
-        "symfony/yaml": "^2.8 || ^3.0 || ^4.0 || ^5.0",
+        "php": "^7.2 || ^8.0",
+        "symfony/framework-bundle": "^4.3 || ^5.0",
+        "symfony/intl": "^4.3 || ^5.0",
+        "symfony/templating": "^4.3 || ^5.0",
+        "symfony/validator": "^4.3 || ^5.0",
+        "symfony/yaml": "^4.3 || ^5.0",
         "psr/log": ">=1"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.3 || ^4.0 || ^5.0",
+        "dg/bypass-finals": "^1.1",
+        "symfony/phpunit-bridge": "^4.3 || ^5.0",
+        "phpunit/phpunit": "<8.0",
         "ext-intl": "*",
         "twig/twig": "1.* || 2.*",
-        "symfony/form": "^2.8 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/form": "^4.3 || ^5.0",
         "phpcompatibility/php-compatibility": "^9.3"
     },
     "suggest": {

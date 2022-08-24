@@ -11,7 +11,7 @@ namespace Lunetics\LocaleBundle\Tests\Templating\Helper;
 
 use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * @author Kevin Archer <ka@kevinarcher.ca>
@@ -20,9 +20,9 @@ class LocaleSwitchHelperTest extends TestCase
 {
     public function testRenderSwitch()
     {
-        $template = uniqid('template:');
+        $template = uniqid('twig:');
 
-        $templating = $this->getMockEngineInterface();
+        $templating = $this->getMockEnvironment();
         $templating
             ->expects($this->once())
             ->method('render')
@@ -37,15 +37,15 @@ class LocaleSwitchHelperTest extends TestCase
 
     public function testGetName()
     {
-        $templating = $this->getMockEngineInterface();
+        $templating = $this->getMockEnvironment();
 
         $localeSwitchHelper = new LocaleSwitchHelper($templating, null);
 
         $this->assertEquals('locale_switch_helper', $localeSwitchHelper->getName());
     }
 
-    protected function getMockEngineInterface()
+    protected function getMockEnvironment()
     {
-        return $this->createMock(EngineInterface::class);
+        return $this->createMock(Environment::class);
     }
 }

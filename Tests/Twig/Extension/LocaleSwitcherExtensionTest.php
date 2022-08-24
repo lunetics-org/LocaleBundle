@@ -16,6 +16,7 @@ use Lunetics\LocaleBundle\Templating\Helper\LocaleSwitchHelper;
 use Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\Node\Node;
+use Twig\TwigFunction;
 
 /**
  * @covers \Lunetics\LocaleBundle\Twig\Extension\LocaleSwitcherExtension
@@ -39,10 +40,10 @@ class LocaleSwitcherExtensionTest extends TestCase
 
         $functions = $extension->getFunctions();
 
-        /** @var \Twig_SimpleFunction $twigExtension */
+        /** @var TwigFunction $twigExtension */
         $twigExtension = current($functions);
 
-        $this->assertInstanceOf('Twig_SimpleFunction', $twigExtension);
+        $this->assertInstanceOf('\Twig\TwigFunction', $twigExtension);
         $callable = $twigExtension->getCallable();
         $this->assertEquals('renderSwitcher', $callable[1]);
         $this->assertEquals(array('html'), $twigExtension->getSafe(new Node()));
