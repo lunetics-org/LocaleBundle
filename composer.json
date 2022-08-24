@@ -27,7 +27,7 @@
     "require-dev": {
         "dg/bypass-finals": "^1.1",
         "symfony/phpunit-bridge": "^4.3 || ^5.0",
-        "phpunit/phpunit": "<8.0",
+        "phpunit/phpunit": "^8.5.12",
         "ext-intl": "*",
         "twig/twig": "1.* || 2.*",
         "symfony/form": "^4.3 || ^5.0",
