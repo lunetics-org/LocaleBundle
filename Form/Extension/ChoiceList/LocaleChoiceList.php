@@ -42,7 +42,7 @@ class LocaleChoiceList extends ArrayChoiceList
             if ($languagesOnly && strlen($locale) == 2 || !$languagesOnly) {
                 try {
                     $this->localeChoices[$locale] = Languages::getName($locale, $locale);
-                } catch(MissingResourceException) {
+                } catch (MissingResourceException) {
                     $this->localeChoices[$locale] = null;
                 }
             }
