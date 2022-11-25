@@ -14,21 +14,21 @@
             "homepage": "http://christophewillemsen.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": "^5.6 || ^7.0",
-        "symfony/framework-bundle": "^2.8 || ^3.0 || ^4.0",
-        "symfony/intl": "^2.8 || ^3.0 || ^4.0",
-        "symfony/templating": "^2.8 || ^3.0 || ^4.0",
-        "symfony/validator": "^2.8 || ^3.0 || ^4.0",
-        "symfony/yaml": "^2.8 || ^3.0 || ^4.0",
-        "psr/log": "~1.0"
+        "php": "^7.4 || ^8.0",
+        "symfony/framework-bundle": "^3.4 || ^4.4",
+        "symfony/intl": "^3.4.15 || ^4.4",
+        "symfony/templating": "^3.4 || ^4.4",
+        "symfony/validator": "^3.4 || ^4.4",
+        "symfony/yaml": "^3.4 || ^4.4",
+        "psr/log": "^1.0 || ^2.0 || ^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.3 || ^4.0",
+        "symfony/phpunit-bridge": "^4.4",
         "ext-intl": "*",
         "twig/twig": "1.* || 2.*",
-        "symfony/form": "^2.8 || ^3.0 || ^4.0"
+        "symfony/form": "^3.4 || ^4.4",
+        "symfony/flex": "^1.0 || ^2.0"
     },
     "suggest": {
         "ext-intl": "Needed for displaying the country name in the locale language"
@@ -37,9 +37,15 @@
         "psr-0": { "Lunetics\\LocaleBundle": "" }
     },
     "target-dir": "Lunetics/LocaleBundle",
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
+        }
+    },
     "extra": {
-        "branch-alias": {
-            "dev-master": "2.6-dev"
+        "symfony": {
+            "allow-contrib": true,
+            "require": "^4.4"
         }
     }
 }
