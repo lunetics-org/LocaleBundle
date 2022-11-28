@@ -13,3 +13,4 @@ report/
 /.phpunit.result.cache
 
 .idea/
+/symfony.lock
