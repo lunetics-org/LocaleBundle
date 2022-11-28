@@ -2,16 +2,13 @@
 
 ### Add the package to your dependencies
 
-``` yaml
-"require": {
-    "lunetics/locale-bundle": "2.2.*",
-    ....
-},
+```bash
+composer require lunetics/locale-bundle
 ```
 
-### Register the bundle in your kernel
+### Register the bundle in your kernel (if not using symfony/flex)
 
-``` php
+```php
 public function registerBundles()
 {
     $bundles = array(
@@ -32,11 +29,6 @@ lunetics_locale:
     - browser
 ```
 
-### Update your packages
-
-```
-php composer.phar require lunetics/locale-bundle "2.3.*"
-```
 
 # Configuration
 
@@ -44,7 +36,7 @@ php composer.phar require lunetics/locale-bundle "2.3.*"
 
 You need to define at least one valid locale that is valid for your application
 
-``` yaml
+```yaml
 lunetics_locale:
   allowed_locales:
     - en
@@ -54,7 +46,7 @@ lunetics_locale:
 
 ### Strict Mode
 
-``` yaml
+```yaml
 lunetics_locale:
   strict_mode: true # defaults to false
 ```
@@ -102,7 +94,7 @@ When applicable, this configuration should be preferred to pure non-strict mode.
 
 You need to activate and define the order of the locale guessers. This is done in one step in the configuration :
 
-``` yaml
+```yaml
 lunetics_locale:
   guessing_order:
     - session
@@ -117,7 +109,7 @@ Note that the session and cookie guessers only retrieve previously identified an
 
 If you use the _locale parameter as attribute/parameter in your routes, you should use the query and router guesser first.
 
-``` yaml
+```yaml
 lunetics_locale:
   guessing_order:
     - query
@@ -129,7 +121,7 @@ lunetics_locale:
 
 Note that you can disable the guessing for a given query pattern :
 
-``` yaml
+```yaml
 lunetics_locale:
   guessing_excluded_pattern: ^/api
 ```
@@ -145,7 +137,7 @@ it is recommended to set *session* and/or *cookie* as the first guesser to avoid
 #### Cookie
 If you use the cookie guesser, it will be automatically read from the cookie and write changes into the cookie anytime the locale has changed (Even from another guesser)
 
-``` yaml
+```yaml
 lunetics_locale:
   cookie:
     set_on_change: true
@@ -169,7 +161,7 @@ This applies for tlds as `com` which is no locale or with multilingual countries
 
 You can add custom mappings via config, like:
 
-``` yaml
+```yaml
 topleveldomain:
   locale_map:
     com: en
@@ -186,7 +178,7 @@ topleveldomain:
 
 The domain guesser will map a domain to a locale.
 
-``` yaml
+```yaml
 domain:
   locale_map:
     dutchversion.be: nl_BE
@@ -200,7 +192,7 @@ The `LocaleGuesserManager` dispatches a `LocaleBundleEvents::onLocaleChange` if 
 For example, if you don't use route / query parameters for locales, you could build an own listener for your user login, which dispatches a `LocaleBundleEvents::onLocaleChange` event to set the locale for your user. You just have to use the `FilterLocaleSwitchEvent` and set the locale.
 
 
-``` php
+```php
 $locale = $user->getLocale();
 $request = $this->getRequest();
 $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
@@ -212,7 +204,7 @@ $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEve
 By default, this bundle adds `Accept-Language` to the list of `Vary` headers.
 You can disable this behaviour with `disable_vary_header`:
 
-``` yaml
+```yaml
 lunetics_locale:
   disable_vary_header: true
 ```
@@ -223,7 +215,7 @@ lunetics_locale:
 
 You can render a default locale switcher, simply by calling the twig function in your template :
 
-``` html
+```html
 {{ locale_switcher() }}
 ```
 
