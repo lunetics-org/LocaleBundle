@@ -26,7 +26,7 @@
     "require-dev": {
         "symfony/phpunit-bridge": ">=5.4",
         "ext-intl": "*",
-        "twig/twig": "1.* || 2.*",
+        "twig/twig": "^1.41 || ^2.0",
         "symfony/form": "^3.4 || ^4.4",
         "symfony/flex": "^1.0 || ^2.0"
     },
