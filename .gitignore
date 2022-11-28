@@ -11,3 +11,6 @@ report/
 /var/
 /.env*
 /.phpunit.result.cache
+
+.idea/
+/symfony.lock

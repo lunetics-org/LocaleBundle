@@ -12,7 +12,7 @@
 
     <services>
         <service id="lunetics_locale.switcher_helper" class="%lunetics_locale.switcher_helper.class%">
-            <argument type="service" id="templating"/>
+            <argument type="service" id="twig"/>
             <argument>%lunetics_locale.switcher.template%</argument>
             <tag name="templating.helper" alias="switch"/>
         </service>

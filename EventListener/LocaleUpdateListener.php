@@ -11,8 +11,8 @@ namespace Lunetics\LocaleBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -109,11 +109,11 @@ class LocaleUpdateListener implements EventSubscriberInterface
     /**
      * Event for updating the cookie on response
      *
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      *
      * @return \Symfony\Component\HttpFoundation\Response;
      */
-    public function updateCookieOnResponse(FilterResponseEvent $event)
+    public function updateCookieOnResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();
         $cookie = $this->localeCookie->getLocaleCookie($this->locale);
