@@ -3,3 +3,11 @@ composer.phar
 composer.lock
 phpunit.xml
 report/
+
+/src/
+/tests/
+/config/
+/public/
+/var/
+/.env*
+/.phpunit.result.cache

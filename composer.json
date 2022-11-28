@@ -24,7 +24,7 @@
         "psr/log": "^1.0 || ^2.0 || ^3.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.4",
+        "symfony/phpunit-bridge": ">=5.4",
         "ext-intl": "*",
         "twig/twig": "1.* || 2.*",
         "symfony/form": "^3.4 || ^4.4",
@@ -46,6 +46,12 @@
         "symfony": {
             "allow-contrib": true,
             "require": "^4.4"
+        }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         }
     }
 }
