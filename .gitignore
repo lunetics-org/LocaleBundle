@@ -4,8 +4,7 @@ composer.lock
 phpunit.xml
 report/
 
-/src/
-/tests/
+/bin/
 /config/
 /public/
 /var/
