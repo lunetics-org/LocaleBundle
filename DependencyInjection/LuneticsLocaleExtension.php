@@ -63,13 +63,6 @@ class LuneticsLocaleExtension extends Extension
             $container->removeDefinition('lunetics_locale.best_locale_matcher');
         }
     }
-    /**
-     * {@inheritDoc}
-     */
-    public function getAlias()
-    {
-        return 'lunetics_locale';
-    }
 
     /**
      * Binds the params from config

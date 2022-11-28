@@ -21,7 +21,8 @@
         "symfony/templating": "^4.4 || ^5.4 ",
         "symfony/validator": "^4.4 || ^5.4 ",
         "symfony/yaml": "^4.4 || ^5.4 ",
-        "psr/log": "^1.0 || ^2.0 || ^3.0"
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "dg/bypass-finals": "^1.4"
     },
     "require-dev": {
         "symfony/phpunit-bridge": ">=5.4",
@@ -40,11 +41,6 @@
     "config": {
         "allow-plugins": {
             "symfony/flex": true
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.6-dev"
         }
     }
 }
