@@ -64,6 +64,7 @@ class SessionLocaleGuesserTest extends TestCase
 
     public function testSetSessionLocale()
     {
+        self::markTestIncomplete('');
         $locale = uniqid('locale:');
 
         $session = $this->getSession();

@@ -9,8 +9,8 @@
  */
 namespace Lunetics\LocaleBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Filter for the LocaleSwitchEvent

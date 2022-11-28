@@ -9,12 +9,13 @@
  */
 namespace Lunetics\LocaleBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Lunetics\LocaleBundle\LocaleGuesser\LocaleGuesserManager;
@@ -88,9 +89,9 @@ class LocaleListener implements EventSubscriberInterface
      *
      * Sets the identified locale as default locale to the request
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
 
@@ -116,7 +117,7 @@ class LocaleListener implements EventSubscriberInterface
                 && ($manager->getGuesser('session') || $manager->getGuesser('cookie'))
             ) {
                 $localeSwitchEvent = new FilterLocaleSwitchEvent($request, $locale);
-                $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEvent);
+                $this->dispatcher->dispatch($localeSwitchEvent, LocaleBundleEvents::onLocaleChange);
             }
         }
     }
@@ -124,11 +125,11 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * This Listener adds a vary header to all responses.
      *
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function onLocaleDetectedSetVaryHeader(FilterResponseEvent $event)
+    public function onLocaleDetectedSetVaryHeader(ResponseEvent $event)
     {
         $response = $event->getResponse();
         if (!$this->disableVaryHeader) {
