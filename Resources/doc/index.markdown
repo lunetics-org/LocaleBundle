@@ -210,7 +210,7 @@ $this->dispatcher->dispatch(LocaleBundleEvents::onLocaleChange, $localeSwitchEve
 ## Vary on Accept-Language
 
 By default, this bundle adds `Accept-Language` to the list of `Vary` headers.
-You can can disable this behaviour with `disable_vary_header`:
+You can disable this behaviour with `disable_vary_header`:
 
 ``` yaml
 lunetics_locale:
