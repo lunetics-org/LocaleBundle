@@ -34,12 +34,12 @@ class BaseMetaValidator extends TestCase
     /**
      * Setup
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->context = $this->getContext();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $yamlParser = new YamlParser();
         $file = new FileLocator(__DIR__ . '/../../Resources/config');

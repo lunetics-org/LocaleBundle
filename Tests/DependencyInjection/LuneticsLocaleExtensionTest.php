@@ -53,12 +53,9 @@ class LuneticsLocaleExtensionTest extends TestCase
         $this->assertEquals($strictMatch, $container->hasDefinition('lunetics_locale.best_locale_matcher'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "guessing_order" at path "lunetics_locale" must be configured.
-     */
     public function testBundleLoadThrowsExceptionUnlessGuessingOrderIsSet()
     {
+        $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         $loader = new LuneticsLocaleExtension();
         $loader->load(array(), new ContainerBuilder());
     }

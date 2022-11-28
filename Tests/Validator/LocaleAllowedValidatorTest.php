@@ -108,11 +108,9 @@ class LocaleAllowedValidatorTest extends BaseMetaValidator
         $this->getLocaleAllowedValidator($intlExtension, array('en_US', 'de_DE'), true)->validate('de', $constraint);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
-     */
     public function testValidateThrowsUnexpectedTypeException()
     {
+        $this->expectException('Symfony\Component\Validator\Exception\UnexpectedTypeException');
         $validator = new LocaleAllowedValidator();
         $validator->validate(array(), $this->getMockConstraint());
     }

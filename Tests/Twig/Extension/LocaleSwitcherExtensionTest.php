@@ -27,7 +27,7 @@ class LocaleSwitcherExtensionTest extends TestCase
     private $targetInformationBuildMock;
     private $localeSwitcherHelperMock;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->targetInformationBuildMock = $this->createMock(TargetInformationBuilder::class);
         $this->localeSwitcherHelperMock = $this->createMock(LocaleSwitchHelper::class);

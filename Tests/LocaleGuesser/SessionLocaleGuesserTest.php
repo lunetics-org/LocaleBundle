@@ -66,10 +66,11 @@ class SessionLocaleGuesserTest extends TestCase
     {
         $locale = uniqid('locale:');
 
-        $guesser = $this->getGuesser();
+        $session = $this->getSession();
+        $guesser = $this->getGuesser($session);
         $guesser->setSessionLocale($locale, true);
 
-        $this->assertAttributeContains($locale, 'session', $guesser);
+        $this->assertContains($locale, $session);
     }
 
 
