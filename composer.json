@@ -35,9 +35,11 @@
         "ext-intl": "Needed for displaying the country name in the locale language"
     },
     "autoload": {
-        "psr-0": { "Lunetics\\LocaleBundle": "" }
+        "psr-4": { "Lunetics\\LocaleBundle\\": "src" }
     },
-    "target-dir": "Lunetics/LocaleBundle",
+    "autoload-dev": {
+        "psr-4": { "Lunetics\\LocaleBundle\\Tests\\": "tests" }
+    },
     "config": {
         "allow-plugins": {
             "symfony/flex": true

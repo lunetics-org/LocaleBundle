@@ -42,7 +42,7 @@ class BaseMetaValidator extends TestCase
     public static function setUpBeforeClass(): void
     {
         $yamlParser = new YamlParser();
-        $file = new FileLocator(__DIR__ . '/../../Resources/config');
+        $file = new FileLocator(__DIR__ . '/../../src/Resources/config');
         self::$iso3166 = $yamlParser->parse(file_get_contents($file->locate('iso3166-1-alpha-2.yml')));
         self::$iso639 = array_merge(
             $yamlParser->parse(file_get_contents($file->locate('iso639-1.yml'))),
