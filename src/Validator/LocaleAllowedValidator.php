@@ -69,21 +69,26 @@ class LocaleAllowedValidator extends ConstraintValidator
             throw new UnexpectedTypeException($locale, 'string');
         }
 
-        $locale = (string) $locale;
 
+        $locale = (string) $locale;
+        $allowedLocales = $this->getAllowedLocales();
         if ($this->strictMode) {
-            if (!in_array($locale, $this->getAllowedLocales())) {
+            if (!in_array($locale, $allowedLocales)) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
         } else {
-            if ($this->intlExtension) {
-                $primary = \Locale::getPrimaryLanguage($locale);
-            } else {
-                $splittedLocale = explode('_', $locale);
-                $primary = count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
-            }
+            $findPrimary = function ($locale) {
+                if ($this->intlExtension) {
+                    return \Locale::getPrimaryLanguage($locale);
+                } else {
+                    $splittedLocale = explode('_', $locale);
+                    return count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
+                }
+            };
 
-            if (!in_array($locale, $this->getAllowedLocales()) && (!in_array($primary, $this->getAllowedLocales()))) {
+            $allowedLocales = array_map($findPrimary, $allowedLocales);
+
+            if (!in_array($locale, $allowedLocales) && (!in_array($findPrimary($locale), $allowedLocales))) {
                 $this->context->addViolation($constraint->message, array('%string%' => $locale));
             }
         }

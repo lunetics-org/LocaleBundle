@@ -73,10 +73,10 @@ class LocaleInformationTest extends BaseMetaValidator
      */
     public function testGetAllAllowedLocalesLanguageIdenticalToRegion($intlExtension)
     {
-        $this->markTestSkipped('symfony/locale is buggy');
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension);
         $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLocales = $information->getAllAllowedLocales();
+
         $this->assertContains('de_DE', $foundLocales);
         $this->assertContains('fr_FR', $foundLocales);
     }
@@ -88,13 +88,14 @@ class LocaleInformationTest extends BaseMetaValidator
      */
     public function testGetAllAllowedLanguages($intlExtension)
     {
-        $this->markTestSkipped('Intl::getLanguageBundle()->getLanguageNames() changed returned data in symfomy 4.4, we need to figure out what is wrong.');
-
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension);
         $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLanguages = $information->getAllAllowedLanguages();
-        $this->assertContains('de_CH', $foundLanguages);
-        $this->assertNotContains('de_LI', $foundLanguages);
+
+        $this->assertCount(3, $foundLanguages);
+        $this->assertContains('de', $foundLanguages);
+        $this->assertContains('de', $foundLanguages);
+        $this->assertContains('fr', $foundLanguages);
     }
 
     /**
@@ -104,15 +105,13 @@ class LocaleInformationTest extends BaseMetaValidator
      */
     public function testGetAllAllowedLanguagesStrict($intlExtension)
     {
-        $this->markTestSkipped('Intl::getLanguageBundle()->getLanguageNames() changed returned data in symfomy 4.4, we need to figure out what is wrong.');
-
         $metaValidator = $this->getMetaValidator($this->allowedLocales, $intlExtension, true);
         $information = new LocaleInformation($metaValidator, $this->getGuesserManagerMock());
         $foundLanguages = $information->getAllAllowedLanguages();
-        $this->assertCount(count($this->allowedLocales), $foundLanguages);
-        foreach ($foundLanguages as $locale) {
-            $this->assertContains($locale, $this->allowedLocales);
-        }
+
+        $this->assertCount(2, $foundLanguages);
+        $this->assertContains('de', $foundLanguages);
+        $this->assertContains('en', $foundLanguages);
     }
 
     private function getLocaleInformation(array $preferredLocale)
