@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "symfony/framework-bundle": "^4.4 || ^5.4 ",
+        "symfony/framework-bundle": "^5.4 || ^6.0 ",
         "symfony/intl": "^5.4 || ^6.0",
         "symfony/templating": "^5.4  || ^6.0",
         "symfony/validator": "^5.4  || ^6.0",
@@ -49,6 +49,12 @@
         "symfony": {
             "allow-contrib": true,
             "require": "^5.4"
+        }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         }
     }
 }
