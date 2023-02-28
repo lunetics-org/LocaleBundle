@@ -21,8 +21,8 @@ use Symfony\Component\Intl\Languages;
  */
 class LocaleChoiceList extends ArrayChoiceList
 {
-    private $localeChoices;
-    private $preferredChoices;
+    private $localeChoices = [];
+    private $preferredChoices = [];
 
     /**
      * Construct the LocaleChoiceList
@@ -33,7 +33,6 @@ class LocaleChoiceList extends ArrayChoiceList
      */
     public function __construct(LocaleInformation $information, $languagesOnly = true, $strictMode = false)
     {
-        $this->localeChoices = array();
         $allowedLocales = $strictMode
             ? $information->getAllowedLocalesFromConfiguration()
             : $information->getAllAllowedLanguages();

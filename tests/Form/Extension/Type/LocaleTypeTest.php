@@ -27,7 +27,7 @@ class LocaleTypeTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('setDefaults')
-            ->with(array('choices' => null, 'preferred_choices' => null));
+            ->with(array('choices' => [], 'preferred_choices' => null));
 
         $type = new LocaleType($choiceList);
         $type->configureOptions($resolver);
@@ -49,7 +49,10 @@ class LocaleTypeTest extends TestCase
 
     protected function getMockLocaleChoiceList()
     {
-        return $this->createMock(LocaleChoiceList::class);
+        $mockLocaleChoiceList = $this->createMock(LocaleChoiceList::class);
+        $mockLocaleChoiceList->method('getOriginalKeys')->willReturn([]);
+
+        return $mockLocaleChoiceList;
     }
 
     protected function getMockOptionsResolverInterface()

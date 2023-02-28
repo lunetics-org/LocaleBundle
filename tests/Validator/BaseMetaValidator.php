@@ -16,6 +16,7 @@ use Lunetics\LocaleBundle\Validator\MetaValidator;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Parser as YamlParser;
 
@@ -121,7 +122,7 @@ class ConstraintValidatorFactory implements \Symfony\Component\Validator\Constra
     /**
      * {@inheritDoc}
      */
-    public function getInstance(Constraint $constraint)
+    public function getInstance(Constraint $constraint): ConstraintValidatorInterface
     {
         $className = $constraint->validatedBy();
 
