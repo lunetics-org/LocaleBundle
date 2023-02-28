@@ -27,7 +27,7 @@ class LocaleTypeTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('setDefaults')
-            ->with(array('choices' => [], 'preferred_choices' => null));
+            ->with(array('choices' => null, 'preferred_choices' => null));
 
         $type = new LocaleType($choiceList);
         $type->configureOptions($resolver);
