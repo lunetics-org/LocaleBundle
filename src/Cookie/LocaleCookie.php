@@ -24,7 +24,7 @@ class LocaleCookie
     private $httpOnly;
     private $setOnChange;
 
-    public function __construct($name, $ttl, $path, $domain = null, $secure, $httpOnly, $setOnChange)
+    public function __construct($name, $ttl, $path, $domain, $secure, $httpOnly, $setOnChange)
     {
         $this->name = $name;
         $this->ttl = $ttl;

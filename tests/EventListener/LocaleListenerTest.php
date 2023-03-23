@@ -322,7 +322,7 @@ class LocaleListenerTest extends TestCase
             $manager = $this->getGuesserManager();
         }
 
-        $listener = new LocaleListener($locale, $manager, $matcher, $logger);
+        $listener = new LocaleListener($manager, $locale, $matcher, $logger);
         $listener->setEventDispatcher(new EventDispatcher());
 
         return $listener;
