@@ -47,9 +47,15 @@ class DefaultBestLocaleMatcher implements BestLocaleMatcher
                 return $allowedLocale;
             }
         }
-        if (str_contains($locale, '_')) {
-            $locale = explode('_', $locale)[0];
-            return $this->match($locale);
+        // Checks for the first part of the locale and matches only the language part
+        $splitLanguage = preg_split('/[_-]/', $locale);
+        if (count($splitLanguage) > 1) {
+            $locale = $splitLanguage[0];
+        }
+        foreach ($allowedLocales as $allowedLocale) {
+            if (str_starts_with($allowedLocale, $locale)) {
+                return $allowedLocale;
+            }
         }
         return false;
     }
