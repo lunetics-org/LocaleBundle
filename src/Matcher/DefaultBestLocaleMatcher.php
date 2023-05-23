@@ -47,6 +47,10 @@ class DefaultBestLocaleMatcher implements BestLocaleMatcher
                 return $allowedLocale;
             }
         }
+        if (str_contains($locale, '_')) {
+            $locale = explode('_', $locale)[0];
+            return $this->match($locale);
+        }
         return false;
     }
 }
