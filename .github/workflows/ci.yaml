@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  phpunit:
+  phpunit-sf5:
     name: "PHPUnit"
     runs-on: "ubuntu-20.04"
 
@@ -16,6 +16,46 @@ jobs:
       matrix:
         symfony-version:
           - '^5.4'
+        php-version:
+          - '7.2.5'
+          - '7.4'
+        dependencies:
+          - "lowest"
+          - "highest"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Configure symfony version
+        uses: php-actions/composer@v6
+        with:
+          command: config
+          args: extra.symfony.require ${{ matrix.symfony-version }}
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "${{ matrix.composer-options }}"
+
+      - name: Run tests
+        run: |
+          SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit ${PHPUNIT_FLAGS}
+
+  phpunit-sf6:
+    name: "PHPUnit"
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        symfony-version:
           - '^6.0'
         php-version:
           - '8.1'
