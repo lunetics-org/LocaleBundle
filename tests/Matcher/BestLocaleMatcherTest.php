@@ -41,6 +41,8 @@ class BestLocaleMatcherTest extends TestCase
             array('fr_FR', array('fr_FR', 'fr'), 'fr_FR'),
             array('fr_FR', array('fr'), 'fr'),
             array('fr_FR', array('fr_FR'), 'fr_FR'),
+            array('fr', array('fr_FR'), 'fr_FR'),
+            array('fr_CH', array('fr_FR'), 'fr_FR'),
             array('fr_FR', array('en_GB'), false),
         );
     }

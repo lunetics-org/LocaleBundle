@@ -47,6 +47,21 @@ class DefaultBestLocaleMatcher implements BestLocaleMatcher
                 return $allowedLocale;
             }
         }
+        // Checks for the first part of the locale and matches only the language part
+        $findPrimary = function ($locale) {
+            if (function_exists('\Locale::getPrimaryLanguage')) {
+                return \Locale::getPrimaryLanguage($locale);
+            } else {
+                $splittedLocale = preg_split('/[_-]/', $locale);
+                return count($splittedLocale) > 1 ? $splittedLocale[0] : $locale;
+            }
+        };
+        $locale = $findPrimary($locale);
+        foreach ($allowedLocales as $allowedLocale) {
+            if (str_starts_with($allowedLocale, $locale)) {
+                return $allowedLocale;
+            }
+        }
         return false;
     }
 }
